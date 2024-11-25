@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FaUser, FaTasks, FaTachometerAlt, FaUsers, FaChartLine, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaUserCircle, FaClipboardList, FaUsersCog, FaChartBar, FaSignOutAlt, FaMapMarkedAlt, FaThLarge, FaUserShield } from "react-icons/fa";
 import { logoutService } from "@/services/service";
 import useStore from "@/store/index";
 
@@ -39,36 +39,60 @@ const Navbar = () => {
           <ul className="space-y-4">
             <li>
               <Link href="/panel" className="flex items-center p-3 rounded-lg shadow-neu text-gray-700 hover:bg-gray-300 hover:shadow-inner transition">
-                <FaTachometerAlt className="mr-2" />
+                <FaHome className="mr-2" />
                 Panel
               </Link>
             </li>
+            {usuarioLogeado && usuarioLogeado.rol === 1 && (
+              <li>
+                <Link href="/panel/dashboard" className="flex items-center p-3 rounded-lg shadow-neu text-gray-700 hover:bg-gray-300 hover:shadow-inner transition">
+                  <FaThLarge className="mr-2" />
+                  Dashboard
+                </Link>
+              </li>
+            )}
             <li>
               <Link href="/panel/perfil" className="flex items-center p-3 rounded-lg shadow-neu text-gray-700 hover:bg-gray-300 hover:shadow-inner transition">
-                <FaUser className="mr-2" />
+                <FaUserCircle className="mr-2" />
                 Perfil
               </Link>
             </li>
+            {usuarioLogeado && usuarioLogeado.rol === 1 && (
+              <li>
+                <Link href="/panel/areas" className="flex items-center p-3 rounded-lg shadow-neu text-gray-700 hover:bg-gray-300 hover:shadow-inner transition">
+                  <FaMapMarkedAlt className="mr-2" />
+                  Áreas
+                </Link>
+              </li>
+            )}
             <li>
               <Link href="/panel/tareas" className="flex items-center p-3 rounded-lg shadow-neu text-gray-700 hover:bg-gray-300 hover:shadow-inner transition">
-                <FaTasks className="mr-2" />
+                <FaClipboardList className="mr-2" />
                 Tareas
               </Link>
             </li>
-            {usuarioLogeado?.rol !== 2 && (
+            {usuarioLogeado && usuarioLogeado.rol === 1 && (
               <li>
                 <Link href="/panel/usuarios" className="flex items-center p-3 rounded-lg shadow-neu text-gray-700 hover:bg-gray-300 hover:shadow-inner transition">
-                  <FaUsers className="mr-2" />
-                  Usuarios
+                  <FaUsersCog className="mr-2" />
+                  Empleados
                 </Link>
               </li>
             )}
             <li>
               <Link href="/panel/desempenio" className="flex items-center p-3 rounded-lg shadow-neu text-gray-700 hover:bg-gray-300 hover:shadow-inner transition">
-                <FaChartLine className="mr-2" />
+                <FaChartBar className="mr-2" />
                 Desempeño
               </Link>
             </li>
+            {usuarioLogeado && usuarioLogeado.rol === 1 && (
+              <li>
+                <Link href="/panel/roles" className="flex items-center p-3 rounded-lg shadow-neu text-gray-700 hover:bg-gray-300 hover:shadow-inner transition">
+                  <FaUserShield className="mr-2" />
+                  Roles
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
       </div>

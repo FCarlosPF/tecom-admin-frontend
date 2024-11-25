@@ -1,9 +1,9 @@
-import PanelDashboard from '@/components/panel-dashboard'
+import Inicio from '@/components/inicio'
 import React from 'react'
 
 const Panel = () => {
   return (
-    <PanelDashboard/>
+    <Inicio/>
   )
 }
 

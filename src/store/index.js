@@ -16,8 +16,10 @@ const useStore = create((set) => ({
     rol: null,
   },
   empleados: [],
+  tareas: [],
   setUsuarioLogeado: (usuario) => set({ usuarioLogeado: usuario }),
   setEmpleados: (empleados) => set({ empleados }),
+  setTareas: (tareas) => set({ tareas }),
 }));
 
 export default useStore;

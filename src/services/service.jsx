@@ -66,3 +66,301 @@ export const getAllEmployees = async () => {
     throw error;
   }
 };
+
+
+export const getAllTasks = async () => {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/api/tareas/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener los empleados");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de obtener empleados:", error);
+    throw error;
+  }
+};
+
+export const getTasKToEmployee = async (employeeId) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/tareas/empleado/${employeeId}/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener las tareas del empleado");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de obtener tareas del empleado:", error);
+    throw error;
+  }
+};
+
+export const getAreas = async () => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/areas/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener las tareas del empleado");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de obtener tareas del empleado:", error);
+    throw error;
+  }
+};
+
+export const getOneArea = async (areaId) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/area/${areaId}/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener las tareas del empleado");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de obtener tareas del empleado:", error);
+    throw error;
+  }
+};
+
+export const getOneEmpleado = async (empleadoId) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/empleados/${empleadoId}/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener las tareas del empleado");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de obtener tareas del empleado:", error);
+    throw error;
+  }
+};
+
+export const addEmpleado = async (role) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/empleados/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(role),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al agregar el rol");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de agregar rol:", error);
+    throw error;
+  }
+};
+
+export const updateEmpleado = async (id, updatedArea) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/empleados/${id}/`, {
+      method: "PUT", // O "PATCH" si solo quieres actualizar algunos campos
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedArea),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar el área");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de actualizar área:", error);
+    throw error;
+  }
+};
+
+export const deleteEmpleado = async (id) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/empleados/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el rol");
+    }
+
+    return;
+  } catch (error) {
+    console.error("Error en el servicio de eliminar rol:", error);
+    throw error;
+  }
+};
+
+export const getRoles = async () => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/roles/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener los roles");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de obtener roles:", error);
+    throw error;
+  }
+};
+
+
+export const addRole = async (role) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/roles/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(role),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al agregar el rol");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de agregar rol:", error);
+    throw error;
+  }
+};
+
+export const addArea = async (area) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/areas/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(area),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al agregar el area");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de agregar area:", error);
+    throw error;
+  }
+};
+
+export const deleteRole = async (id) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/roles/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el rol");
+    }
+
+    return;
+  } catch (error) {
+    console.error("Error en el servicio de eliminar rol:", error);
+    throw error;
+  }
+};
+
+export const deleteArea = async (id) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/areas/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el área");
+    }
+
+    return;
+  } catch (error) {
+    console.error("Error en el servicio de eliminar área:", error);
+    throw error;
+  }
+};
+
+export const updateArea = async (id, updatedArea) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/areas/${id}/`, {
+      method: "PUT", // O "PATCH" si solo quieres actualizar algunos campos
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedArea),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar el área");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de actualizar área:", error);
+    throw error;
+  }
+};

@@ -10,6 +10,10 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: "#f5f5f5",
+      },
+      boxShadow: {
+        neu: '8px 8px 16px #bebebe, -8px -8px 16px #ffffff',
       },
     },
   },

@@ -4,15 +4,9 @@ import React, { useEffect } from "react";
 import useStore from "@/store/index";
 
 const PerfilView = () => {
-  const { usuarioLogeado, setUsuarioLogeado } = useStore();
+  const { usuarioLogeado } = useStore();
 
-  useEffect(() => {
-    // Cargar los datos del usuario desde localStorage si existen
-    const storedUser = localStorage.getItem("usuarioLogeado");
-    if (storedUser) {
-      setUsuarioLogeado(JSON.parse(storedUser));
-    }
-  }, [setUsuarioLogeado]);
+
 
   const getInitials = (nombre, apellidos) => {
     const nombreInicial = nombre ? nombre.charAt(0).toUpperCase() : "";

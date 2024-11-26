@@ -173,14 +173,14 @@ export const getOneEmpleado = async (empleadoId) => {
   }
 };
 
-export const addEmpleado = async (role) => {
+export const addEmpleado = async (empleado) => {
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/empleados/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(role),
+      body: JSON.stringify(empleado),
     });
 
     if (!response.ok) {
@@ -191,6 +191,29 @@ export const addEmpleado = async (role) => {
     return data;
   } catch (error) {
     console.error("Error en el servicio de agregar rol:", error);
+    throw error;
+  }
+};
+
+export const addTask = async (task) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/tareas/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task),
+    });
+
+    if (!response.ok) {
+      const errorDetails = await response.json();
+      throw new Error(`Error al agregar la tarea: ${errorDetails.message}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de agregar la tarea:", error);
     throw error;
   }
 };

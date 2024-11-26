@@ -15,6 +15,7 @@ const Layout = ({ children }) => {
     return null;
   }
 
+  
 
   return (
     <ProtectedRoute>

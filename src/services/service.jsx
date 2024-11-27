@@ -218,6 +218,29 @@ export const addTask = async (task) => {
   }
 };
 
+export const addAsignacionTarea = async (task) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/asignacionestareas/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task),
+    });
+
+    if (!response.ok) {
+      const errorDetails = await response.json();
+      throw new Error(`Error al agregar la tarea: ${errorDetails.message}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de agregar la tarea:", error);
+    throw error;
+  }
+};
+
 export const updateEmpleado = async (id, updatedArea) => {
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/empleados/${id}/`, {
@@ -236,6 +259,26 @@ export const updateEmpleado = async (id, updatedArea) => {
     return data;
   } catch (error) {
     console.error("Error en el servicio de actualizar área:", error);
+    throw error;
+  }
+};
+
+export const deleteTarea= async (id) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/tareas/${id}/`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el rol");
+    }
+
+    return;
+  } catch (error) {
+    console.error("Error en el servicio de eliminar rol:", error);
     throw error;
   }
 };
@@ -374,6 +417,50 @@ export const updateArea = async (id, updatedArea) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(updatedArea),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar el área");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de actualizar área:", error);
+    throw error;
+  }
+};
+
+export const updateTareas = async (id, updateTareas) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/tareas/${id}/`, {
+      method: "PATCH", // O "PATCH" si solo quieres actualizar algunos campos
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updateTareas),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar el área");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de actualizar área:", error);
+    throw error;
+  }
+};
+
+export const updateAsignacionesTareas = async (id, updateTareas) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/asignacionestareas/${id}/`, {
+      method: "PATCH", // O "PATCH" si solo quieres actualizar algunos campos
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updateTareas),
     });
 
     if (!response.ok) {

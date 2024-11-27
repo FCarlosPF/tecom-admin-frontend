@@ -1,4 +1,4 @@
-import TareasView from '@/components/tareas'
+import TareasView from '@/components/historial-tareas/tareas'
 import React from 'react'
 
 const Tareas = () => {

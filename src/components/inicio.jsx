@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { FaCheck, FaTrash } from "react-icons/fa";
 import useStore from "@/store";
-import { getAllEmployees, getAllTasks, getTasKToEmployee, updateAsignacionesTareas, updateTareas } from "@/services/service";
+import { getAllEmployees, getAllTasks, getAsignacionesTareas, getTasKToEmployee, updateAsignacionesTareas, updateTareas } from "@/services/service";
 
 const TareasView = () => {
-  const { tareas, setTareas, usuarioLogeado, empleados, setEmpleados } = useStore();
+  const { tareas, setTareas, usuarioLogeado, setEmpleados, setAsignacionesTareas } = useStore();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,7 +23,20 @@ const TareasView = () => {
         console.error("Error al obtener los usuarios:", error);
       }
     };
-
+    const fetchAsignacionesTareas = async () => {
+      try {
+        const data = await getAsignacionesTareas();
+        if (Array.isArray(data)) {
+          setAsignacionesTareas(data);
+        } else {
+          console.error("La respuesta de la API no es un array:", data);
+        }
+        console.log("AsignacionesTareas:", data);
+      } catch (error) {
+        console.error("Error al obtener los usuarios:", error);
+      }
+    };    
+    fetchAsignacionesTareas();
     fetchUsuarios();
   }, [setEmpleados]);
 

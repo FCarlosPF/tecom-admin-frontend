@@ -453,6 +453,27 @@ export const updateTareas = async (id, updateTareas) => {
   }
 };
 
+export const getAsignacionesTareas = async () => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/asignacionestareas/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener los roles");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de obtener roles:", error);
+    throw error;
+  }
+};
+
 export const updateAsignacionesTareas = async (id, updateTareas) => {
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/asignacionestareas/${id}/`, {

@@ -9,6 +9,8 @@ import {
   getTasKToEmployee,
   deleteTarea,
   addAsignacionTarea,
+  getAsignacionesTareas,
+  getAllEmployees,
 } from "@/services/service";
 import Modal from "./utils/modal";
 import TaskTable from "./utils/tarea-table";
@@ -16,7 +18,7 @@ import Pagination from "./utils/paginations";
 import AssignTask from "./utils/asignar-tarea";
 import { toast } from "react-toastify";
 const TareasView = () => {
-  const { tareas, setTareas, usuarioLogeado, setUsuarioLogeado, empleados } =
+  const { tareas, setTareas, usuarioLogeado, setUsuarioLogeado, empleados,setEmpleados } =
     useStore();
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -30,6 +32,7 @@ const TareasView = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const [asignacionestareas, setAsignacionesTareas] = useState([]);
 
   const fetchTareas = async () => {
     if (!usuarioLogeado) {
@@ -66,7 +69,12 @@ const TareasView = () => {
         );
         data = await getTasKToEmployee(usuarioLogeado.id_empleado);
       }
-      console.log("Datos obtenidos:", data);
+      const dataAsignacionesTareas = await getAsignacionesTareas()
+      setAsignacionesTareas(dataAsignacionesTareas)
+      console.log("Datos obtenidos de asignaciones:", dataAsignacionesTareas);
+      const dataEmpelados = await getAllEmployees();
+      setEmpleados(dataEmpelados);
+
       setTareas(data || []);
     } catch (error) {
       console.error("Error al obtener las tareas:", error.message, error.stack);
@@ -194,6 +202,7 @@ const TareasView = () => {
                 usuarios={empleados}
                 usuarioLogeado={usuarioLogeado}
                 handleAssignTask={handleAssignTask}
+                asignacionesTareas={asignacionestareas}
               />
             )}
         </div>

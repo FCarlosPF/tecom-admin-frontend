@@ -13,13 +13,15 @@ const useStore = create((set) => ({
     nombre_usuario: '',
     fecha_contratacion: '',
     area: null,
-    rol: null,
+    rol: null
   },
   empleados: [],
   tareas: [],
+  asignacionesTareas: [],
   setUsuarioLogeado: (usuario) => set({ usuarioLogeado: usuario }),
   setEmpleados: (empleados) => set({ empleados }),
   setTareas: (tareas) => set({ tareas }),
+  setAsignacionesTareas: (asignacionesTareas) => set({ asignacionesTareas })
 }));
 
 export default useStore;

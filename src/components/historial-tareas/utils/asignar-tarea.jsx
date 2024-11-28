@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 
-const AssignTask = ({ tareas, usuarios, usuarioLogeado, handleAssignTask }) => {
+const AssignTask = ({
+  tareas,
+  usuarios,
+  usuarioLogeado,
+  handleAssignTask,
+  asignacionesTareas,
+}) => {
   const [selectedTask, setSelectedTask] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     console.log("Tareas:", tareas);
@@ -11,15 +18,33 @@ const AssignTask = ({ tareas, usuarios, usuarioLogeado, handleAssignTask }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const asignador = usuarioLogeado.id_empleado; // Asignador es el id del usuario logeado
+
+    // Verificar si asignacionesTareas está definido
+    if (asignacionesTareas && Array.isArray(asignacionesTareas)) {
+
+
+      const tareaAsignada = asignacionesTareas.some(
+        (asignacion) =>
+          asignacion.tarea.tarea_id === parseInt(selectedTask) &&
+          asignacion.empleado.id_empleado === parseInt(selectedUser)
+      );
+
+      if (tareaAsignada) {
+        setError("Esta tarea ya ha sido asignada a este empleado.");
+        return;
+      }
+    }
+
     const data = {
       tarea: selectedTask,
-      empleado_id: selectedUser,
-      asignador_id: asignador,
+      empleado: selectedUser,
+      asignador: asignador,
     };
     console.log("Datos enviados:", data);
     handleAssignTask(data);
     setSelectedTask("");
     setSelectedUser("");
+    setError("");
   };
 
   return (
@@ -28,6 +53,7 @@ const AssignTask = ({ tareas, usuarios, usuarioLogeado, handleAssignTask }) => {
         Asignar Tarea
       </h3>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {error && <p className="text-red-500">{error}</p>}
         <select
           value={selectedTask}
           onChange={(e) => setSelectedTask(e.target.value)}

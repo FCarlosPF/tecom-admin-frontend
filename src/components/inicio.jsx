@@ -170,10 +170,10 @@ const TareasView = () => {
       <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
         Panel de Tareas
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {estados.map((estado) => (
-          <div key={estado} className="bg-gray-100 p-4 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">{estado}</h2>
+          <div key={estado} className="bg-gray-100 p-2 rounded-lg shadow-md">
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">{estado}</h2>
             {tareasPorEstado[estado] && tareasPorEstado[estado].length > 0 ? (
               tareasPorEstado[estado].map((tarea) => {
                 let asignadorNombres, empleadoNombres;
@@ -194,31 +194,31 @@ const TareasView = () => {
                     key={
                       usuarioLogeado && usuarioLogeado.rol === 1 ? tarea.tarea_id : tarea.tarea?.tarea_id
                     }
-                    className="bg-white shadow-lg rounded-lg overflow-hidden mb-4"
+                    className="bg-white shadow-lg rounded-lg overflow-hidden mb-2"
                   >
-                    <div className="p-5">
-                      <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                    <div className="p-3">
+                      <h2 className="text-lg font-semibold text-gray-800 mb-1">
                         {usuarioLogeado && usuarioLogeado.rol === 1 ? tarea.titulo : tarea.tarea?.titulo}
                       </h2>
-                      <p className="text-gray-600 mb-4">
+                      <p className="text-gray-600 mb-2 text-sm">
                         {usuarioLogeado && usuarioLogeado.rol === 1
                           ? tarea.descripcion
                           : tarea.tarea?.descripcion}
                       </p>
-                      <p className="text-gray-600 mb-4">
+                      <p className="text-gray-600 mb-2 text-sm">
                         Asignador: {asignadorNombres}
                       </p>
-                      <p className="text-gray-600 mb-4">
+                      <p className="text-gray-600 mb-2 text-sm">
                         Empleado: {empleadoNombres}
                       </p>
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="inline-block px-3 py-1 text-sm font-medium text-white bg-indigo-500 rounded-md">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="inline-block px-2 py-1 text-xs font-medium text-white bg-indigo-500 rounded-md">
                           {usuarioLogeado && usuarioLogeado.rol === 1
                             ? tarea.prioridad
                             : tarea.tarea?.prioridad}
                         </span>
                         <span
-                          className={`text-sm font-medium ${
+                          className={`text-xs font-medium ${
                             (usuarioLogeado && usuarioLogeado.rol === 1
                               ? tarea.dias_restantes
                               : tarea.tarea?.dias_restantes) === 0
@@ -235,9 +235,9 @@ const TareasView = () => {
                             : `Días restantes: ${tarea.tarea?.dias_restantes}`}
                         </span>
                       </div>
-                      <div className="flex gap-4">
+                      <div className="flex gap-2">
                         <button
-                          className="flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full shadow-md hover:bg-green-600 transition-colors duration-300"
+                          className="flex items-center justify-center w-8 h-8 bg-green-500 text-white rounded-full shadow-md hover:bg-green-600 transition-colors duration-300"
                           onClick={() =>
                             completarTarea(
                               usuarioLogeado && usuarioLogeado.rol === 1
@@ -254,7 +254,7 @@ const TareasView = () => {
                 );
               })
             ) : (
-              <p className="text-gray-500">No hay tareas en este estado.</p>
+              <p className="text-gray-500 text-sm">No hay tareas en este estado.</p>
             )}
           </div>
         ))}

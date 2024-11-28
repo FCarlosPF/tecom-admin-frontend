@@ -6,7 +6,7 @@ import useStore from "@/store";
 import { getAllEmployees, getAllTasks, getAsignacionesTareas, getTasKToEmployee, updateAsignacionesTareas, updateTareas } from "@/services/service";
 
 const TareasView = () => {
-  const { tareas, setTareas, usuarioLogeado, setEmpleados, setAsignacionesTareas } = useStore();
+  const { tareas, setTareas, usuarioLogeado, setEmpleados, setAsignacionesTareas, asignacionesTareas } = useStore();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,6 +23,7 @@ const TareasView = () => {
         console.error("Error al obtener los usuarios:", error);
       }
     };
+
     const fetchAsignacionesTareas = async () => {
       try {
         const data = await getAsignacionesTareas();
@@ -33,12 +34,13 @@ const TareasView = () => {
         }
         console.log("AsignacionesTareas:", data);
       } catch (error) {
-        console.error("Error al obtener los usuarios:", error);
+        console.error("Error al obtener las asignaciones de tareas:", error);
       }
-    };    
-    fetchAsignacionesTareas();
+    };
+
     fetchUsuarios();
-  }, [setEmpleados]);
+    fetchAsignacionesTareas();
+  }, [setEmpleados, setAsignacionesTareas]);
 
   const fetchTareas = async () => {
     if (!usuarioLogeado) {
@@ -151,87 +153,112 @@ const TareasView = () => {
     );
   }
 
-  // Filtrar tareas activas
-  const tareasActivas = Array.isArray(tareas)
-    ? tareas.filter((tarea) => {
-        const estado =
-          usuarioLogeado && usuarioLogeado.rol === 1
-            ? tarea.estado
-            : tarea.tarea?.estado;
-        return estado !== "Completada";
-      })
-    : [];
+  // Agrupar tareas por estado
+  const tareasPorEstado = tareas.reduce((acc, tarea) => {
+    const estado = usuarioLogeado.rol === 1 ? tarea.estado : tarea.tarea?.estado;
+    if (!acc[estado]) {
+      acc[estado] = [];
+    }
+    acc[estado].push(tarea);
+    return acc;
+  }, {});
+
+  const estados = ["Pendiente", "En Progreso", "Completada"];
 
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
         Panel de Tareas
       </h1>
-      {tareasActivas.length === 0 ? (
-        <div className="text-center py-10 text-gray-500">
-          <p className="text-xl">¡No tienes tareas pendientes!</p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tareasActivas.map((tarea) => (
-            <div
-              key={
-                usuarioLogeado && usuarioLogeado.rol === 1 ? tarea.tarea_id : tarea.tarea?.tarea_id
-              }
-              className="bg-white shadow-lg rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
-            >
-              <div className="p-5">
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                  { usuarioLogeado && usuarioLogeado.rol === 1 ? tarea.titulo : tarea.tarea?.titulo}
-                </h2>
-                <p className="text-gray-600 mb-4">
-                  { usuarioLogeado && usuarioLogeado.rol === 1
-                    ? tarea.descripcion
-                    : tarea.tarea?.descripcion}
-                </p>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="inline-block px-3 py-1 text-sm font-medium text-white bg-indigo-500 rounded-md">
-                    {usuarioLogeado && usuarioLogeado.rol === 1
-                      ? tarea.prioridad
-                      : tarea.tarea?.prioridad}
-                  </span>
-                  <span
-                    className={`text-sm font-medium ${
-                      (usuarioLogeado && usuarioLogeado.rol === 1
-                        ? tarea.dias_restantes
-                        : tarea.tarea?.dias_restantes) === 0
-                        ? "text-red-500"
-                        : "text-green-500"
-                    }`}
-                  >
-                    {usuarioLogeado && usuarioLogeado.rol === 1
-                      ? tarea.dias_restantes === 0
-                        ? "Vencido"
-                        : `Días restantes: ${tarea.dias_restantes}`
-                      : tarea.tarea?.dias_restantes === 0
-                      ? "Vencido"
-                      : `Días restantes: ${tarea.tarea?.dias_restantes}`}
-                  </span>
-                </div>
-                <div className="flex gap-4">
-                  <button
-                    className="flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full shadow-md hover:bg-green-600 transition-colors duration-300"
-                    onClick={() =>
-                      completarTarea(
-                        usuarioLogeado &&usuarioLogeado.rol === 1
-                          ? tarea.tarea_id
-                          : tarea.asignacion_id
-                      )
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {estados.map((estado) => (
+          <div key={estado} className="bg-gray-100 p-4 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">{estado}</h2>
+            {tareasPorEstado[estado] && tareasPorEstado[estado].length > 0 ? (
+              tareasPorEstado[estado].map((tarea) => {
+                let asignadorNombres, empleadoNombres;
+
+                if (usuarioLogeado.rol === 1) {
+                  const asignaciones = asignacionesTareas.filter(
+                    (asignacion) => asignacion.tarea.tarea_id === tarea.tarea_id
+                  );
+                  asignadorNombres = [...new Set(asignaciones.map(asignacion => asignacion.asignador.nombre))].join(", ");
+                  empleadoNombres = asignaciones.map(asignacion => asignacion.empleado.nombre).join(", ");
+                } else {
+                  asignadorNombres = tarea.asignador.nombre;
+                  empleadoNombres = tarea.empleado.nombre;
+                }
+
+                return (
+                  <div
+                    key={
+                      usuarioLogeado && usuarioLogeado.rol === 1 ? tarea.tarea_id : tarea.tarea?.tarea_id
                     }
+                    className="bg-white shadow-lg rounded-lg overflow-hidden mb-4"
                   >
-                    <FaCheck />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+                    <div className="p-5">
+                      <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                        {usuarioLogeado && usuarioLogeado.rol === 1 ? tarea.titulo : tarea.tarea?.titulo}
+                      </h2>
+                      <p className="text-gray-600 mb-4">
+                        {usuarioLogeado && usuarioLogeado.rol === 1
+                          ? tarea.descripcion
+                          : tarea.tarea?.descripcion}
+                      </p>
+                      <p className="text-gray-600 mb-4">
+                        Asignador: {asignadorNombres}
+                      </p>
+                      <p className="text-gray-600 mb-4">
+                        Empleado: {empleadoNombres}
+                      </p>
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="inline-block px-3 py-1 text-sm font-medium text-white bg-indigo-500 rounded-md">
+                          {usuarioLogeado && usuarioLogeado.rol === 1
+                            ? tarea.prioridad
+                            : tarea.tarea?.prioridad}
+                        </span>
+                        <span
+                          className={`text-sm font-medium ${
+                            (usuarioLogeado && usuarioLogeado.rol === 1
+                              ? tarea.dias_restantes
+                              : tarea.tarea?.dias_restantes) === 0
+                              ? "text-red-500"
+                              : "text-green-500"
+                          }`}
+                        >
+                          {usuarioLogeado && usuarioLogeado.rol === 1
+                            ? tarea.dias_restantes === 0
+                              ? "Vencido"
+                              : `Días restantes: ${tarea.dias_restantes}`
+                            : tarea.tarea?.dias_restantes === 0
+                            ? "Vencido"
+                            : `Días restantes: ${tarea.tarea?.dias_restantes}`}
+                        </span>
+                      </div>
+                      <div className="flex gap-4">
+                        <button
+                          className="flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full shadow-md hover:bg-green-600 transition-colors duration-300"
+                          onClick={() =>
+                            completarTarea(
+                              usuarioLogeado && usuarioLogeado.rol === 1
+                                ? tarea.tarea_id
+                                : tarea.asignacion_id
+                            )
+                          }
+                        >
+                          <FaCheck />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <p className="text-gray-500">No hay tareas en este estado.</p>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

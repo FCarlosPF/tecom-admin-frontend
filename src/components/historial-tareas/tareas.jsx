@@ -17,6 +17,8 @@ import TaskTable from "./utils/tarea-table";
 import Pagination from "./utils/paginations";
 import AssignTask from "./utils/asignar-tarea";
 import { toast } from "react-toastify";
+import { formatISO } from 'date-fns';
+
 const TareasView = () => {
   const { tareas, setTareas, usuarioLogeado, setUsuarioLogeado, empleados,setEmpleados } =
     useStore();
@@ -25,7 +27,7 @@ const TareasView = () => {
   const [newTask, setNewTask] = useState({
     titulo: "",
     descripcion: "",
-    fecha_inicio: new Date().toISOString().split("T")[0],
+    fecha_inicio: formatISO(new Date()),
     fecha_estimada_fin: "",
     prioridad: "",
     estado: "Pendiente",
@@ -100,14 +102,6 @@ const TareasView = () => {
     }
   }, [usuarioLogeado, setTareas, setLoading]);
 
-  const completarTarea = (id) => {
-    setTareas((prev) =>
-      prev.map((tarea) =>
-        tarea.id === id ? { ...tarea, estado: "Completada" } : tarea
-      )
-    );
-  };
-
   const eliminarTarea = async (id) => {
     try {
       await deleteTarea(id);
@@ -131,8 +125,8 @@ const TareasView = () => {
       setNewTask({
         titulo: "",
         descripcion: "",
-        fecha_inicio: new Date().toISOString().split("T")[0],
-        fecha_estimada_fin: "",
+        fecha_inicio: formatISO(new Date()), // Incluye fecha y hora exacta
+        Fecha_estimada_fin: "",
         prioridad: "",
         estado: "Pendiente",
       });

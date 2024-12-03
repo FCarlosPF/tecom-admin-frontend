@@ -2,6 +2,7 @@ import React from "react";
 import { FaTrash } from "react-icons/fa";
 import RenderPrioridad from "./render-prioridad";
 import RenderEstado from "./render-estado";
+import { format } from "date-fns";
 
 const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea }) => {
   const headers = [
@@ -67,18 +68,34 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea }) => {
               </td>
               <td className="px-4 py-3 text-sm text-gray-700">
                 {usuarioLogeado.rol === 1
-                  ? tarea.fecha_inicio
-                  : tarea.tarea.fecha_inicio}
+                  ? format(new Date(tarea.fecha_inicio), "dd/MM/yyyy HH:mm")
+                  : format(
+                      new Date(tarea.tarea.fecha_inicio),
+                      "dd/MM/yyyy HH:mm"
+                    )}
               </td>
               <td className="px-4 py-3 text-sm text-gray-700">
                 {usuarioLogeado.rol === 1
-                  ? tarea.fecha_estimada_fin
-                  : tarea.tarea.fecha_estimada_fin}
+                  ? format(
+                      new Date(tarea.fecha_estimada_fin),
+                      "dd/MM/yyyy HH:mm"
+                    )
+                  : format(
+                      new Date(tarea.tarea.fecha_estimada_fin),
+                      "dd/MM/yyyy HH:mm"
+                    )}
               </td>
               <td className="px-4 py-3 text-sm text-gray-700">
                 {usuarioLogeado.rol === 1
                   ? tarea.fecha_real_fin
-                  : tarea.tarea.fecha_real_fin}
+                    ? format(new Date(tarea.fecha_real_fin), "dd/MM/yyyy HH:mm")
+                    : ""
+                  : tarea.tarea.fecha_real_fin
+                  ? format(
+                      new Date(tarea.tarea.fecha_real_fin),
+                      "dd/MM/yyyy HH:mm"
+                    )
+                  : ""}
               </td>
               {usuarioLogeado.rol === 1 && (
                 <td className="px-4 py-3 text-sm text-gray-700">

@@ -85,6 +85,12 @@ const Navbar = () => {
                 Desempeño
               </Link>
             </li>
+            <li>
+              <Link href="/panel/asistencias" className="flex items-center p-3 rounded-lg shadow-neu text-gray-700 hover:bg-gray-300 hover:shadow-inner transition">
+                <FaChartBar className="mr-2" />
+                Asistencias
+              </Link>
+            </li>
             {usuarioLogeado && usuarioLogeado.rol === 1 && (
               <li>
                 <Link href="/panel/roles" className="flex items-center p-3 rounded-lg shadow-neu text-gray-700 hover:bg-gray-300 hover:shadow-inner transition">

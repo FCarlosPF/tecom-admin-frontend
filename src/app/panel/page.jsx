@@ -1,4 +1,4 @@
-import Inicio from '@/components/inicio'
+import Inicio from '@/components/inicio-tareas/inicio'
 import React from 'react'
 
 const Panel = () => {

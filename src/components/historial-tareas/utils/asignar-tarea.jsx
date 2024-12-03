@@ -25,8 +25,8 @@ const AssignTask = ({
 
       const tareaAsignada = asignacionesTareas.some(
         (asignacion) =>
-          asignacion.tarea.tarea_id === parseInt(selectedTask) &&
-          asignacion.empleado.id_empleado === parseInt(selectedUser)
+          asignacion.tarea?.tarea_id === parseInt(selectedTask) &&
+          asignacion.empleado?.id_empleado === parseInt(selectedUser)
       );
 
       if (tareaAsignada) {

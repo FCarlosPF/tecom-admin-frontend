@@ -1020,28 +1020,28 @@ export const updateOrdenCompra = async (id, ordenCompra) => {
   }
 };
 
-export const deleteOrdenCompra = async (id) => {
-  try {
-    const response = await fetch(
-      `http://127.0.0.1:8000/api/ordenescompra/${id}/`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+  export const deleteOrdenCompra = async (id) => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/ordenescompra/${id}/`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Error al eliminar la orden de compra");
       }
-    );
 
-    if (!response.ok) {
-      throw new Error("Error al eliminar la orden de compra");
+      return { message: "Orden de compra eliminada correctamente" };
+    } catch (error) {
+      console.error("Error en el servicio de eliminar orden de compra:", error);
+      throw error;
     }
-
-    return { message: "Orden de compra eliminada correctamente" };
-  } catch (error) {
-    console.error("Error en el servicio de eliminar orden de compra:", error);
-    throw error;
-  }
-};
+  };
 
 export const getMetricasPorEmpleado = async (id) => {
   try {

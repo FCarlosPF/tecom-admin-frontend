@@ -49,7 +49,7 @@ const Navbar = () => {
 
   return (
     <aside className="w-72 bg-primary shadow-neu p-4 fixed top-0 left-0 h-full flex flex-col justify-between">
-      <div>
+      <div className="overflow-y-auto">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-700">Admin Panel</h1>
         </div>

@@ -1,8 +1,10 @@
 import React from "react";
 import { format } from "date-fns";
+import useStore from "@/store";
 
 const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask }) => {
   if (!isOpen) return null;
+  const { tareas, usuarioLogeado } = useStore();
 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
@@ -63,6 +65,29 @@ const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask }) => {
             <option value="Media">Media</option>
             <option value="Baja">Baja</option>
           </select>
+          {usuarioLogeado.rol === 2 && (
+            <div className="mb-4">
+              <label className="block text-gray-700">Tarea Padre</label>
+              <select
+                className="w-full p-2 border rounded"
+                value={newTask.tarea_padre || ""}
+                onChange={(e) =>
+                  setNewTask({ ...newTask, tarea_padre: e.target.value })
+                }
+              >
+                <option value="">Seleccione una tarea padre</option>
+                {tareas.map((tarea) => (
+                  <option
+                    key={tarea.tarea.tarea_id}
+                    value={tarea.tarea.tarea_id}
+                  >
+                    {tarea.tarea.titulo}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <div className="flex gap-4 justify-end">
             <button
               className="px-4 py-2 bg-gray-200 rounded-md shadow hover:shadow-lg transition"

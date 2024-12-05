@@ -239,7 +239,7 @@ const TareasView = () => {
   const tareasPorEstado = (Array.isArray(tareas) ? tareas : []).reduce(
     (acc, tarea) => {
       const estado =
-        usuarioLogeado.rol === 1 ? tarea.estado : tarea.tarea?.estado;
+        usuarioLogeado && usuarioLogeado.rol === 1 ? tarea.estado : tarea.tarea?.estado;
       if (!acc[estado]) {
         acc[estado] = [];
       }

@@ -159,7 +159,7 @@ const DesempeñoView = () => {
   return (
     <div className="p-4 bg-primary min-h-screen">
       <h1 className="text-3xl font-bold text-gray-700 mb-6 text-center">
-        {`Evalución de Desempeño de ${usuarioLogeado.nombre}`}
+        { usuarioLogeado && `Evalución de Desempeño de ${usuarioLogeado.nombre}`}
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">

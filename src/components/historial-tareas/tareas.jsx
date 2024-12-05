@@ -20,8 +20,7 @@ import { toast } from "react-toastify";
 import { formatISO } from 'date-fns';
 
 const TareasView = () => {
-  const { tareas, setTareas, usuarioLogeado, setUsuarioLogeado, empleados,setEmpleados } =
-    useStore();
+  const { tareas, setTareas, usuarioLogeado, setUsuarioLogeado, empleados, setEmpleados } = useStore();
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({
@@ -31,6 +30,7 @@ const TareasView = () => {
     fecha_estimada_fin: "",
     prioridad: "",
     estado: "Pendiente",
+    tarea_padre: null,
   });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -126,9 +126,10 @@ const TareasView = () => {
         titulo: "",
         descripcion: "",
         fecha_inicio: formatISO(new Date()), // Incluye fecha y hora exacta
-        Fecha_estimada_fin: "",
+        fecha_estimada_fin: "",
         prioridad: "",
         estado: "Pendiente",
+        tarea_padre: null,
       });
       setModalOpen(false);
       fetchTareas();
@@ -168,7 +169,7 @@ const TareasView = () => {
             <h2 className="text-2xl font-semibold text-gray-800">
               Historial de Tareas
             </h2>
-            {usuarioLogeado.rol === 1 && (
+            {(usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
               <button
                 className="p-2 bg-white rounded-full shadow-neu flex items-center hover:shadow-neu-active transition"
                 onClick={() => setModalOpen(true)}
@@ -206,6 +207,7 @@ const TareasView = () => {
           newTask={newTask}
           setNewTask={setNewTask}
           handleAddTask={handleAddTask}
+          tareas={tareas} // Pasar las tareas para seleccionar tarea_padre
         />
       </div>
     </>

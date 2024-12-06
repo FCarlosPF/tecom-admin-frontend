@@ -90,23 +90,7 @@ const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask, tareas, us
             </select>
           </div>
         )}
-        {usuarioLogeado && usuarioLogeado.rol === 2 && (
-          <div className="mb-4">
-            <label className="block text-gray-700">Asignar a Usuarios</label>
-            <select
-              multiple
-              className="w-full p-2 border rounded"
-              value={selectedUsers}
-              onChange={handleUserSelection}
-            >
-              {Array.isArray(empleados) && empleados.map((usuario) => (
-                <option key={usuario.id_empleado} value={usuario.id_empleado}>
-                  {usuario.nombre}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+  
         <div className="flex gap-4 justify-end">
           <button
             className="px-4 py-2 bg-gray-200 rounded-md shadow-neu hover:shadow-neu-active transition"

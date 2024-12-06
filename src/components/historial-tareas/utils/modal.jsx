@@ -16,8 +16,8 @@ const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask, tareas, us
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-gray-200 p-6 rounded-lg shadow-neu w-96">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-start" onClick={onClose}>
+      <div className="bg-gray-200 p-6 rounded-l-lg shadow-2xl w-full md:w-1/3 lg:w-1/4 h-full overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <h2 className="text-2xl font-semibold mb-4">Agregar Tarea</h2>
         <div className="mb-4">
           <label className="block text-gray-700">Título</label>
@@ -90,7 +90,20 @@ const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask, tareas, us
             </select>
           </div>
         )}
-  
+        <div className="mb-4">
+          <label className="block text-gray-700">Asignar a Usuarios</label>
+          <select
+            multiple
+            className="w-full p-2 border rounded h-32"
+            onChange={handleUserSelection}
+          >
+            {Array.isArray(empleados) && empleados.map((empleado) => (
+              <option key={empleado.id_empleado} value={empleado.id_empleado}>
+                {empleado.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="flex gap-4 justify-end">
           <button
             className="px-4 py-2 bg-gray-200 rounded-md shadow-neu hover:shadow-neu-active transition"

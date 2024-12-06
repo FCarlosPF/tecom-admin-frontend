@@ -127,8 +127,14 @@ const TareasView = () => {
           const tarea = addedTask.tarea_id;
           const empleado = usuarioLogeado.id_empleado;
   
-          // Llamar a handleAssignTask sin retraso
-          await handleAssignTask({tarea, empleado});
+          // Asignar la tarea al usuario logeado
+          await handleAssignTask({ tarea, empleado, asignador: usuarioLogeado.id_empleado });
+        }
+  
+        if (selectedUsers.length > 0) {
+          for (const userId of selectedUsers) {
+            await handleAssignTask({ tarea: addedTask.tarea_id, empleado: userId, asignador: usuarioLogeado.id_empleado });
+          }
         }
       } else {
         console.error("La tarea añadida no contiene un id:", addedTask);

@@ -11,10 +11,6 @@ const AssignTask = ({
   const [selectedUser, setSelectedUser] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    console.log("Tareas:", tareas);
-  }, [tareas]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const asignador = usuarioLogeado.id_empleado; // Asignador es el id del usuario logeado

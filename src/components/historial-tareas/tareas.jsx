@@ -70,6 +70,7 @@ const TareasView = () => {
           `Usuario con rol ${usuarioLogeado.rol}, obteniendo tareas para el empleado ${usuarioLogeado.id_empleado}`
         );
         data = await getTasKToEmployee(usuarioLogeado.id_empleado);
+        console.log(data)
       }
       const dataAsignacionesTareas = await getAsignacionesTareas()
       setAsignacionesTareas(dataAsignacionesTareas)
@@ -117,11 +118,22 @@ const TareasView = () => {
       const taskToAdd = { ...newTask, estado: "Pendiente" };
       console.log("Enviando a la API:", taskToAdd);
       const addedTask = await addTask(taskToAdd);
-
-      if (addedTask) {
+      console.log("Tarea añadida:", addedTask);
+  
+      if (addedTask && addedTask.tarea_id) {
         setTareas((prev) => [...prev, addedTask]);
+  
+        if (usuarioLogeado && usuarioLogeado.rol === 2) {
+          const tarea = addedTask.tarea_id;
+          const empleado = usuarioLogeado.id_empleado;
+  
+          // Llamar a handleAssignTask sin retraso
+          await handleAssignTask({tarea, empleado});
+        }
+      } else {
+        console.error("La tarea añadida no contiene un id:", addedTask);
       }
-
+  
       setNewTask({
         titulo: "",
         descripcion: "",
@@ -140,6 +152,7 @@ const TareasView = () => {
 
   const handleAssignTask = async (taskId, userId, asignador) => {
     try {
+      console.log("Asignando tarea:", { taskId, userId, asignador });
       await addAsignacionTarea(taskId, userId, asignador);
       fetchTareas();
       toast.success("Tarea asignada correctamente");
@@ -169,7 +182,7 @@ const TareasView = () => {
             <h2 className="text-2xl font-semibold text-gray-800">
               Historial de Tareas
             </h2>
-            {(usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+            {usuarioLogeado && (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
               <button
                 className="p-2 bg-white rounded-full shadow-neu flex items-center hover:shadow-neu-active transition"
                 onClick={() => setModalOpen(true)}
@@ -190,16 +203,15 @@ const TareasView = () => {
               paginate={setCurrentPage}
             />
           </div>
-          {usuarioLogeado &&
-            (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
-              <AssignTask
-                tareas={tareas}
-                usuarios={empleados}
-                usuarioLogeado={usuarioLogeado}
-                handleAssignTask={handleAssignTask}
-                asignacionesTareas={asignacionestareas}
-              />
-            )}
+          {usuarioLogeado && (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+            <AssignTask
+              tareas={tareas}
+              usuarios={empleados}
+              usuarioLogeado={usuarioLogeado}
+              handleAssignTask={handleAssignTask}
+              asignacionesTareas={asignacionestareas}
+            />
+          )}
         </div>
         <Modal
           isOpen={modalOpen}
@@ -208,6 +220,7 @@ const TareasView = () => {
           setNewTask={setNewTask}
           handleAddTask={handleAddTask}
           tareas={tareas} // Pasar las tareas para seleccionar tarea_padre
+          usuarioLogeado={usuarioLogeado} // Pasar usuarioLogeado para verificar el rol
         />
       </div>
     </>

@@ -44,7 +44,7 @@ const AssignTask = ({
   };
 
   return (
-    <div className="bg-white shadow-neu p-6 rounded-lg mt-6">
+    <div className="bg-gray-200 shadow-neu p-6 rounded-lg mt-6">
       <h3 className="text-lg font-semibold text-gray-800 mb-4">
         Asignar Tarea
       </h3>
@@ -99,7 +99,7 @@ const AssignTask = ({
         </select>
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition"
+          className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow-neu hover:shadow-neu-active transition"
         >
           Asignar
         </button>

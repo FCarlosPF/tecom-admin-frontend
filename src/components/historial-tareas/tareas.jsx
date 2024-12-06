@@ -113,7 +113,7 @@ const TareasView = () => {
     }
   };
 
-  const handleAddTask = async () => {
+  const handleAddTask = async (selectedUsers) => {
     try {
       const taskToAdd = { ...newTask, estado: "Pendiente" };
       console.log("Enviando a la API:", taskToAdd);
@@ -184,14 +184,14 @@ const TareasView = () => {
             </h2>
             {usuarioLogeado && (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
               <button
-                className="p-2 bg-white rounded-full shadow-neu flex items-center hover:shadow-neu-active transition"
+                className="p-2 bg-gray-200 text-gray-700 rounded-full shadow-neu flex items-center hover:shadow-neu-active transition"
                 onClick={() => setModalOpen(true)}
               >
-                <FaPlus className="text-blue-500" />
+                <FaPlus />
               </button>
             )}
           </div>
-          <div className="bg-white shadow-neu p-6 rounded-lg">
+          <div className="bg-gray-200 shadow-neu p-6 rounded-lg">
             <TaskTable
               tareas={currentItems}
               usuarioLogeado={usuarioLogeado}
@@ -221,6 +221,7 @@ const TareasView = () => {
           handleAddTask={handleAddTask}
           tareas={tareas} // Pasar las tareas para seleccionar tarea_padre
           usuarioLogeado={usuarioLogeado} // Pasar usuarioLogeado para verificar el rol
+          empleados={empleados} // Pasar empleados para asignar tareas
         />
       </div>
     </>

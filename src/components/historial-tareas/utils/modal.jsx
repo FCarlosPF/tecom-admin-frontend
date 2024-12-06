@@ -1,18 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
 
-const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask, tareas, usuarioLogeado }) => {
+const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask, tareas, usuarioLogeado, empleados }) => {
+  const [selectedUsers, setSelectedUsers] = useState([]);
+
   if (!isOpen) return null;
+
+  const handleUserSelection = (e) => {
+    const value = Array.from(e.target.selectedOptions, option => option.value);
+    setSelectedUsers(value);
+  };
+
+  const handleAddTaskWithAssignment = () => {
+    handleAddTask(selectedUsers);
+  };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+      <div className="bg-gray-200 p-6 rounded-lg shadow-neu w-96">
         <h2 className="text-2xl font-semibold mb-4">Agregar Tarea</h2>
         <div className="mb-4">
           <label className="block text-gray-700">Título</label>
           <input
             type="text"
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded shadow-inner"
             value={newTask.titulo}
             onChange={(e) => setNewTask({ ...newTask, titulo: e.target.value })}
           />
@@ -79,16 +90,33 @@ const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask, tareas, us
             </select>
           </div>
         )}
+        {usuarioLogeado && usuarioLogeado.rol === 2 && (
+          <div className="mb-4">
+            <label className="block text-gray-700">Asignar a Usuarios</label>
+            <select
+              multiple
+              className="w-full p-2 border rounded"
+              value={selectedUsers}
+              onChange={handleUserSelection}
+            >
+              {Array.isArray(empleados) && empleados.map((usuario) => (
+                <option key={usuario.id_empleado} value={usuario.id_empleado}>
+                  {usuario.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         <div className="flex gap-4 justify-end">
           <button
-            className="px-4 py-2 bg-gray-200 rounded-md shadow hover:shadow-lg transition"
+            className="px-4 py-2 bg-gray-200 rounded-md shadow-neu hover:shadow-neu-active transition"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600 transition"
-            onClick={handleAddTask}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow-neu hover:shadow-neu-active transition"
+            onClick={handleAddTaskWithAssignment}
           >
             Agregar
           </button>

@@ -20,13 +20,13 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea }) => {
   }
 
   return (
-    <table className="w-full rounded-lg">
-      <thead className="bg-gray-200">
+    <table className="w-full rounded-lg shadow-neu">
+      <thead className="bg-gray-200 text-gray-700">
         <tr>
           {headers.map((header) => (
             <th
               key={header}
-              className="px-4 py-3 text-left text-sm font-medium text-gray-600"
+              className="px-4 py-3 text-left text-sm font-medium"
             >
               {header}
             </th>
@@ -40,7 +40,7 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea }) => {
               key={
                 usuarioLogeado.rol === 1 ? tarea.tarea_id : tarea.tarea.tarea_id
               }
-              className="hover:bg-gray-50 transition"
+              className="hover:bg-gray-100 transition"
             >
               <td className="px-4 py-3 text-sm text-gray-700">
                 {usuarioLogeado.rol === 1 ? tarea.titulo : tarea.tarea.titulo}

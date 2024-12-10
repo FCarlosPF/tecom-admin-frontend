@@ -201,13 +201,14 @@ export const addEmpleado = async (empleado) => {
     });
 
     if (!response.ok) {
-      throw new Error("Error al agregar el rol");
+      throw new Error("Error al agregar el empleado");
     }
 
+    console.log("Empleado añadido correctamente")
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error en el servicio de agregar rol:", error);
+    console.error("Error en el servicio de agregar el empleado:", error);
     throw error;
   }
 };
@@ -521,6 +522,29 @@ export const updateAsignacionesTareas = async (id, updateTareas) => {
   }
 };
 
+export const deleteAsignacionesTareas = async (id) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/asignacionestareas/${id}/`,
+      {
+        method: "DELETE", // O "PATCH" si solo quieres actualizar algunos campos
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar el proyecto");
+    }
+
+    return { message: "Proyecto eliminado correctamente" };
+  } catch (error) {
+    console.error("Error en el servicio de eliminar la asignacionTarea:", error);
+    throw error;
+  }
+};
+
 export const getProyectos = async () => {
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/proyectos/`, {
@@ -531,11 +555,10 @@ export const getProyectos = async () => {
     });
 
     if (!response.ok) {
-      throw new Error("Error al obtener los proyectos");
+      throw new Error("Error al eliminar el proyecto");
     }
 
-    const data = await response.json();
-    return data;
+    return { message: "Proyecto eliminado correctamente" };
   } catch (error) {
     console.error("Error en el servicio de obtener proyectos:", error);
     throw error;

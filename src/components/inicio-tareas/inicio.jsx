@@ -106,8 +106,10 @@ const TareasView = () => {
   };
 
   useEffect(() => {
-    fetchTareas();
-  }, [setTareas, usuarioLogeado]);
+    if (usuarioLogeado) {
+      fetchTareas();
+    }
+  }, [usuarioLogeado]);
 
   useEffect(() => {
     console.log("Tareas:", tareas);

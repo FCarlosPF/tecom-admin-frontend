@@ -1,14 +1,27 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
 
-const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask, tareas, usuarioLogeado, empleados }) => {
+const Modal = ({
+  isOpen,
+  onClose,
+  newTask,
+  setNewTask,
+  handleAddTask,
+  tareas,
+  usuarioLogeado,
+  empleados,
+}) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
 
   if (!isOpen) return null;
 
   const handleUserSelection = (e) => {
-    const value = Array.from(e.target.selectedOptions, option => option.value);
-    setSelectedUsers(value);
+    const value = parseInt(e.target.value, 10);
+    setSelectedUsers((prevSelectedUsers) =>
+      prevSelectedUsers.includes(value)
+        ? prevSelectedUsers.filter((user) => user !== value)
+        : [...prevSelectedUsers, value]
+    );
   };
 
   const handleAddTaskWithAssignment = () => {
@@ -16,8 +29,14 @@ const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask, tareas, us
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-start" onClick={onClose}>
-      <div className="bg-gray-200 p-6 rounded-l-lg shadow-2xl w-full md:w-1/3 lg:w-1/4 h-full overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-start"
+      onClick={onClose}
+    >
+      <div
+        className="bg-gray-200 p-6 rounded-l-lg shadow-2xl w-full md:w-1/3 lg:w-1/4 h-full overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="text-2xl font-semibold mb-4">Agregar Tarea</h2>
         <div className="mb-4">
           <label className="block text-gray-700">Título</label>
@@ -33,7 +52,9 @@ const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask, tareas, us
           <textarea
             className="w-full p-2 border rounded"
             value={newTask.descripcion}
-            onChange={(e) => setNewTask({ ...newTask, descripcion: e.target.value })}
+            onChange={(e) =>
+              setNewTask({ ...newTask, descripcion: e.target.value })
+            }
           />
         </div>
         <div className="mb-4">
@@ -42,7 +63,10 @@ const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask, tareas, us
             type="datetime-local"
             value={
               newTask.fecha_estimada_fin
-                ? format(new Date(newTask.fecha_estimada_fin), "yyyy-MM-dd'T'HH:mm")
+                ? format(
+                    new Date(newTask.fecha_estimada_fin),
+                    "yyyy-MM-dd'T'HH:mm"
+                  )
                 : ""
             }
             onChange={(e) =>
@@ -71,38 +95,57 @@ const Modal = ({ isOpen, onClose, newTask, setNewTask, handleAddTask, tareas, us
             <option value="Baja">Baja</option>
           </select>
         </div>
-        {usuarioLogeado && usuarioLogeado.rol === 2 && (
-          <div className="mb-4">
-            <label className="block text-gray-700">Tarea Padre</label>
-            <select
-              className="w-full p-2 border rounded"
-              value={newTask.tarea_padre || ""}
-              onChange={(e) =>
-                setNewTask({ ...newTask, tarea_padre: e.target.value })
-              }
-            >
-              <option value="">Seleccione una tarea padre</option>
-              {Array.isArray(tareas) && tareas.map((tarea) => (
-                <option key={tarea.tarea.tarea_id} value={tarea.tarea.tarea_id}>
-                  {tarea.tarea.titulo}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+        {usuarioLogeado &&
+          (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+            <div className="mb-4">
+              <label className="block text-gray-700">Tarea Padre</label>
+              <select
+                className="w-full p-2 border rounded"
+                value={newTask.tarea_padre || ""}
+                onChange={(e) =>
+                  setNewTask({ ...newTask, tarea_padre: e.target.value })
+                }
+              >
+                <option value="">Seleccione una tarea padre</option>
+                {Array.isArray(tareas) &&
+                  tareas.map((tarea) => (
+                    <option
+                      key={
+                        usuarioLogeado.rol === 2
+                          ? tarea.tarea.tarea_id
+                          : tarea.tarea_id
+                      }
+                      value={
+                        usuarioLogeado.rol === 2
+                          ? tarea.tarea.tarea_id
+                          : tarea.tarea_id
+                      }
+                    >
+                      {usuarioLogeado.rol === 2
+                        ? tarea.tarea.titulo
+                        : tarea.titulo}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          )}
         <div className="mb-4">
           <label className="block text-gray-700">Asignar a Usuarios</label>
-          <select
-            multiple
-            className="w-full p-2 border rounded h-32"
-            onChange={handleUserSelection}
-          >
-            {Array.isArray(empleados) && empleados.map((empleado) => (
-              <option key={empleado.id_empleado} value={empleado.id_empleado}>
-                {empleado.nombre}
-              </option>
-            ))}
-          </select>
+          <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">
+            {Array.isArray(empleados) &&
+              empleados.map((empleado) => (
+                <label key={empleado.id_empleado} className="flex items-center">
+                  <input
+                    type="checkbox"
+                    value={empleado.id_empleado}
+                    checked={selectedUsers.includes(empleado.id_empleado)}
+                    onChange={handleUserSelection}
+                    className="mr-2"
+                  />
+                  {empleado.nombre}
+                </label>
+              ))}
+          </div>
         </div>
         <div className="flex gap-4 justify-end">
           <button

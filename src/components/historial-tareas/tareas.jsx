@@ -11,18 +11,32 @@ import {
   addAsignacionTarea,
   getAsignacionesTareas,
   getAllEmployees,
+  updateTareas,
+  updateAsignacionesTareas,
+  deleteAsignacionesTareas,
 } from "@/services/service";
-import Modal from "./utils/modal";
+import Modal from "./utils/create-modal";
 import TaskTable from "./utils/tarea-table";
 import Pagination from "./utils/paginations";
 import AssignTask from "./utils/asignar-tarea";
 import { toast } from "react-toastify";
-import { formatISO } from 'date-fns';
+import { formatISO } from "date-fns";
+import EditModal from "./utils/edit-modal";
+import EditTaskModal from "./utils/edit-modal";
 
 const TareasView = () => {
-  const { tareas, setTareas, usuarioLogeado, setUsuarioLogeado, empleados, setEmpleados } = useStore();
+  const {
+    tareas,
+    setTareas,
+    usuarioLogeado,
+    setUsuarioLogeado,
+    empleados,
+    setEmpleados,
+  } = useStore();
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState(null);
   const [newTask, setNewTask] = useState({
     titulo: "",
     descripcion: "",
@@ -33,7 +47,7 @@ const TareasView = () => {
     tarea_padre: null,
   });
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const [asignacionestareas, setAsignacionesTareas] = useState([]);
 
   const fetchTareas = async () => {
@@ -70,10 +84,10 @@ const TareasView = () => {
           `Usuario con rol ${usuarioLogeado.rol}, obteniendo tareas para el empleado ${usuarioLogeado.id_empleado}`
         );
         data = await getTasKToEmployee(usuarioLogeado.id_empleado);
-        console.log(data)
+        console.log(data);
       }
-      const dataAsignacionesTareas = await getAsignacionesTareas()
-      setAsignacionesTareas(dataAsignacionesTareas)
+      const dataAsignacionesTareas = await getAsignacionesTareas();
+      setAsignacionesTareas(dataAsignacionesTareas);
       console.log("Datos obtenidos de asignaciones:", dataAsignacionesTareas);
       const dataEmpelados = await getAllEmployees();
       setEmpleados(dataEmpelados);
@@ -113,33 +127,46 @@ const TareasView = () => {
     }
   };
 
+  const editarTarea = (task) => {
+    setTaskToEdit(task);
+    setEditModalOpen(true);
+  };
+
   const handleAddTask = async (selectedUsers) => {
     try {
       const taskToAdd = { ...newTask, estado: "Pendiente" };
       console.log("Enviando a la API:", taskToAdd);
       const addedTask = await addTask(taskToAdd);
       console.log("Tarea añadida:", addedTask);
-  
+
       if (addedTask && addedTask.tarea_id) {
         setTareas((prev) => [...prev, addedTask]);
-  
+
         if (usuarioLogeado && usuarioLogeado.rol === 2) {
           const tarea = addedTask.tarea_id;
           const empleado = usuarioLogeado.id_empleado;
-  
+
           // Asignar la tarea al usuario logeado
-          await handleAssignTask({ tarea, empleado, asignador: usuarioLogeado.id_empleado });
+          await handleAssignTask({
+            tarea,
+            empleado,
+            asignador: usuarioLogeado.id_empleado,
+          });
         }
-  
+
         if (selectedUsers.length > 0) {
           for (const userId of selectedUsers) {
-            await handleAssignTask({ tarea: addedTask.tarea_id, empleado: userId, asignador: usuarioLogeado.id_empleado });
+            await handleAssignTask({
+              tarea: addedTask.tarea_id,
+              empleado: userId,
+              asignador: usuarioLogeado.id_empleado,
+            });
           }
         }
       } else {
         console.error("La tarea añadida no contiene un id:", addedTask);
       }
-  
+
       setNewTask({
         titulo: "",
         descripcion: "",
@@ -150,9 +177,66 @@ const TareasView = () => {
         tarea_padre: null,
       });
       setModalOpen(false);
-      fetchTareas();
     } catch (error) {
       console.error("Error al agregar la tarea:", error);
+    }
+  };
+
+  const handleEditTask = async (editedTask, selectedUsers) => {
+    try {
+      console.log("Editando tarea:", editedTask);
+      await updateTareas(editedTask.tarea_id, editedTask);
+      console.log("Tarea actualizada:", editedTask);
+
+      // Obtener las asignaciones actuales de la tarea
+      const currentAssignments = asignacionestareas
+        .filter(
+          (asignacion) => asignacion.tarea.tarea_id === editedTask.tarea_id
+        )
+        .map((asignacion) => ({
+          asignacion_id: asignacion.asignacion_id,
+          userId: asignacion.empleado.id_empleado,
+        }));
+
+      console.log("currentAssignments", currentAssignments);
+
+      // Asignar la tarea a los usuarios seleccionados
+      await Promise.all(
+        selectedUsers.map(async (userId) => {
+          if (
+            !currentAssignments.some(
+              (asignacion) => asignacion.userId === userId
+            )
+          ) {
+            await handleAssignTask({
+              tarea: editedTask.tarea_id,
+              empleado: userId,
+              asignador: usuarioLogeado.id_empleado,
+            });
+          }
+        })
+      );
+
+      // Eliminar asignaciones de los usuarios deseleccionados
+      await Promise.all(
+        currentAssignments.map(async ({ asignacion_id, userId }) => {
+          if (!selectedUsers.includes(userId)) {
+            await deleteAsignacionesTareas(asignacion_id);
+          }
+        })
+      );
+
+      setTareas((prev) =>
+        prev.map((tarea) =>
+          tarea.tarea_id === editedTask.tarea_id ? editedTask : tarea
+        )
+      );
+      fetchTareas();
+      toast.success("Tarea editada correctamente");
+      setEditModalOpen(false);
+    } catch (error) {
+      console.error("Error al editar la tarea:", error);
+      toast.error("Error al editar la tarea");
     }
   };
 
@@ -188,20 +272,22 @@ const TareasView = () => {
             <h2 className="text-2xl font-semibold text-gray-800">
               Historial de Tareas
             </h2>
-            {usuarioLogeado && (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
-              <button
-                className="p-2 bg-gray-200 text-gray-700 rounded-full shadow-neu flex items-center hover:shadow-neu-active transition"
-                onClick={() => setModalOpen(true)}
-              >
-                <FaPlus />
-              </button>
-            )}
+            {usuarioLogeado &&
+              (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+                <button
+                  className="p-2 bg-gray-200 text-gray-700 rounded-full shadow-neu flex items-center hover:shadow-neu-active transition"
+                  onClick={() => setModalOpen(true)}
+                >
+                  <FaPlus />
+                </button>
+              )}
           </div>
           <div className="bg-gray-200 shadow-neu p-6 rounded-lg">
             <TaskTable
               tareas={currentItems}
               usuarioLogeado={usuarioLogeado}
               eliminarTarea={eliminarTarea}
+              editarTarea={editarTarea} // Pasar la función editarTarea como prop
             />
             <Pagination
               currentPage={currentPage}
@@ -209,15 +295,6 @@ const TareasView = () => {
               paginate={setCurrentPage}
             />
           </div>
-          {usuarioLogeado && (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
-            <AssignTask
-              tareas={tareas}
-              usuarios={empleados}
-              usuarioLogeado={usuarioLogeado}
-              handleAssignTask={handleAssignTask}
-              asignacionesTareas={asignacionestareas}
-            />
-          )}
         </div>
         <Modal
           isOpen={modalOpen}
@@ -228,6 +305,16 @@ const TareasView = () => {
           tareas={tareas} // Pasar las tareas para seleccionar tarea_padre
           usuarioLogeado={usuarioLogeado} // Pasar usuarioLogeado para verificar el rol
           empleados={empleados} // Pasar empleados para asignar tareas
+        />
+        <EditTaskModal
+          isOpen={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          taskToEdit={taskToEdit}
+          handleEditTask={handleEditTask}
+          tareas={tareas}
+          usuarioLogeado={usuarioLogeado}
+          empleados={empleados}
+          asignacionesTareas={asignacionestareas} // Pasar asignacionesTareas para inicializar selectedUsers
         />
       </div>
     </>

@@ -15,7 +15,10 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea, editarTarea }) => {
     "Fecha Fin",
   ];
 
-  if (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) {
+  if (
+    usuarioLogeado &&
+    (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2)
+  ) {
     headers.push("Acciones");
   }
 
@@ -30,12 +33,12 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea, editarTarea }) => {
 
   return (
     <table className="w-full rounded-lg">
-      <thead className="bg-gray-200">
+      <thead className="bg-gray-800">
         <tr>
           {headers.map((header) => (
             <th
               key={header}
-              className="px-4 py-3 text-left text-sm font-medium text-gray-600"
+              className="px-4 py-3 text-left text-sm text-white font-bold"
             >
               {header}
             </th>
@@ -44,28 +47,36 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea, editarTarea }) => {
       </thead>
       <tbody>
         {tareas.map((task) => {
-          const tarea = usuarioLogeado.rol === 2 ? task.tarea : task;
+          const tarea = usuarioLogeado && usuarioLogeado.rol === 2 ? task.tarea : task;
           return (
-            <tr key={tarea.tarea_id} className="hover:bg-gray-50 transition">
-              <td className="px-4 py-3 text-sm text-gray-700">{tarea.titulo}</td>
-              <td className="px-4 py-3 text-sm text-gray-700">{tarea.descripcion}</td>
-              <td className="px-4 py-3 text-sm text-gray-700 flex justify-center">
+            <tr key={tarea.tarea_id} className="hover:bg-gray-700 transition">
+              <td className="px-4 py-3 text-sm text-gray-100">
+                {tarea.titulo}
+              </td>
+              <td className="px-4 py-3 text-sm text-gray-100">
+                {tarea.descripcion}
+              </td>
+              <td className="px-4 py-3 text-sm text-gray-100 flex justify-center">
                 <RenderPrioridad prioridad={tarea.prioridad} />
               </td>
-              <td className="px-4 py-3 text-sm">
+              <td className="px-4 py-3 text-sm text-gray-100">
                 <RenderEstado estado={tarea.estado} />
               </td>
-              <td className="px-4 py-3 text-sm text-gray-700">
-                {tarea.fecha_inicio ? formatDate(tarea.fecha_inicio) : "Fecha inválida"}
+              <td className="px-4 py-3 text-sm text-gray-100">
+                {tarea.fecha_inicio
+                  ? formatDate(tarea.fecha_inicio)
+                  : "Fecha inválida"}
               </td>
-              <td className="px-4 py-3 text-sm text-gray-700">
-                {tarea.fecha_estimada_fin ? formatDate(tarea.fecha_estimada_fin) : "Fecha inválida"}
+              <td className="px-4 py-3 text-sm text-gray-100">
+                {tarea.fecha_estimada_fin
+                  ? formatDate(tarea.fecha_estimada_fin)
+                  : "Fecha inválida"}
               </td>
-              <td className="px-4 py-3 text-sm text-gray-700">
+              <td className="px-4 py-3 text-sm text-gray-100">
                 {tarea.fecha_real_fin ? formatDate(tarea.fecha_real_fin) : ""}
               </td>
               {(usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
-                <td className="px-4 py-3 text-sm text-gray-700">
+                <td className="px-4 py-3 text-sm text-gray-100">
                   <div className="flex justify-center gap-2">
                     <button
                       className="text-blue-500 hover:text-blue-700 transition"

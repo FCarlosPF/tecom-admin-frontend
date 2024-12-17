@@ -1,4 +1,4 @@
-import UsuariosView from '@/components/Usuarios';
+import UsuariosView from '@/components/empleados/usuarios';
 import React from 'react'
 
 const Usuarios = () => {

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
+import useStore from "@/store";
 
 const Modal = ({
   isOpen,
@@ -12,6 +13,29 @@ const Modal = ({
   empleados,
 }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [parentTaskEndDate, setParentTaskEndDate] = useState("");
+
+  
+  useEffect(() => {
+    if (newTask.tarea_padre) {
+      const parentTask = tareas.find((tarea) => {
+        if (usuarioLogeado.rol === 1) {
+          return tarea.tarea_id === parseInt(newTask.tarea_padre, 10);
+        } else {
+          return tarea.tarea.tarea_id === parseInt(newTask.tarea_padre, 10);
+        }
+      });
+      if (parentTask) {
+        setParentTaskEndDate(
+          usuarioLogeado.rol === 1
+            ? parentTask.fecha_estimada_fin
+            : parentTask.tarea.fecha_estimada_fin
+        );
+      }
+    } else {
+      setParentTaskEndDate("");
+    }
+  }, [newTask.tarea_padre, tareas, usuarioLogeado.rol]);
 
   if (!isOpen) return null;
 
@@ -26,6 +50,11 @@ const Modal = ({
 
   const handleAddTaskWithAssignment = () => {
     handleAddTask(selectedUsers);
+  };
+
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    return format(now, "yyyy-MM-dd'T'HH:mm");
   };
 
   return (
@@ -67,6 +96,12 @@ const Modal = ({
                     new Date(newTask.fecha_estimada_fin),
                     "yyyy-MM-dd'T'HH:mm"
                   )
+                : ""
+            }
+            min={getCurrentDateTime()}
+            max={
+              parentTaskEndDate
+                ? format(new Date(parentTaskEndDate), "yyyy-MM-dd'T'HH:mm")
                 : ""
             }
             onChange={(e) =>
@@ -149,13 +184,13 @@ const Modal = ({
         </div>
         <div className="flex gap-4 justify-end">
           <button
-            className="px-4 py-2 bg-gray-200 rounded-md shadow-neu hover:shadow-neu-active transition"
+            className="px-4 py-2 bg-gray-200 rounded-md shadow-lg hover:shadow-xl transition"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow-neu hover:shadow-neu-active transition"
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow-lg hover:shadow-xl transition"
             onClick={handleAddTaskWithAssignment}
           >
             Agregar

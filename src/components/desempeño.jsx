@@ -157,88 +157,93 @@ const DesempeñoView = () => {
   };
 
   return (
-    <div className="p-4 bg-primary min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-700 mb-6 text-center">
-        { usuarioLogeado && `Evalución de Desempeño de ${usuarioLogeado.nombre}`}
-      </h1>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105">
-          <h2 className="text-lg font-bold text-gray-700 mb-4 text-center">
-            Tareas
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-gray-800">
+            {usuarioLogeado && `Evaluación de Desempeño de ${usuarioLogeado.nombre}`}
           </h2>
-          <div className="h-64">
-            <Bar data={barData} options={options} />
-          </div>
         </div>
+        <div className="bg-gray-900 p-6 rounded-lg">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105">
+              <h2 className="text-lg font-bold text-gray-700 mb-4 text-center">
+                Tareas
+              </h2>
+              <div className="h-64">
+                <Bar data={barData} options={options} />
+              </div>
+            </div>
 
-        <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105">
-          <h2 className="text-lg font-bold text-gray-700 mb-4 text-center">
-            Tareas Completadas por Día
-          </h2>
-          <div className="h-64">
-            <Line data={lineData} options={options} />
-          </div>
-        </div>
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105">
+              <h2 className="text-lg font-bold text-gray-700 mb-4 text-center">
+                Tareas Completadas por Día
+              </h2>
+              <div className="h-64">
+                <Line data={lineData} options={options} />
+              </div>
+            </div>
 
-        <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
-          <h2 className="text-lg font-bold text-gray-700 mb-4 text-center">
-            Tareas Completadas a Tiempo
-          </h2>
-          <div className="h-64 w-64">
-            <Pie data={pieData} options={options} />
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
+              <h2 className="text-lg font-bold text-gray-700 mb-4 text-center">
+                Tareas Completadas a Tiempo
+              </h2>
+              <div className="h-64 w-64">
+                <Pie data={pieData} options={options} />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
-          <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
-            Carga de Trabajo Actual
-          </h3>
-          <p className="text-2xl text-gray-800 text-center">
-            {evaluaciones.carga_trabajo_actual}
-          </p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
-          <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
-            Tareas Totales
-          </h3>
-          <p className="text-2xl text-gray-800 text-center">
-            {evaluaciones.tareas_totales}
-          </p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
-          <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
-            Porcentaje de Tareas Completadas a Tiempo
-          </h3>
-          <p className="text-2xl text-gray-800 text-center">
-            {evaluaciones.porcentaje_tareas_completadas_a_tiempo}%
-          </p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
-          <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
-            Promedio de Retraso en Horas
-          </h3>
-          <p className="text-2xl text-gray-800 text-center">
-            {evaluaciones.promedio_retraso_horas}
-          </p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
-          <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
-            Promedio de Duración de Tareas Completadas
-          </h3>
-          <p className="text-2xl text-gray-800 text-center">
-            {evaluaciones.promedio_duracion_tareas_completadas}
-          </p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
-          <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
-            Tareas Completadas en el Último Mes
-          </h3>
-          <p className="text-2xl text-gray-800 text-center">
-            {evaluaciones.tareas_completadas_ultimo_mes}
-          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
+              <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
+                Carga de Trabajo Actual
+              </h3>
+              <p className="text-2xl text-gray-800 text-center">
+                {evaluaciones.carga_trabajo_actual}
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
+              <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
+                Tareas Totales
+              </h3>
+              <p className="text-2xl text-gray-800 text-center">
+                {evaluaciones.tareas_totales}
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
+              <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
+                Porcentaje de Tareas Completadas a Tiempo
+              </h3>
+              <p className="text-2xl text-gray-800 text-center">
+                {evaluaciones.porcentaje_tareas_completadas_a_tiempo}%
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
+              <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
+                Promedio de Retraso en Horas
+              </h3>
+              <p className="text-2xl text-gray-800 text-center">
+                {evaluaciones.promedio_retraso_horas}
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
+              <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
+                Promedio de Duración de Tareas Completadas
+              </h3>
+              <p className="text-2xl text-gray-800 text-center">
+                {evaluaciones.promedio_duracion_tareas_completadas}
+              </p>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-lg transform transition duration-500 hover:scale-105 flex flex-col items-center justify-center">
+              <h3 className="text-md font-bold text-gray-700 mb-2 text-center">
+                Tareas Completadas en el Último Mes
+              </h3>
+              <p className="text-2xl text-gray-800 text-center">
+                {evaluaciones.tareas_completadas_ultimo_mes}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

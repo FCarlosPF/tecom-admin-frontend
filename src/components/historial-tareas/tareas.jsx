@@ -14,6 +14,7 @@ import {
   updateTareas,
   updateAsignacionesTareas,
   deleteAsignacionesTareas,
+  descargarReporteExcel,
 } from "@/services/service";
 import Modal from "./utils/create-modal";
 import TaskTable from "./utils/tarea-table";
@@ -32,6 +33,8 @@ const TareasView = () => {
     setUsuarioLogeado,
     empleados,
     setEmpleados,
+    asignacionesTareas,
+    setAsignacionesTareas,
   } = useStore();
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -48,80 +51,40 @@ const TareasView = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const [asignacionestareas, setAsignacionesTareas] = useState([]);
 
-  const fetchTareas = async () => {
-    if (!usuarioLogeado) {
-      console.error("usuarioLogeado no está definido");
-      setTareas([]);
-      setLoading(false);
-      return;
-    }
-
-    if (usuarioLogeado.id_empleado === null) {
-      console.log("id_empleado es null, no se ejecuta fetchTareas");
-      setLoading(false);
-      return;
-    }
-
+  const fetchData = async () => {
     try {
-      console.log(
-        "Estado de usuarioLogeado al iniciar fetchTareas:",
-        usuarioLogeado
-      );
-      let data;
-      if (usuarioLogeado.rol === 1) {
-        console.log("Usuario con rol 1, obteniendo todas las tareas");
-        data = await getAllTasks();
-      } else {
-        if (!usuarioLogeado.id_empleado) {
-          console.error("id_empleado no está definido en usuarioLogeado");
-          setTareas([]);
-          setLoading(false);
-          return;
-        }
-        console.log(
-          `Usuario con rol ${usuarioLogeado.rol}, obteniendo tareas para el empleado ${usuarioLogeado.id_empleado}`
-        );
-        data = await getTasKToEmployee(usuarioLogeado.id_empleado);
-        console.log(data);
-      }
-      const dataAsignacionesTareas = await getAsignacionesTareas();
-      setAsignacionesTareas(dataAsignacionesTareas);
-      console.log("Datos obtenidos de asignaciones:", dataAsignacionesTareas);
-      const dataEmpelados = await getAllEmployees();
-      setEmpleados(dataEmpelados);
-
-      setTareas(data || []);
+      setLoading(true);
+      const [tasks, assignments, employees] = await Promise.all([
+        usuarioLogeado.rol === 1
+          ? getAllTasks()
+          : getTasKToEmployee(usuarioLogeado.id_empleado),
+        getAsignacionesTareas(),
+        getAllEmployees(),
+      ]);
+      setTareas(tasks);
+      setAsignacionesTareas(assignments);
+      setEmpleados(employees);
     } catch (error) {
-      console.error("Error al obtener las tareas:", error.message, error.stack);
-      setTareas([]);
+      console.error("Error al realizar los fetch:", error.message, error.stack);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const usuarioLogeado = JSON.parse(localStorage.getItem("usuarioLogeado"));
-    console.log("Cargando usuarioLogeado desde localStorage:", usuarioLogeado);
-    if (usuarioLogeado) {
-      setUsuarioLogeado(usuarioLogeado);
-    }
-  }, [setUsuarioLogeado]);
-
-  useEffect(() => {
-    if (usuarioLogeado) {
-      fetchTareas();
+    if (usuarioLogeado && usuarioLogeado.id_empleado !== null) {
+      fetchData();
     } else {
-      console.log("usuarioLogeado no está definido, no se ejecuta fetchTareas");
+      console.log("usuarioLogeado no está definido o id_empleado es null");
     }
-  }, [usuarioLogeado, setTareas, setLoading]);
+  }, [usuarioLogeado]);
 
   const eliminarTarea = async (id) => {
     try {
       await deleteTarea(id);
       setTareas((prev) => prev.filter((tarea) => tarea.id !== id));
-      fetchTareas();
+      fetchData();
     } catch (error) {
       console.error("Error al eliminar la tarea:", error);
     }
@@ -176,6 +139,7 @@ const TareasView = () => {
         estado: "Pendiente",
         tarea_padre: null,
       });
+      fetchData();
       setModalOpen(false);
     } catch (error) {
       console.error("Error al agregar la tarea:", error);
@@ -189,7 +153,7 @@ const TareasView = () => {
       console.log("Tarea actualizada:", editedTask);
 
       // Obtener las asignaciones actuales de la tarea
-      const currentAssignments = asignacionestareas
+      const currentAssignments = asignacionesTareas
         .filter(
           (asignacion) => asignacion.tarea.tarea_id === editedTask.tarea_id
         )
@@ -231,7 +195,8 @@ const TareasView = () => {
           tarea.tarea_id === editedTask.tarea_id ? editedTask : tarea
         )
       );
-      fetchTareas();
+      console.log(tareas);
+      fetchData();
       toast.success("Tarea editada correctamente");
       setEditModalOpen(false);
     } catch (error) {
@@ -244,7 +209,7 @@ const TareasView = () => {
     try {
       console.log("Asignando tarea:", { taskId, userId, asignador });
       await addAsignacionTarea(taskId, userId, asignador);
-      fetchTareas();
+      fetchData();
       toast.success("Tarea asignada correctamente");
       console.log("Tarea asignada correctamente");
     } catch (error) {
@@ -274,15 +239,18 @@ const TareasView = () => {
             </h2>
             {usuarioLogeado &&
               (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
-                <button
-                  className="p-2 bg-gray-200 text-gray-700 rounded-full shadow-neu flex items-center hover:shadow-neu-active transition"
-                  onClick={() => setModalOpen(true)}
-                >
-                  <FaPlus />
-                </button>
+                <div className="flex gap-4">
+                  <button
+                    className="p-2 bg-gray-800 text-white rounded-full shadow-lg flex items-center hover:shadow-xl transition"
+                    onClick={() => setModalOpen(true)}
+                  >
+                    <FaPlus />
+                  </button>
+
+                </div>
               )}
           </div>
-          <div className="bg-gray-200 shadow-neu p-6 rounded-lg">
+          <div className="bg-gray-900  p-6 rounded-lg">
             <TaskTable
               tareas={currentItems}
               usuarioLogeado={usuarioLogeado}
@@ -295,6 +263,17 @@ const TareasView = () => {
               paginate={setCurrentPage}
             />
           </div>
+          {usuarioLogeado &&
+          (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+            <div className="flex justify-end mt-4">
+              <button
+                className="p-2 bg-blue-600 text-white rounded-full shadow-lg flex items-center hover:shadow-xl transition"
+                onClick={descargarReporteExcel}
+              >
+                Descargar Reporte
+              </button>
+            </div>
+          )}
         </div>
         <Modal
           isOpen={modalOpen}
@@ -314,7 +293,7 @@ const TareasView = () => {
           tareas={tareas}
           usuarioLogeado={usuarioLogeado}
           empleados={empleados}
-          asignacionesTareas={asignacionestareas} // Pasar asignacionesTareas para inicializar selectedUsers
+          asignacionesTareas={asignacionesTareas} // Pasar asignacionesTareas para inicializar selectedUsers
         />
       </div>
     </>

@@ -9,7 +9,7 @@ const RenderEstado = ({ estado }) => {
   };
 
   return (
-    <div className={`w-full h-6 rounded-full shadow-neu ${colores[estado]} flex items-center justify-center text-white font-bold`} title={estado}>
+    <div className={`w-full h-6 rounded-full shadow-md ${colores[estado]} flex items-center justify-center text-white font-bold`} title={estado}>
       {estado}
     </div>
   );

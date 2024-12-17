@@ -41,6 +41,12 @@ const EditTaskModal = ({
     handleEditTask(editedTask, selectedUsers);
   };
 
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    return format(now, "yyyy-MM-dd'T'HH:mm");
+  };
+
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-start"
@@ -84,6 +90,7 @@ const EditTaskModal = ({
                   )
                 : ""
             }
+            min={getCurrentDateTime()}
             onChange={(e) =>
               setEditedTask((prev) => ({
                 ...prev,
@@ -164,13 +171,13 @@ const EditTaskModal = ({
         </div>
         <div className="flex gap-4 justify-end">
           <button
-            className="px-4 py-2 bg-gray-200 rounded-md shadow-neu hover:shadow-neu-active transition"
+            className="px-4 py-2 bg-gray-200 rounded-md shadow-lg hover:shadow-xl transition"
             onClick={onClose}
           >
             Cancelar
           </button>
           <button
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow-neu hover:shadow-neu-active transition"
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md shadow-lg hover:shadow-xl transition"
             onClick={handleEditTaskWithAssignment}
           >
             Guardar

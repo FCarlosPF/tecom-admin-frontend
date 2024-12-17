@@ -8,12 +8,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-        primary: "#f5f5f5",
+        'gray-900': '#1a1a1a',
+        'gray-800': '#2d2d2d',
+        'blue-500': '#1e88e5',
+        'blue-600': '#1565c0',
+        'black': '#000000',
       },
       boxShadow: {
-        neu: '8px 8px 16px #bebebe, -8px -8px 16px #ffffff',
+        neu: '10px 10px 20px #0a3d91, -10px -10px 20px #114db1',
       },
     },
   },

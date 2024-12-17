@@ -8,7 +8,7 @@ const RenderPrioridad = ({ prioridad }) => {
   };
 
   return (
-    <div className={`w-6 h-6 rounded-full shadow-neu ${colores[prioridad]} flex items-center justify-center text-white font-bold`} title={prioridad} />
+    <div className={`w-6 h-6 rounded-full shadow-md ${colores[prioridad]} flex items-center justify-center text-white font-bold`} title={prioridad} />
   );
 };
 

@@ -127,10 +127,10 @@ const Dashboard = () => {
   return (
     <div className="p-6 bg-primary min-h-screen">
       <h1 className="text-3xl font-bold text-gray-700 mb-6">Dashboard</h1>
-
+  
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
         {/* Gráfico de barras */}
-        <div className="bg-gray-100 p-4 rounded-lg shadow-neu flex justify-center items-center">
+        <div className="bg-gray-100 p-4 rounded-lg flex justify-center items-center shadow-lg">
           <div className="w-full max-w-lg">
             <h2 className="text-lg font-bold text-gray-700 mb-4 text-center">
               Estadísticas
@@ -140,9 +140,9 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
+  
         {/* Gráfico de líneas */}
-        <div className="bg-gray-100 p-4 rounded-lg shadow-neu flex justify-center items-center">
+        <div className="bg-gray-100 p-4 rounded-lg flex justify-center items-center shadow-lg">
           <div className="w-full max-w-lg">
             <h2 className="text-lg font-bold text-gray-700 mb-4 text-center">
               Tareas Completadas
@@ -152,9 +152,9 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
+  
         {/* Gráfico de pastel */}
-        <div className="bg-gray-100 p-4 rounded-lg shadow-neu flex justify-center items-center">
+        <div className="bg-gray-100 p-4 rounded-lg flex justify-center items-center shadow-lg">
           <div className="w-full max-w-lg flex flex-col items-center">
             <h2 className="text-lg font-bold text-gray-700 mb-4 text-center">
               Prioridad de Tareas
@@ -165,31 +165,31 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
+  
       {/* Sección de estadísticas */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="p-4 bg-gray-100 rounded-lg shadow-neu flex flex-col items-center justify-center">
+        <div className="p-4 bg-gray-100 rounded-lg flex flex-col items-center justify-center shadow-lg">
           <h2 className="text-lg text-gray-600">Empleados Activos</h2>
           <p className="text-3xl font-bold text-gray-800">
             {empleados.filter((empleado) => empleado.activo).length}
           </p>
         </div>
-        <div className="p-4 bg-gray-100 rounded-lg shadow-neu flex flex-col items-center justify-center">
+        <div className="p-4 bg-gray-100 rounded-lg flex flex-col items-center justify-center shadow-lg">
           <h2 className="text-lg text-gray-600">Asistencias Hoy</h2>
           <p className="text-3xl font-bold text-gray-800">98</p>
         </div>
-        <div className="p-4 bg-gray-100 rounded-lg shadow-neu flex flex-col items-center justify-center">
+        <div className="p-4 bg-gray-100 rounded-lg flex flex-col items-center justify-center shadow-lg">
           <h2 className="text-lg text-gray-600">Permisos Pendientes</h2>
           <p className="text-3xl font-bold text-gray-800">8</p>
         </div>
-        <div className="p-4 bg-gray-100 rounded-lg shadow-neu flex flex-col items-center justify-center">
+        <div className="p-4 bg-gray-100 rounded-lg flex flex-col items-center justify-center shadow-lg">
           <h2 className="text-lg text-gray-600">Tareas en Progreso</h2>
           <p className="text-3xl font-bold text-gray-800">15</p>
         </div>
       </div>
-
+  
       {/* Actividades recientes */}
-      <div className="bg-gray-100 p-6 rounded-lg shadow-neu mb-8">
+      <div className="bg-gray-100 p-6 rounded-lg mb-8 shadow-lg">
         <h2 className="text-xl font-bold text-gray-700 mb-4">
           Actividades Recientes
         </h2>
@@ -208,9 +208,9 @@ const Dashboard = () => {
           </li>
         </ul>
       </div>
-
+  
       {/* Calendario */}
-      <div className="bg-gray-100 p-6 rounded-lg shadow-neu w-full lg:w-1/3 xl:w-1/4">
+      <div className="bg-gray-100 p-6 rounded-lg w-full lg:w-1/3 xl:w-1/4 shadow-lg">
         <h2 className="text-xl font-bold text-gray-700 mb-4">Calendario</h2>
         <Calendar onChange={setDate} value={date} />
       </div>

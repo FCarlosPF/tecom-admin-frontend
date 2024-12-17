@@ -23,7 +23,7 @@ const Layout = ({ children }) => {
     <ProtectedRoute>
       <div className="flex bg-primary">
         <Navbar />
-        <main className="flex-1 p-6 ml-72">
+        <main className="flex-1  ml-72 h-screen overflow-y-auto bg-gray-100">
           {children}
           <ToastContainer />
         </main>

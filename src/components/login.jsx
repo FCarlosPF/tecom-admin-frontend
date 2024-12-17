@@ -1,35 +1,62 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { useRouter } from "next/navigation";
 import { loginService } from "@/services/service";
 import useStore from "@/store/index";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
+import { MoveDirection, OutMode } from "@tsparticles/engine";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+const ParticlesMemo = React.memo(({ options, particlesLoaded }) => (
+  <Particles
+    id="tsparticles"
+    particlesLoaded={particlesLoaded}
+    options={options}
+  />
+));
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const [error, setError] = useState("");
   const router = useRouter();
   const { setUsuarioLogeado, usuarioLogeado } = useStore();
+  const particlesInit = useRef(false);
 
   useEffect(() => {
-    // Cargar los datos del usuario desde localStorage si existen
-    const storedUser = localStorage.getItem('usuarioLogeado');
+    const storedUser = localStorage.getItem("usuarioLogeado");
     if (storedUser) {
       setUsuarioLogeado(JSON.parse(storedUser));
       router.push("/panel");
     }
   }, [setUsuarioLogeado, router]);
 
+  useEffect(() => {
+    if (!particlesInit.current) {
+      initParticlesEngine(async (engine) => {
+        await loadSlim(engine);
+      }).then(() => {
+        particlesInit.current = true;
+      });
+    }
+  }, []);
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError(""); // Limpiar el estado de error al inicio
+    setError("");
     try {
       const data = await loginService(username, password);
-      console.log("Respuesta del servicio:", data); // Agregar un log para verificar la respuesta del servicio
-  
       if (data) {
-        console.log("Data existe:", data);
         const usuario = {
           id_empleado: data.id_empleado,
           nombre: data.nombre,
@@ -45,71 +72,172 @@ const Login = () => {
           rol: data.rol,
         };
         setUsuarioLogeado(usuario);
-        localStorage.setItem('usuarioLogeado', JSON.stringify(usuario));
-        console.log("Usuario logeado:", usuario); // Verificar que el usuario se ha establecido correctamente
+        localStorage.setItem("usuarioLogeado", JSON.stringify(usuario));
         router.push("/panel");
-        console.log("Redirigiendo a /panel"); // Verificar que se está intentando redirigir
       } else {
         setError("Credenciales incorrectas");
-        console.log("Credenciales incorrectas"); // Verificar que se ha establecido el error
       }
     } catch (error) {
       setError("Credenciales incorrectas");
-      console.log("Error en el login:", error); // Verificar que se ha capturado el error
     }
   };
 
+  const particlesLoaded = useCallback(async (container) => {
+    console.log(container);
+  }, []);
+
+  const options = useMemo(
+    () => ({
+      background: {
+        color: {
+          value: "white-blue",
+        },
+      },
+      fpsLimit: 120,
+      interactivity: {
+        events: {
+          onClick: {
+            enable: true,
+            mode: "push",
+          },
+          onHover: {
+            enable: true,
+            mode: "repulse",
+          },
+        },
+        modes: {
+          push: {
+            quantity: 4,
+          },
+          repulse: {
+            distance: 100,
+            duration: 0.4,
+          },
+        },
+      },
+      particles: {
+        color: {
+          value: "#ffffff",
+        },
+        links: {
+          enable: false,
+        },
+        move: {
+          direction: MoveDirection.bottom,
+          enable: true,
+          outModes: {
+            default: OutMode.out,
+          },
+          random: false,
+          speed: 1,
+          straight: false,
+        },
+        number: {
+          density: {
+            enable: true,
+          },
+          value: 1600,
+        },
+        opacity: {
+          value: 0.8,
+        },
+        shape: {
+          type: "circle",
+        },
+        size: {
+          value: { min: 1, max: 5 },
+        },
+      },
+      detectRetina: true,
+    }),
+    []
+  );
+
+  const handleUsernameChange = useCallback((e) => {
+    setUsername(e.target.value);
+  }, []);
+
+  const handlePasswordChange = useCallback((e) => {
+    setPassword(e.target.value);
+  }, []);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-primary">
-      <div className="p-8 rounded-lg shadow-neu bg-primary max-w-sm w-full">
-        <h2 className="text-center text-2xl font-bold text-gray-700 mb-6">
-          Iniciar Sesión
-        </h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-600 mb-2"
+    <div className="relative flex items-center justify-center min-h-screen bg-black">
+      <ParticlesMemo particlesLoaded={particlesLoaded} options={options} />
+      <div className="flex items-center justify-center rounded-lg shadow-lg bg-blue-800 bg-opacity-90 max-w-4xl w-full z-10">
+        {/* Imagen a la izquierda */}
+        <div className="w-1/2 hidden md:block">
+          <img
+            src="https://media.licdn.com/dms/image/v2/D4E0BAQGgGk-XuOr2cA/company-logo_200_200/company-logo_200_200/0/1666116188527?e=1741824000&v=beta&t=Yx0Q88ghBsl--XUhVQuOak_VdJeLx-l0HoT1mjmovAo"
+            alt="Login Image"
+            className="w-full h-auto object-cover rounded-lg shadow-lg"
+          />
+        </div>
+
+        {/* Formulario a la derecha */}
+        <div className="w-full md:w-1/2 p-6">
+          <h2 className="text-center text-3xl font-bold text-white mb-6">
+            Iniciar Sesión
+          </h2>
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          <form onSubmit={handleLogin}>
+            <div className="mb-4">
+              <label
+                htmlFor="username"
+                className="block text-sm font-bold text-white mb-2"
+              >
+                Nombre de Usuario
+              </label>
+              <input
+                type="text"
+                id="username"
+                value={username}
+                onChange={handleUsernameChange}
+                className="w-full p-3 rounded-lg bg-gray-800 shadow-inner focus:outline-none text-white font-bold"
+                placeholder="nombre de usuario"
+                required
+                autoComplete="username"
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="password"
+                className="block text-sm font-bold text-white mb-2"
+              >
+                Contraseña
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  className="w-full p-3 rounded-lg bg-gray-800 shadow-inner focus:outline-none text-white font-bold pr-10"
+                  placeholder="********"
+                  required
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={toggleShowPassword}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200"
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg active:shadow-inner transition-all font-medium text-white"
             >
-              Nombre de Usuario
-            </label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-3 rounded-lg bg-primary shadow-neu focus:outline-none"
-              placeholder="nombredeusuario"
-              required
-              autoComplete="username"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-600 mb-2"
-            >
-              Contraseña
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 rounded-lg bg-primary shadow-neu focus:outline-none"
-              placeholder="********"
-              required
-              autoComplete="current-password"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full py-3 rounded-lg bg-gray-300 hover:bg-gray-400 shadow-neu active:shadow-inner transition-all font-medium text-gray-700"
-          >
-            Entrar
-          </button>
-        </form>
+              Entrar
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

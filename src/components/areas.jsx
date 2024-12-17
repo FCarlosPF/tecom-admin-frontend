@@ -1,19 +1,23 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getAreas, deleteArea, addArea, updateArea } from "@/services/service";
 import { FaEdit, FaTrash, FaPlus, FaTimes } from "react-icons/fa";
-import useStore from "@/store/index";
+import useStore from "@/store";
+import {
+  getAreas,
+  deleteArea,
+  addArea,
+  updateArea,
+} from "@/services/service";
+import { toast } from "react-toastify";
 
 const AreasView = () => {
   const [areas, setAreas] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [newArea, setNewArea] = useState({ nombre: "", supervisor: "" });
   const [editArea, setEditArea] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [message, setMessage] = useState("");
   const { empleados } = useStore();
 
   useEffect(() => {
@@ -22,7 +26,7 @@ const AreasView = () => {
         const data = await getAreas();
         setAreas(data);
       } catch (error) {
-        setError(error.message);
+        console.error("Error al obtener las áreas:", error);
       } finally {
         setLoading(false);
       }
@@ -33,9 +37,11 @@ const AreasView = () => {
   const handleDelete = async (id) => {
     try {
       await deleteArea(id);
-      setAreas(areas.filter((area) => area.area_id !== id));
+      setAreas((prev) => prev.filter((area) => area.area_id !== id));
+      toast.success("Área eliminada correctamente");
     } catch (error) {
       console.error("Error al eliminar el área:", error);
+      toast.error("Error al eliminar el área");
     }
   };
 
@@ -45,17 +51,15 @@ const AreasView = () => {
         ...newArea,
         supervisor: newArea.supervisor || null,
       };
-
       await addArea(areaToAdd);
       const updatedAreas = await getAreas();
       setAreas(updatedAreas);
-
       setShowModal(false);
       setNewArea({ nombre: "", supervisor: "" });
-      setMessage("Área agregada exitosamente");
+      toast.success("Área agregada exitosamente");
     } catch (error) {
       console.error("Error al agregar el área:", error);
-      setMessage("Error al agregar el área");
+      toast.error("Error al agregar el área");
     }
   };
 
@@ -65,18 +69,16 @@ const AreasView = () => {
         ...editArea,
         supervisor: editArea.supervisor ? editArea.supervisor.id_empleado : null,
       };
-
       await updateArea(areaToUpdate.area_id, areaToUpdate);
       const updatedAreas = await getAreas();
       setAreas(updatedAreas);
-
       setShowModal(false);
       setEditArea(null);
       setIsEditing(false);
-      setMessage("Área actualizada exitosamente");
+      toast.success("Área actualizada exitosamente");
     } catch (error) {
       console.error("Error al actualizar el área:", error);
-      setMessage("Error al actualizar el área");
+      toast.error("Error al actualizar el área");
     }
   };
 
@@ -88,84 +90,66 @@ const AreasView = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-600 text-lg">Cargando...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-red-600 text-lg">Error: {error}</p>
-      </div>
+      <div className="flex justify-center items-center h-64">Cargando...</div>
     );
   }
 
   return (
-    <div className="container mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
-
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Gestión de Áreas</h1>
-        <button
-          className="bg-green-500 text-white font-semibold px-4 py-2 rounded-lg shadow hover:bg-green-600 transition"
-          onClick={() => {
-            setNewArea({ nombre: "", supervisor: "" });
-            setIsEditing(false);
-            setShowModal(true);
-          }}
-        >
-          <FaPlus className="inline-block mr-2" />
-          Nueva Área
-        </button>
-      </div>
-
-      {message && (
-        <div className="mb-6 bg-green-100 text-green-700 px-4 py-2 rounded shadow">
-          {message}
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <div>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-gray-800">Gestión de Áreas</h2>
+          <button
+            className="p-2 bg-gray-800 text-white rounded-full shadow-lg flex items-center hover:shadow-xl transition"
+            onClick={() => {
+              setNewArea({ nombre: "", supervisor: "" });
+              setIsEditing(false);
+              setShowModal(true);
+            }}
+          >
+            <FaPlus />
+          </button>
         </div>
-      )}
-
-      <table className="min-w-full bg-white rounded-lg shadow">
-        <thead className="bg-gray-800 text-white">
-          <tr>
-            <th className="py-3 px-4 text-left">Nombre</th>
-            <th className="py-3 px-4 text-left">Supervisor</th>
-            <th className="py-3 px-4 text-center">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {areas.map((area) => (
-            <tr
-              key={area.area_id}
-              className="border-b last:border-none hover:bg-gray-100"
-            >
-              <td className="py-3 px-4">{area.nombre}</td>
-              <td className="py-3 px-4">
-                {area.supervisor
-                  ? `${area.supervisor.nombre} ${area.supervisor.apellidos}`
-                  : "Sin supervisor"}
-              </td>
-              <td className="py-3 px-4 text-center">
-                <button
-                  className="bg-blue-500 text-white font-semibold px-3 py-1 rounded-lg shadow mr-2 hover:bg-blue-600 transition"
-                  onClick={() => openEditModal(area)}
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  className="bg-red-500 text-white font-semibold px-3 py-1 rounded-lg shadow hover:bg-red-600 transition"
-                  onClick={() => handleDelete(area.area_id)}
-                >
-                  <FaTrash />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
+        <div className="bg-gray-900 p-6 rounded-lg">
+          <table className="w-full rounded-lg">
+            <thead className="bg-gray-800">
+              <tr>
+                <th className="px-4 py-3 text-left text-sm text-white font-bold">Nombre</th>
+                <th className="px-4 py-3 text-left text-sm text-white font-bold">Supervisor</th>
+                <th className="px-4 py-3 text-center text-sm text-white font-bold">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {areas.map((area) => (
+                <tr key={area.area_id} className="hover:bg-gray-700 transition">
+                  <td className="px-4 py-3 text-sm text-gray-100">{area.nombre}</td>
+                  <td className="px-4 py-3 text-sm text-gray-100">
+                    {area.supervisor
+                      ? `${area.supervisor.nombre} ${area.supervisor.apellidos}`
+                      : "Sin supervisor"}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-100 text-center">
+                    <div className="flex justify-center gap-2">
+                      <button
+                        className="text-blue-500 hover:text-blue-700 transition"
+                        onClick={() => openEditModal(area)}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="text-red-500 hover:text-red-700 transition"
+                        onClick={() => handleDelete(area.area_id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
       {showModal && (
         <div className="fixed inset-0 bg-gray-700 bg-opacity-75 flex justify-center items-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-1/3 p-6 relative">
@@ -179,9 +163,7 @@ const AreasView = () => {
               {isEditing ? "Editar Área" : "Agregar Nueva Área"}
             </h2>
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-2">
-                Nombre
-              </label>
+              <label className="block text-gray-700 font-semibold mb-2">Nombre</label>
               <input
                 type="text"
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
@@ -194,9 +176,7 @@ const AreasView = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-2">
-                Supervisor
-              </label>
+              <label className="block text-gray-700 font-semibold mb-2">Supervisor</label>
               <select
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
                 value={
@@ -220,10 +200,7 @@ const AreasView = () => {
               >
                 <option value="">Seleccione un supervisor</option>
                 {empleados.map((empleado) => (
-                  <option
-                    key={empleado.id_empleado}
-                    value={empleado.id_empleado}
-                  >
+                  <option key={empleado.id_empleado} value={empleado.id_empleado}>
                     {empleado.nombre}
                   </option>
                 ))}
@@ -247,7 +224,6 @@ const AreasView = () => {
         </div>
       )}
     </div>
-  </div>
   );
 };
 

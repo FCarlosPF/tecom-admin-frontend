@@ -1086,3 +1086,29 @@ export const getMetricasPorEmpleado = async (id) => {
     throw error;
   }
 };
+
+export const descargarReporteExcel = async () => {
+  try {
+    const response = await fetch("http://127.0.0.1:8000/api/reporte-tareas-no-entregadas-a-tiempo/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al descargar el reporte");
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "reporte-tareas-no-entregadas-a-tiempo.xlsx";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } catch (error) {
+    console.error("Error al descargar el reporte:", error);
+  }
+};

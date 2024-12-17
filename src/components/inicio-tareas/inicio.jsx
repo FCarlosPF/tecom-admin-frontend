@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { FaCheck, FaUser, FaClock, FaTag, FaArrowRight } from "react-icons/fa";
+import {
+  FaCheck,
+  FaUser,
+  FaClock,
+  FaTag,
+  FaArrowRight,
+  FaChevronDown,
+  FaChevronUp,
+} from "react-icons/fa";
 import useStore from "@/store";
 import {
   getAllEmployees,
@@ -26,6 +34,7 @@ const TareasView = () => {
   const [selectedTarea, setSelectedTarea] = useState(null);
   const [asignadorNombres, setAsignadorNombres] = useState("");
   const [empleadoNombres, setEmpleadoNombres] = useState("");
+  const [expandedTareas, setExpandedTareas] = useState({});
 
   useEffect(() => {
     const fetchUsuarios = async () => {
@@ -36,7 +45,6 @@ const TareasView = () => {
         } else {
           console.error("La respuesta de la API no es un array:", data);
         }
-        console.log("Usuarios:", data);
       } catch (error) {
         console.error("Error al obtener los usuarios:", error);
       }
@@ -50,7 +58,6 @@ const TareasView = () => {
         } else {
           console.error("La respuesta de la API no es un array:", data);
         }
-        console.log("AsignacionesTareas:", data);
       } catch (error) {
         console.error("Error al obtener las asignaciones de tareas:", error);
       }
@@ -59,6 +66,16 @@ const TareasView = () => {
     fetchUsuarios();
     fetchAsignacionesTareas();
   }, [setEmpleados, setAsignacionesTareas]);
+
+  useEffect(() => {
+    if (usuarioLogeado) {
+      fetchTareas();
+    }
+  }, [usuarioLogeado]);
+
+  useEffect(() => {
+    console.log("Tareas:", tareas);
+  }, [tareas]);
 
   const fetchTareas = async () => {
     if (!usuarioLogeado) {
@@ -75,13 +92,8 @@ const TareasView = () => {
     }
 
     try {
-      console.log(
-        "Estado de usuarioLogeado al iniciar fetchTareas:",
-        usuarioLogeado
-      );
       let data;
       if (usuarioLogeado.rol === 1) {
-        console.log("Usuario con rol 1, obteniendo todas las tareas");
         data = await getAllTasks();
       } else {
         if (!usuarioLogeado.id_empleado) {
@@ -90,87 +102,54 @@ const TareasView = () => {
           setLoading(false);
           return;
         }
-        console.log(
-          `Usuario con rol ${usuarioLogeado.rol}, obteniendo tareas para el empleado ${usuarioLogeado.id_empleado}`
-        );
         data = await getTasKToEmployee(usuarioLogeado.id_empleado);
       }
-      console.log("Datos obtenidos:", data);
-      setTareas(Array.isArray(data) ? data : []); // Asegúrate de que data sea un array
+      setTareas(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error al obtener las tareas:", error.message, error.stack);
-      setTareas([]); // En caso de error, asegúrate de que tareas sea un array vacío
+      setTareas([]);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (usuarioLogeado) {
-      fetchTareas();
-    }
-  }, [usuarioLogeado]);
-
-  useEffect(() => {
-    console.log("Tareas:", tareas);
-  }, [tareas]);
-
   const completarTarea = async (id) => {
-    let tareaActual;
     try {
-      if (usuarioLogeado.rol === 1) {
-        tareaActual = tareas.find((tarea) => tarea.tarea_id === id);
+      const tareaActual = tareas.find((tarea) =>
+        usuarioLogeado.rol === 1
+          ? tarea.tarea_id === id
+          : tarea.asignacion_id === id
+      );
 
-        if (!tareaActual) {
-          throw new Error("Tarea no encontrada");
-        }
-      } else {
-        tareaActual = tareas.find((tarea) => tarea.asignacion_id === id);
-        if (!tareaActual) {
-          throw new Error("Tarea no encontrada");
-        }
+      if (!tareaActual) {
+        throw new Error("Tarea no encontrada");
       }
 
-      let nuevoEstado;
       const estadoActual =
         usuarioLogeado.rol === 1
           ? tareaActual.estado
           : tareaActual.tarea.estado;
-
-      if (estadoActual === "Pendiente") {
-        nuevoEstado = "En Progreso";
-      } else if (estadoActual === "En Progreso") {
-        nuevoEstado = "Completada";
-      } else {
-        console.error(
-          "Estado de tarea no válido para completar:",
-          estadoActual
-        );
-        return;
-      }
-
+      const nuevoEstado =
+        estadoActual === "Pendiente" ? "En Progreso" : "Completada";
       const fechaRealFin =
         nuevoEstado === "Completada"
           ? format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
           : null;
+
       if (usuarioLogeado.rol === 1) {
-        const updatedTask = await updateTareas(id, {
+        await updateTareas(id, {
           ...tareaActual,
           estado: nuevoEstado,
           fecha_real_fin: fechaRealFin,
         });
-        console.log("Tarea actualizada correctamente:", updatedTask);
       } else {
-        const dataToSend = {
+        await updateAsignacionesTareas(id, {
           tarea: {
             ...tareaActual.tarea,
             estado: nuevoEstado,
             fecha_real_fin: fechaRealFin,
           },
-        };
-        console.log("Datos enviados a updateAsignacionesTareas:", dataToSend);
-        const updatedTask = await updateAsignacionesTareas(id, dataToSend);
-        console.log("Tarea actualizada correctamente:", updatedTask);
+        });
       }
 
       setTareas((prevTareas) =>
@@ -189,32 +168,19 @@ const TareasView = () => {
 
   const handleCardClick = (tarea) => {
     setSelectedTarea(tarea);
-
-    if (usuarioLogeado.rol === 1) {
-      const asignaciones = asignacionesTareas.filter(
-        (asignacion) => asignacion.tarea.tarea_id === tarea.tarea_id
-      );
-      setAsignadorNombres(
-        [
-          ...new Set(
-            asignaciones.map((asignacion) => asignacion.asignador.nombre)
-          ),
-        ].join(", ")
-      );
-      setEmpleadoNombres(
-        asignaciones.map((asignacion) => asignacion.empleado?.nombre).join(", ")
-      );
-    } else {
-      const asignaciones = asignacionesTareas.filter(
-        (asignacion) => asignacion.tarea.tarea_id === tarea.tarea_id
-      );
-      setAsignadorNombres(
-        asignaciones.map((asignacion) => asignacion.asignador?.nombre).join(", ")
-      );
-      setEmpleadoNombres(
-        asignaciones.map((asignacion) => asignacion.empleado?.nombre).join(", ")
-      );
-    }
+    const asignaciones = asignacionesTareas.filter(
+      (asignacion) => asignacion.tarea.tarea_id === tarea.tarea_id
+    );
+    setAsignadorNombres(
+      [
+        ...new Set(
+          asignaciones.map((asignacion) => asignacion.asignador.nombre)
+        ),
+      ].join(", ")
+    );
+    setEmpleadoNombres(
+      asignaciones.map((asignacion) => asignacion.empleado?.nombre).join(", ")
+    );
   };
 
   const closeModal = () => {
@@ -229,6 +195,13 @@ const TareasView = () => {
     }
   };
 
+  const toggleExpand = (tareaId) => {
+    setExpandedTareas((prev) => ({
+      ...prev,
+      [tareaId]: !prev[tareaId],
+    }));
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -237,11 +210,12 @@ const TareasView = () => {
     );
   }
 
-  // Agrupar tareas por estado
   const tareasPorEstado = (Array.isArray(tareas) ? tareas : []).reduce(
     (acc, tarea) => {
       const estado =
-        usuarioLogeado && usuarioLogeado.rol === 1 ? tarea.estado : tarea.tarea?.estado;
+        usuarioLogeado && usuarioLogeado.rol === 1
+          ? tarea.estado
+          : tarea.tarea?.estado;
       if (!acc[estado]) {
         acc[estado] = [];
       }
@@ -254,116 +228,219 @@ const TareasView = () => {
   const estados = ["Pendiente", "En Progreso", "Completada"];
 
   return (
-    <div className="container mx-auto p-6 h-screen flex">
+    <div className="container mx-auto p-6 h-screen flex flex-col">
+      <h1 className="text-4xl font-bold text-black mb-6 text-center">Kanban</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 h-full flex-grow">
         {estados.map((estado) => (
           <div
             key={estado}
-            className="bg-gray-100 p-2 rounded-lg shadow-md flex flex-col h-full overflow-y-auto"
+            className="bg-gray-900 p-2 rounded-lg shadow-md flex flex-col h-full overflow-y-auto"
           >
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">
-              {estado}
-            </h2>
+            <h2 className="text-lg font-semibold text-white mb-2">{estado}</h2>
             <div className="flex flex-col space-y-2">
               {tareasPorEstado[estado] && tareasPorEstado[estado].length > 0 ? (
-                tareasPorEstado[estado].map((tarea) => {
-                  return (
-                    <div
-                      key={
-                        usuarioLogeado && usuarioLogeado.rol === 1
-                          ? tarea.tarea_id
-                          : tarea.tarea?.tarea_id
-                      }
-                      className="bg-white shadow-md rounded-lg overflow-hidden p-2 border-l-4 border-indigo-500 cursor-pointer"
-                      onClick={() =>
-                        usuarioLogeado.rol === 1
-                          ? handleCardClick(tarea)
-                          : handleCardClick(tarea.tarea)
-                      }
-                    >
-                      <div className="flex justify-between items-center">
-                        <div className="flex-grow">
-                          <div className="flex justify-between items-center mb-1">
-                            <h2 className="text-base font-semibold text-gray-800">
-                              {usuarioLogeado && usuarioLogeado.rol === 1
-                                ? tarea.titulo
-                                : tarea.tarea?.titulo}
-                            </h2>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-1">
-                            {usuarioLogeado && usuarioLogeado.rol === 1
-                              ? tarea.descripcion
-                              : tarea.tarea?.descripcion}
-                          </p>
-                          <div className="flex items-center text-sm text-gray-600 mb-1">
-                            <FaClock className="mr-1" />
-                            <span>
-                              {usuarioLogeado && usuarioLogeado.rol === 1
-                                ? tarea.estado === "Completada"
+                tareasPorEstado[estado]
+                  .filter((tarea) =>
+                    usuarioLogeado && usuarioLogeado.rol == 1
+                      ? !tarea.tarea_padre
+                      : !tarea.tarea.tarea_padre
+                  )
+                  .map((tarea) => {
+                    const subtareas = tareas.filter((subtarea) => {
+                      return usuarioLogeado && usuarioLogeado.rol === 1
+                        ? subtarea.tarea_padre === tarea.tarea_id
+                        : subtarea.tarea.tarea_padre === tarea.tarea.tarea_id;
+                    });
+                    const tareaData =
+                      usuarioLogeado && usuarioLogeado.rol === 1
+                        ? tarea
+                        : tarea.tarea;
+                    return (
+                      <div
+                        key={tareaData.tarea_id}
+                        className="bg-gray-800 shadow-md rounded-lg overflow-hidden p-2 border-l-4 border-blue-500 cursor-pointer"
+                      >
+                        <div
+                          className="flex justify-between items-center"
+                          onClick={() =>
+                            usuarioLogeado.rol === 1
+                              ? handleCardClick(tarea)
+                              : handleCardClick(tarea.tarea)
+                          }
+                        >
+                          <div className="flex-grow">
+                            <div className="flex justify-between items-center mb-1">
+                              <h2 className="text-base font-semibold text-white">
+                                {tareaData.titulo}
+                              </h2>
+                            </div>
+                            <p className="text-sm text-gray-400 mb-1">
+                              {tareaData.descripcion}
+                            </p>
+                            <div className="flex items-center text-sm text-gray-400 mb-1">
+                              <FaClock className="mr-1 text-blue-500" />
+                              <span
+                                className={
+                                  (tareaData.estado !== "Completada" &&
+                                    tareaData.tiempo_restante.dias === 0 &&
+                                    tareaData.tiempo_restante.horas === 0) ||
+                                  (tareaData.estado === "Completada" &&
+                                    new Date(tareaData.fecha_real_fin) >
+                                      new Date(tareaData.fecha_estimada_fin))
+                                    ? "text-red-500"
+                                    : ""
+                                }
+                              >
+                                {tareaData.estado === "Completada"
                                   ? `Completada el: ${format(
-                                      new Date(tarea.fecha_real_fin),
+                                      new Date(tareaData.fecha_real_fin),
                                       "dd/MM/yyyy HH:mm"
                                     )}`
-                                  : tarea.tiempo_restante.dias === 0 &&
-                                    tarea.tiempo_restante.horas === 0
-                                  ? `Vencido: ${tarea.tiempo_pasado.dias} días y ${tarea.tiempo_pasado.horas} horas pasados`
-                                  : `Tiempo restante: ${tarea.tiempo_restante.dias} días y ${tarea.tiempo_restante.horas} horas`
-                                : tarea.tarea?.estado === "Completada"
-                                ? `Completada el: ${format(
-                                    new Date(tarea.tarea.fecha_real_fin),
-                                    "dd/MM/yyyy HH:mm"
-                                  )}`
-                                : tarea.tarea?.tiempo_restante.dias === 0 &&
-                                  tarea.tarea?.tiempo_restante.horas === 0
-                                ? `Vencido: ${tarea.tarea?.tiempo_pasado.dias} días y ${tarea.tarea?.tiempo_pasado.horas} horas pasados`
-                                : `Días restantes: ${tarea.tarea?.tiempo_restante.dias} días y ${tarea.tarea?.tiempo_restante.horas} horas`}
-                            </span>
+                                  : tareaData.tiempo_restante.dias === 0 &&
+                                    tareaData.tiempo_restante.horas === 0
+                                  ? `Vencido: ${tareaData.tiempo_pasado.dias} días y ${tareaData.tiempo_pasado.horas} horas pasados`
+                                  : `Tiempo restante: ${tareaData.tiempo_restante.dias} días y ${tareaData.tiempo_restante.horas} horas`}
+                              </span>
+                            </div>
+                            <div className="flex items-center text-sm text-gray-400 mb-1">
+                              <FaTag className="mr-1 text-yellow-500" />
+                              <span>{tareaData.prioridad}</span>
+                            </div>
                           </div>
-                          <div className="flex items-center text-sm text-gray-600 mb-1">
-                            <FaTag className="mr-1" />
-                            <span>
-                              {usuarioLogeado && usuarioLogeado.rol === 1
-                                ? tarea.prioridad
-                                : tarea.tarea?.prioridad}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex items-center">
-                          {((usuarioLogeado &&
-                            usuarioLogeado.rol === 1 &&
-                            tarea.estado !== "Completada") ||
-                            (usuarioLogeado &&
-                              usuarioLogeado.rol !== 1 &&
-                              tarea.tarea?.estado !== "Completada")) && (
-                            <button
-                              className={`flex items-center justify-center w-6 h-6 text-white rounded-full shadow-md transition-colors duration-300 ${
-                                tarea.estado === "Pendiente" ||
-                                tarea.tarea?.estado === "Pendiente"
-                                  ? "bg-blue-500 hover:bg-blue-600"
-                                  : "bg-green-500 hover:bg-green-600"
-                              }`}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                completarTarea(
-                                  usuarioLogeado && usuarioLogeado.rol === 1
+                          <div className="flex items-center">
+                            {tareaData.estado !== "Completada" && (
+                              <button
+                                className={`flex items-center justify-center w-6 h-6 text-white rounded-full shadow-md transition-colors duration-300 ${
+                                  tareaData.estado === "Pendiente"
+                                    ? "bg-blue-500 hover:bg-blue-600"
+                                    : "bg-green-500 hover:bg-green-600"
+                                }`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  completarTarea(
+                                    usuarioLogeado && usuarioLogeado.rol == 1
+                                      ? tarea.tarea_id
+                                      : tarea.tarea.tarea_id
+                                  );
+                                }}
+                              >
+                                {tareaData.estado === "Pendiente" ? (
+                                  <FaArrowRight size={12} />
+                                ) : (
+                                  <FaCheck size={12} />
+                                )}
+                              </button>
+                            )}
+                            {subtareas.length > 0 && (
+                              <button
+                                className="ml-2 text-gray-400 hover:text-gray-200"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleExpand(
+                                    usuarioLogeado.rol === 1
+                                      ? tarea.tarea_id
+                                      : tarea.tarea.tarea_id
+                                  );
+                                }}
+                              >
+                                {expandedTareas[
+                                  usuarioLogeado.rol === 1
                                     ? tarea.tarea_id
-                                    : tarea.asignacion_id
-                                );
-                              }}
-                            >
-                              {tarea.estado === "Pendiente" ||
-                              tarea.tarea?.estado === "Pendiente" ? (
-                                <FaArrowRight size={12} />
-                              ) : (
-                                <FaCheck size={12} />
-                              )}{" "}
-                            </button>
-                          )}
+                                    : tarea.tarea.tarea_id
+                                ] ? (
+                                  <FaChevronUp />
+                                ) : (
+                                  <FaChevronDown />
+                                )}
+                              </button>
+                            )}
+                          </div>
                         </div>
+                        {expandedTareas[
+                          usuarioLogeado && usuarioLogeado.rol === 1
+                            ? tarea.tarea_id
+                            : tarea.tarea.tarea_id
+                        ] && (
+                          <div className="pl-4 mt-2">
+                            {subtareas.map((subtarea) => {
+                              const subtareaData =
+                                usuarioLogeado.rol === 1
+                                  ? subtarea
+                                  : subtarea.tarea;
+                              return (
+                                <div
+                                  key={subtareaData.tarea_id}
+                                  className="bg-gray-700 shadow-md rounded-lg overflow-hidden p-2 border-l-4 border-indigo-500 cursor-pointer"
+                                >
+                                  <div
+                                    className="flex justify-between items-center"
+                                    onClick={() =>
+                                      handleCardClick(subtareaData)
+                                    }
+                                  >
+                                    <div className="flex-grow">
+                                      <div className="flex justify-between items-center mb-1">
+                                        <h2 className="text-base font-semibold text-white">
+                                          {subtareaData.titulo}
+                                        </h2>
+                                      </div>
+                                      <p className="text-sm text-gray-400 mb-1">
+                                        {subtareaData.descripcion}
+                                      </p>
+                                      <div className="flex items-center text-sm text-gray-400 mb-1">
+                                        <FaClock className="mr-1 text-blue-500" />
+                                        <span>
+                                          {subtareaData.estado === "Completada"
+                                            ? `Completada el: ${format(
+                                                new Date(
+                                                  subtareaData.fecha_real_fin
+                                                ),
+                                                "dd/MM/yyyy HH:mm"
+                                              )}`
+                                            : subtareaData.tiempo_restante
+                                                .dias === 0 &&
+                                              subtareaData.tiempo_restante
+                                                .horas === 0
+                                            ? `Vencido: ${subtareaData.tiempo_pasado.dias} días y ${subtareaData.tiempo_pasado.horas} horas pasados`
+                                            : `Tiempo restante: ${subtareaData.tiempo_restante.dias} días y ${subtareaData.tiempo_restante.horas} horas`}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center text-sm text-gray-400 mb-1">
+                                        <FaTag className="mr-1 text-yellow-500" />
+                                        <span>{subtareaData.prioridad}</span>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center">
+                                      {subtareaData.estado !== "Completada" && (
+                                        <button
+                                          className={`flex items-center justify-center w-6 h-6 text-white rounded-full shadow-md transition-colors duration-300 ${
+                                            subtareaData.estado === "Pendiente"
+                                              ? "bg-blue-500 hover:bg-blue-600"
+                                              : "bg-green-500 hover:bg-green-600"
+                                          }`}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            completarTarea(subtarea.tarea_id);
+                                          }}
+                                        >
+                                          {subtareaData.estado ===
+                                          "Pendiente" ? (
+                                            <FaArrowRight size={12} />
+                                          ) : (
+                                            <FaCheck size={12} />
+                                          )}
+                                        </button>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  );
-                })
+                    );
+                  })
               ) : (
                 <p className="text-gray-500 text-sm">
                   No hay tareas en este estado.
@@ -392,7 +469,7 @@ const TareasView = () => {
             <h2 className="text-3xl font-bold mb-6 text-gray-800">
               {selectedTarea.titulo}
             </h2>
-            <p className=" text-gray-600 mb-6 text-base leading-relaxed">
+            <p className="text-gray-600 mb-6 text-base leading-relaxed">
               {selectedTarea.descripcion}
             </p>
             <div className="space-y-4">

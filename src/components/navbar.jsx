@@ -130,7 +130,7 @@ const Navbar = () => {
                 className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
               >
                 <FaCalendarCheck className="mr-2" />
-                Asistencias
+                Calendario
               </Link>
             </li>
             <li className="border-b border-gray-700">

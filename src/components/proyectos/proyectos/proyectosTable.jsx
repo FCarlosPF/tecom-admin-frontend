@@ -1,11 +1,17 @@
-"use client"
+"use client";
 
-import { getProyectos, addProyecto, updateProyecto, deleteProyecto } from '@/services/service';
-import React, { useState, useEffect } from 'react';
+import {
+  getProyectos,
+  addProyecto,
+  updateProyecto,
+  deleteProyecto,
+} from "@/services/service";
+import useStore from "@/store";
+import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash, FaPlus, FaTimes } from "react-icons/fa";
 
 const ProyectosTable = () => {
-  const [proyectos, setProyectos] = useState([]);
+  const { proyectos, setProyectos } = useStore();
   const [showModal, setShowModal] = useState(false);
   const [newProyecto, setNewProyecto] = useState({
     nombre: "",
@@ -24,16 +30,19 @@ const ProyectosTable = () => {
     const fetchData = async () => {
       try {
         const proyectosData = await getProyectos();
+        console.log("Fetched proyectos", proyectosData);
         if (Array.isArray(proyectosData)) setProyectos(proyectosData);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
     fetchData();
   }, []);
 
   const handleDelete = async (id) => {
-    const confirmacion = confirm("¿Estás seguro de que deseas eliminar este proyecto?");
+    const confirmacion = confirm(
+      "¿Estás seguro de que deseas eliminar este proyecto?"
+    );
     if (confirmacion) {
       try {
         await deleteProyecto(id);
@@ -92,8 +101,10 @@ const ProyectosTable = () => {
 
   return (
     <div className="p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Gestión de Proyectos</h2>
-      
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+        Gestión de Proyectos
+      </h2>
+
       <button
         className="bg-green-600 text-white px-6 py-3 rounded-lg mb-6 flex items-center hover:bg-green-700 transition"
         onClick={() => {
@@ -123,47 +134,78 @@ const ProyectosTable = () => {
       <table className="table-auto w-full border border-gray-300 rounded-lg">
         <thead className="bg-gray-100">
           <tr>
-            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">Nombre</th>
-            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">Descripción</th>
-            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">Fecha de Inicio</th>
-            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">Fecha de Fin</th>
-            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">Estado</th>
-            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">Presupuesto</th>
-            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">Responsable ID</th>
-            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">Acciones</th>
+            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">
+              Nombre
+            </th>
+            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">
+              Descripción
+            </th>
+            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">
+              Fecha de Inicio
+            </th>
+            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">
+              Fecha de Fin
+            </th>
+            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">
+              Estado
+            </th>
+            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">
+              Presupuesto
+            </th>
+            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">
+              Responsable ID
+            </th>
+            <th className="px-6 py-3 border-b text-left text-sm font-medium text-gray-600">
+              Acciones
+            </th>
           </tr>
         </thead>
         <tbody>
-          {Array.isArray(proyectos) && proyectos.map((proyecto) => (
-            <tr
-              key={proyecto.proyecto_id}
-              className="hover:bg-gray-50 transition duration-200"
-            >
-              <td className="px-6 py-4 border-b text-sm text-gray-700">{proyecto.nombre}</td>
-              <td className="px-6 py-4 border-b text-sm text-gray-700">{proyecto.descripcion}</td>
-              <td className="px-6 py-4 border-b text-sm text-gray-700">{proyecto.fecha_inicio}</td>
-              <td className="px-6 py-4 border-b text-sm text-gray-700">{proyecto.fecha_fin}</td>
-              <td className="px-6 py-4 border-b text-sm text-gray-700">{proyecto.estado}</td>
-              <td className="px-6 py-4 border-b text-sm text-gray-700">{proyecto.presupuesto}</td>
-              <td className="px-6 py-4 border-b text-sm text-gray-700">{proyecto.responsable_id}</td>
-              <td className="px-6 py-4 border-b text-sm text-gray-700">
-                <div className="flex gap-3">
-                  <button
-                    className="text-blue-600 hover:text-blue-800 transition"
-                    onClick={() => openEditModal(proyecto)}
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    className="text-red-600 hover:text-red-800 transition"
-                    onClick={() => handleDelete(proyecto.proyecto_id)}
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
+          {Array.isArray(proyectos) &&
+            proyectos.map((proyecto) => (
+              <tr
+                key={proyecto.proyecto_id}
+                className="hover:bg-gray-50 transition duration-200"
+              >
+                <td className="px-6 py-4 border-b text-sm text-gray-700">
+                  {proyecto.nombre}
+                </td>
+                <td className="px-6 py-4 border-b text-sm text-gray-700">
+                  {proyecto.descripcion}
+                </td>
+                <td className="px-6 py-4 border-b text-sm text-gray-700">
+                  {proyecto.fecha_inicio}
+                </td>
+                <td className="px-6 py-4 border-b text-sm text-gray-700">
+                  {proyecto.fecha_fin}
+                </td>
+                <td className="px-6 py-4 border-b text-sm text-gray-700">
+                  {proyecto.estado}
+                </td>
+                <td className="px-6 py-4 border-b text-sm text-gray-700">
+                  {proyecto.presupuesto}
+                </td>
+                <td className="px-6 py-4 border-b text-sm text-gray-700">
+                  {proyecto.responsable_id}
+                </td>
+                <td className="px-6 py-4 border-b text-sm text-gray-700">
+                  <div className="flex gap-3">
+                    <button
+                      className="text-blue-600 hover:text-blue-800 transition"
+                      onClick={() => openEditModal(proyecto)}
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="text-red-600 hover:text-red-800 transition"
+                      onClick={() => handleDelete(proyecto.proyecto_id)}
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
@@ -179,16 +221,56 @@ const ProyectosTable = () => {
               </button>
             </div>
 
-            {[ 
-              { label: "Nombre", value: isEditing ? editProyecto.nombre : newProyecto.nombre, key: "nombre" },
-              { label: "Descripción", value: isEditing ? editProyecto.descripcion : newProyecto.descripcion, key: "descripcion" },
-              { label: "Fecha de Inicio", value: isEditing ? editProyecto.fecha_inicio : newProyecto.fecha_inicio, key: "fecha_inicio", type: "date" },
-              { label: "Fecha de Fin", value: isEditing ? editProyecto.fecha_fin : newProyecto.fecha_fin, key: "fecha_fin", type: "date" },
-              { label: "Presupuesto", value: isEditing ? editProyecto.presupuesto : newProyecto.presupuesto, key: "presupuesto", type: "number" },
-              { label: "Responsable ID", value: isEditing ? editProyecto.responsable_id : newProyecto.responsable_id, key: "responsable_id", type: "number" },
+            {[
+              {
+                label: "Nombre",
+                value: isEditing ? editProyecto.nombre : newProyecto.nombre,
+                key: "nombre",
+              },
+              {
+                label: "Descripción",
+                value: isEditing
+                  ? editProyecto.descripcion
+                  : newProyecto.descripcion,
+                key: "descripcion",
+              },
+              {
+                label: "Fecha de Inicio",
+                value: isEditing
+                  ? editProyecto.fecha_inicio
+                  : newProyecto.fecha_inicio,
+                key: "fecha_inicio",
+                type: "date",
+              },
+              {
+                label: "Fecha de Fin",
+                value: isEditing
+                  ? editProyecto.fecha_fin
+                  : newProyecto.fecha_fin,
+                key: "fecha_fin",
+                type: "date",
+              },
+              {
+                label: "Presupuesto",
+                value: isEditing
+                  ? editProyecto.presupuesto
+                  : newProyecto.presupuesto,
+                key: "presupuesto",
+                type: "number",
+              },
+              {
+                label: "Responsable ID",
+                value: isEditing
+                  ? editProyecto.responsable_id
+                  : newProyecto.responsable_id,
+                key: "responsable_id",
+                type: "number",
+              },
             ].map(({ label, value, key, type = "text" }) => (
               <div className="mb-6" key={key}>
-                <label className="block text-gray-700 text-sm font-medium mb-2">{label}</label>
+                <label className="block text-gray-700 text-sm font-medium mb-2">
+                  {label}
+                </label>
                 <input
                   type={type}
                   className="shadow-sm border rounded w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -197,14 +279,18 @@ const ProyectosTable = () => {
                     const updatedProyecto = isEditing
                       ? { ...editProyecto, [key]: e.target.value }
                       : { ...newProyecto, [key]: e.target.value };
-                    isEditing ? setEditProyecto(updatedProyecto) : setNewProyecto(updatedProyecto);
+                    isEditing
+                      ? setEditProyecto(updatedProyecto)
+                      : setNewProyecto(updatedProyecto);
                   }}
                 />
               </div>
             ))}
 
             <div className="mb-6">
-              <label className="block text-gray-700 text-sm font-medium mb-2">Estado</label>
+              <label className="block text-gray-700 text-sm font-medium mb-2">
+                Estado
+              </label>
               <select
                 className="shadow-sm border rounded w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={isEditing ? editProyecto.estado : newProyecto.estado}
@@ -212,7 +298,9 @@ const ProyectosTable = () => {
                   const updatedProyecto = isEditing
                     ? { ...editProyecto, estado: e.target.value }
                     : { ...newProyecto, estado: e.target.value };
-                  isEditing ? setEditProyecto(updatedProyecto) : setNewProyecto(updatedProyecto);
+                  isEditing
+                    ? setEditProyecto(updatedProyecto)
+                    : setNewProyecto(updatedProyecto);
                 }}
               >
                 <option value="En progreso">En progreso</option>

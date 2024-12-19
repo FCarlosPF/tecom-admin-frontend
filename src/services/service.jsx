@@ -204,7 +204,7 @@ export const addEmpleado = async (empleado) => {
       throw new Error("Error al agregar el empleado");
     }
 
-    console.log("Empleado añadido correctamente")
+    console.log("Empleado añadido correctamente");
     const data = await response.json();
     return data;
   } catch (error) {
@@ -530,7 +530,7 @@ export const deleteAsignacionesTareas = async (id) => {
         method: "DELETE", // O "PATCH" si solo quieres actualizar algunos campos
         headers: {
           "Content-Type": "application/json",
-        }
+        },
       }
     );
 
@@ -540,7 +540,10 @@ export const deleteAsignacionesTareas = async (id) => {
 
     return { message: "Proyecto eliminado correctamente" };
   } catch (error) {
-    console.error("Error en el servicio de eliminar la asignacionTarea:", error);
+    console.error(
+      "Error en el servicio de eliminar la asignacionTarea:",
+      error
+    );
     throw error;
   }
 };
@@ -558,7 +561,8 @@ export const getProyectos = async () => {
       throw new Error("Error al eliminar el proyecto");
     }
 
-    return { message: "Proyecto eliminado correctamente" };
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("Error en el servicio de obtener proyectos:", error);
     throw error;
@@ -1043,37 +1047,40 @@ export const updateOrdenCompra = async (id, ordenCompra) => {
   }
 };
 
-  export const deleteOrdenCompra = async (id) => {
-    try {
-      const response = await fetch(
-        `http://127.0.0.1:8000/api/ordenescompra/${id}/`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Error al eliminar la orden de compra");
+export const deleteOrdenCompra = async (id) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/ordenescompra/${id}/`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
+    );
 
-      return { message: "Orden de compra eliminada correctamente" };
-    } catch (error) {
-      console.error("Error en el servicio de eliminar orden de compra:", error);
-      throw error;
+    if (!response.ok) {
+      throw new Error("Error al eliminar la orden de compra");
     }
-  };
+
+    return { message: "Orden de compra eliminada correctamente" };
+  } catch (error) {
+    console.error("Error en el servicio de eliminar orden de compra:", error);
+    throw error;
+  }
+};
 
 export const getMetricasPorEmpleado = async (id) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/metricas-empleado/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/metricas-empleado/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Error al obtener las métricas del empleado");
@@ -1082,19 +1089,26 @@ export const getMetricasPorEmpleado = async (id) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error en el servicio de obtener métricas del empleado:", error);
+    console.error(
+      "Error en el servicio de obtener métricas del empleado:",
+      error
+    );
     throw error;
   }
 };
 
 export const descargarReporteExcel = async () => {
   try {
-    const response = await fetch("http://127.0.0.1:8000/api/reporte-tareas-no-entregadas-a-tiempo/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      },
-    });
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/reporte-tareas-no-entregadas-a-tiempo/",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type":
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Error al descargar el reporte");
@@ -1115,12 +1129,15 @@ export const descargarReporteExcel = async () => {
 
 export const obtenerTareasPendientesEmpleado = async (id_empleado) => {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/tareas-pendientes/${id_empleado}/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/tareas-pendientes/${id_empleado}/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Error al obtener las tareas pendientes");

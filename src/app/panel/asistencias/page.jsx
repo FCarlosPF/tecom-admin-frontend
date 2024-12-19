@@ -3,7 +3,7 @@ import React from "react";
 
 
 const App = () => {
-  const id_empleado = 6; // Reemplaza con el ID del empleado que desees
+  const id_empleado = 31; // Reemplaza con el ID del empleado que desees
 
   return (
     <div>

@@ -46,7 +46,6 @@ const EditTaskModal = ({
     return format(now, "yyyy-MM-dd'T'HH:mm");
   };
 
-
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-start"
@@ -78,6 +77,40 @@ const EditTaskModal = ({
             }
           />
         </div>
+        {usuarioLogeado &&
+          (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+            <div className="mb-4">
+              <label className="block text-gray-700">Tarea Padre</label>
+              <select
+                className="w-full p-2 border rounded"
+                value={editedTask.tarea_padre || ""}
+                onChange={(e) =>
+                  setEditedTask({ ...editedTask, tarea_padre: e.target.value })
+                }
+              >
+                <option value="">Seleccione una tarea padre</option>
+                {Array.isArray(tareas) &&
+                  tareas.map((tarea) => (
+                    <option
+                      key={
+                        usuarioLogeado.rol === 2
+                          ? tarea.tarea.tarea_id
+                          : tarea.tarea_id
+                      }
+                      value={
+                        usuarioLogeado.rol === 2
+                          ? tarea.tarea.tarea_id
+                          : tarea.tarea_id
+                      }
+                    >
+                      {usuarioLogeado.rol === 2
+                        ? tarea.tarea.titulo
+                        : tarea.titulo}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          )}
         <div className="mb-4">
           <label className="block text-gray-700">Fecha Estimada de Fin</label>
           <input
@@ -117,40 +150,7 @@ const EditTaskModal = ({
             <option value="Baja">Baja</option>
           </select>
         </div>
-        {usuarioLogeado &&
-          (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
-            <div className="mb-4">
-              <label className="block text-gray-700">Tarea Padre</label>
-              <select
-                className="w-full p-2 border rounded"
-                value={editedTask.tarea_padre || ""}
-                onChange={(e) =>
-                  setEditedTask({ ...editedTask, tarea_padre: e.target.value })
-                }
-              >
-                <option value="">Seleccione una tarea padre</option>
-                {Array.isArray(tareas) &&
-                  tareas.map((tarea) => (
-                    <option
-                      key={
-                        usuarioLogeado.rol === 2
-                          ? tarea.tarea.tarea_id
-                          : tarea.tarea_id
-                      }
-                      value={
-                        usuarioLogeado.rol === 2
-                          ? tarea.tarea.tarea_id
-                          : tarea.tarea_id
-                      }
-                    >
-                      {usuarioLogeado.rol === 2
-                        ? tarea.tarea.titulo
-                        : tarea.titulo}
-                    </option>
-                  ))}
-              </select>
-            </div>
-          )}
+
         <div className="mb-4">
           <label className="block text-gray-700">Asignar a Usuarios</label>
           <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">

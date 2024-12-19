@@ -14,8 +14,9 @@ const Modal = ({
 }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [parentTaskEndDate, setParentTaskEndDate] = useState("");
-
-  
+  const {
+    proyectos
+  } = useStore();
   useEffect(() => {
     if (newTask.tarea_padre) {
       const parentTask = tareas.find((tarea) => {
@@ -87,6 +88,58 @@ const Modal = ({
           />
         </div>
         <div className="mb-4">
+        <label className="block text-gray-700">Proyecto</label>
+        <select
+          className="w-full p-2 border rounded"
+          value={newTask.proyecto || ""}
+          onChange={(e) =>
+            setNewTask({ ...newTask, proyecto: e.target.value })
+          }
+        >
+          <option value="">Seleccione un proyecto</option>
+          {Array.isArray(proyectos) &&
+            proyectos.map((proyecto) => (
+              <option key={proyecto.proyecto_id} value={proyecto.proyecto_id}>
+                {proyecto.nombre}
+              </option>
+            ))}
+        </select>
+      </div>
+        {usuarioLogeado &&
+          (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+            <div className="mb-4">
+              <label className="block text-gray-700">Tarea Padre</label>
+              <select
+                className="w-full p-2 border rounded"
+                value={newTask.tarea_padre || ""}
+                onChange={(e) =>
+                  setNewTask({ ...newTask, tarea_padre: e.target.value })
+                }
+              >
+                <option value="">Seleccione una tarea padre</option>
+                {Array.isArray(tareas) &&
+                  tareas.map((tarea) => (
+                    <option
+                      key={
+                        usuarioLogeado.rol === 2
+                          ? tarea.tarea.tarea_id
+                          : tarea.tarea_id
+                      }
+                      value={
+                        usuarioLogeado.rol === 2
+                          ? tarea.tarea.tarea_id
+                          : tarea.tarea_id
+                      }
+                    >
+                      {usuarioLogeado.rol === 2
+                        ? tarea.tarea.titulo
+                        : tarea.titulo}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          )}
+        <div className="mb-4">
           <label className="block text-gray-700">Fecha Estimada de Fin</label>
           <input
             type="datetime-local"
@@ -130,40 +183,7 @@ const Modal = ({
             <option value="Baja">Baja</option>
           </select>
         </div>
-        {usuarioLogeado &&
-          (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
-            <div className="mb-4">
-              <label className="block text-gray-700">Tarea Padre</label>
-              <select
-                className="w-full p-2 border rounded"
-                value={newTask.tarea_padre || ""}
-                onChange={(e) =>
-                  setNewTask({ ...newTask, tarea_padre: e.target.value })
-                }
-              >
-                <option value="">Seleccione una tarea padre</option>
-                {Array.isArray(tareas) &&
-                  tareas.map((tarea) => (
-                    <option
-                      key={
-                        usuarioLogeado.rol === 2
-                          ? tarea.tarea.tarea_id
-                          : tarea.tarea_id
-                      }
-                      value={
-                        usuarioLogeado.rol === 2
-                          ? tarea.tarea.tarea_id
-                          : tarea.tarea_id
-                      }
-                    >
-                      {usuarioLogeado.rol === 2
-                        ? tarea.tarea.titulo
-                        : tarea.titulo}
-                    </option>
-                  ))}
-              </select>
-            </div>
-          )}
+
         <div className="mb-4">
           <label className="block text-gray-700">Asignar a Usuarios</label>
           <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto">

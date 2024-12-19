@@ -18,10 +18,12 @@ const useStore = create((set) => ({
   empleados: [],
   tareas: [],
   asignacionesTareas: [],
+  proyectos: [],
   setUsuarioLogeado: (usuario) => set({ usuarioLogeado: usuario }),
   setEmpleados: (empleados) => set({ empleados }),
   setTareas: (tareas) => set({ tareas }),
-  setAsignacionesTareas: (asignacionesTareas) => set({ asignacionesTareas })
+  setAsignacionesTareas: (asignacionesTareas) => set({ asignacionesTareas }),
+  setProyectos: (proyectos) => set({ proyectos }), 
 }));
 
 export default useStore;

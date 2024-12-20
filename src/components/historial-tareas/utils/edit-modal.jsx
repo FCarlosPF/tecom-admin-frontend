@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
+import useStore from "@/store";
 
 const EditTaskModal = ({
   isOpen,
@@ -13,6 +14,7 @@ const EditTaskModal = ({
 }) => {
   const [editedTask, setEditedTask] = useState(taskToEdit || {});
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const { proyectos } = useStore();
 
   useEffect(() => {
     if (taskToEdit) {
@@ -23,6 +25,13 @@ const EditTaskModal = ({
         )
         .map((asignacion) => asignacion.empleado.id_empleado);
       setSelectedUsers(assignedUsers);
+
+      if (taskToEdit.proyecto && taskToEdit.proyecto.proyecto_id) {
+        setEditedTask((prev) => ({
+          ...prev,
+          proyecto_id: taskToEdit.proyecto.proyecto_id,
+        }));
+      }
     }
   }, [taskToEdit, asignacionesTareas]);
 
@@ -76,6 +85,27 @@ const EditTaskModal = ({
               setEditedTask({ ...editedTask, descripcion: e.target.value })
             }
           />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Proyecto</label>
+          <select
+            className="w-full p-2 border rounded"
+            value={editedTask.proyecto_id || ""}
+            onChange={(e) =>
+              setEditedTask({
+                ...editedTask,
+                proyecto_id: Number(e.target.value),
+              })
+            }
+          >
+            <option value="">Seleccione un proyecto</option>
+            {Array.isArray(proyectos) &&
+              proyectos.map((proyecto) => (
+                <option key={proyecto.proyecto_id} value={proyecto.proyecto_id}>
+                  {proyecto.nombre}
+                </option>
+              ))}
+          </select>
         </div>
         {usuarioLogeado &&
           (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (

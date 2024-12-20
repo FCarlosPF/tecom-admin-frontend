@@ -15,6 +15,7 @@ import {
   updateAsignacionesTareas,
   deleteAsignacionesTareas,
   descargarReporteExcel,
+  getProyectos,
 } from "@/services/service";
 import Modal from "./utils/create-modal";
 import TaskTable from "./utils/tarea-table";
@@ -35,6 +36,7 @@ const TareasView = () => {
     setEmpleados,
     asignacionesTareas,
     setAsignacionesTareas,
+    setProyectos
   } = useStore();
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
@@ -48,6 +50,7 @@ const TareasView = () => {
     prioridad: "",
     estado: "Pendiente",
     tarea_padre: null,
+    proyecto_id: "", // Agregar la propiedad proyecto
   });
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -79,6 +82,19 @@ const TareasView = () => {
       console.log("usuarioLogeado no está definido o id_empleado es null");
     }
   }, [usuarioLogeado]);
+
+  useEffect(() => {
+    const fetchProyectos = async () => {
+      try {
+        const proyectosData = await getProyectos();
+        console.log("Fetched proyectos", proyectosData);
+        if (Array.isArray(proyectosData)) setProyectos(proyectosData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchProyectos();
+  }, []);
 
   const eliminarTarea = async (id) => {
     try {
@@ -138,6 +154,7 @@ const TareasView = () => {
         prioridad: "",
         estado: "Pendiente",
         tarea_padre: null,
+        proyecto_id: ""
       });
       fetchData();
       setModalOpen(false);

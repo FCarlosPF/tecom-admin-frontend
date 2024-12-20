@@ -134,6 +134,15 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="border-b border-gray-700">
+              <Link
+                href="/panel/notificaciones"
+                className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
+              >
+                <FaCalendarCheck className="mr-2" />
+                Notificaciones
+              </Link>
+            </li>
+            <li className="border-b border-gray-700">
               <div
                 onClick={toggleDropdown}
                 className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition cursor-pointer"

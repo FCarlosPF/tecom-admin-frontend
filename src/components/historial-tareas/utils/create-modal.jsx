@@ -19,13 +19,13 @@ const Modal = ({
   } = useStore();
   useEffect(() => {
     if (newTask.tarea_padre) {
-      const parentTask = tareas.find((tarea) => {
+      const parentTask = Array.isArray(tareas) ? tareas.find((tarea) => {
         if (usuarioLogeado.rol === 1) {
           return tarea.tarea_id === parseInt(newTask.tarea_padre, 10);
         } else {
           return tarea.tarea.tarea_id === parseInt(newTask.tarea_padre, 10);
         }
-      });
+      }) : null;
       if (parentTask) {
         setParentTaskEndDate(
           usuarioLogeado.rol === 1
@@ -91,9 +91,9 @@ const Modal = ({
         <label className="block text-gray-700">Proyecto</label>
         <select
           className="w-full p-2 border rounded"
-          value={newTask.proyecto || ""}
+          value={newTask.proyecto_id || ""}
           onChange={(e) =>
-            setNewTask({ ...newTask, proyecto: e.target.value })
+            setNewTask({ ...newTask, proyecto_id: Number(e.target.value) })
           }
         >
           <option value="">Seleccione un proyecto</option>

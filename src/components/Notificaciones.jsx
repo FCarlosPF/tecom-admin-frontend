@@ -102,14 +102,14 @@ const Notificaciones = () => {
           setNotificaciones(updatedNotificaciones);
 
         if (!isEditing) {
-            const notificacionData =
-              selectedPara === "Todos"
-                ? {}
-                : {
-                    area_id: selectedPara === "Área" ? selectedIds : null,
-                    rol_id: selectedPara === "Rol" ? selectedIds : null,
-                    empleados_ids: selectedPara === "Empleado" ? selectedIds : [],
-                  };
+          const notificacionData =
+            selectedPara === "Todos"
+              ? {}
+              : {
+                  area_id: selectedPara === "Área" ? selectedIds : null,
+                  rol_id: selectedPara === "Rol" ? selectedIds : null,
+                  empleados_ids: selectedPara === "Empleado" ? selectedIds : [],
+                };
 
           console.log("Notificación Data:", notificacionData); // Agregar console.log
 
@@ -371,12 +371,12 @@ const Notificaciones = () => {
                   setSelectedPara(e.target.value);
                 }}
               >
-                <option value="Personalizado">Personalizado</option>
+                <option value="">Seleccione una Opción</option>
                 <option value="Área">Área</option>
                 <option value="Rol">Rol</option>
                 <option value="Empleado">Empleado</option>
-                <option value="Todos">Todos</option> {/* Agregar opción Todos */}
-
+                <option value="Todos">Todos</option>{" "}
+                {/* Agregar opción Todos */}
               </select>
             </div>
 
@@ -387,8 +387,14 @@ const Notificaciones = () => {
                 </label>
                 <select
                   className="shadow-sm border rounded w-full py-3 px-4 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onChange={(e) => setSelectedIds(e.target.value)}
+                  onChange={(e) => {
+                    const selectedValue = e.target.value;
+                    console.log("Selected Area ID:", selectedValue); // Agregar console.log
+                    setSelectedIds(selectedValue);
+                  }}
                 >
+                  <option value="">Seleccione un área</option>
+
                   {areas.map((area) => (
                     <option key={area.area_id} value={area.area_id}>
                       {area.nombre}

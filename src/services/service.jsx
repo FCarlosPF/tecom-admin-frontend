@@ -1266,3 +1266,26 @@ export const enviarNotificacion = async (notificacionId, notificacion) => {
     throw error;
   }
 };
+
+
+
+export const getNotificacionesPorEmpleado = async (idEmpleado) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/notificaciones/empleado/${idEmpleado}/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener las notificaciones");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de obtener notificaciones:", error);
+    throw error;
+  }
+};

@@ -9,6 +9,7 @@ import {
   FaArrowRight,
   FaChevronDown,
   FaChevronUp,
+  FaBell,
 } from "react-icons/fa";
 import useStore from "@/store";
 import {
@@ -20,6 +21,7 @@ import {
   updateTareas,
 } from "@/services/service";
 import { format } from "date-fns";
+import CampanaModal from "./utils/CampanaModal";
 
 const TareasView = () => {
   const {
@@ -35,7 +37,15 @@ const TareasView = () => {
   const [asignadorNombres, setAsignadorNombres] = useState("");
   const [empleadoNombres, setEmpleadoNombres] = useState("");
   const [expandedTareas, setExpandedTareas] = useState({});
+  const [isModalCampanaOpen, setIsModalCampanaOpen] = useState(false);
 
+  const handleBellClick = () => {
+    setIsModalCampanaOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalCampanaOpen(false);
+  };
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
@@ -229,7 +239,15 @@ const TareasView = () => {
 
   return (
     <div className="container mx-auto p-6 h-screen flex flex-col">
-      <h1 className="text-4xl font-bold text-black mb-6 text-center">Kanban</h1>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex-grow text-center">
+          <h1 className="text-4xl font-bold text-black">Kanban</h1>
+        </div>
+        <FaBell
+          className="text-4xl text-black cursor-pointer"
+          onClick={handleBellClick}
+        />
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 h-full flex-grow">
         {estados.map((estado) => (
           <div
@@ -542,6 +560,7 @@ const TareasView = () => {
           </div>
         </div>
       )}
+      <CampanaModal isOpen={isModalCampanaOpen} onClose={handleCloseModal} />
     </div>
   );
 };

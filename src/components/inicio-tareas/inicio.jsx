@@ -241,7 +241,7 @@ const TareasView = () => {
     <div className="container mx-auto p-6 h-screen flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <div className="flex-grow text-center">
-          <h1 className="text-4xl font-bold text-black">Kanban</h1>
+          <h1 className="text-4xl font-bold text-black">Panel de Tareas</h1>
         </div>
         <FaBell
           className="text-4xl text-black cursor-pointer"

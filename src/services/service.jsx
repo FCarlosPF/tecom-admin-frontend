@@ -29,6 +29,32 @@ export const loginService = async (username, password) => {
   }
 };
 
+export const changePasswordService = async (oldPassword, newPassword) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+
+    const response = await fetch("http://127.0.0.1:8000/api/change-password/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({ old_password: oldPassword, new_password: newPassword }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al cambiar la contraseña");
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de cambio de contraseña:", error);
+    throw error;
+  }
+};
+
 export const logoutService = async () => {
   try {
     const refreshToken = localStorage.getItem("refreshToken");

@@ -1,3 +1,4 @@
+// src/components/navbar.jsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -16,11 +17,13 @@ import {
   FaCalendarCheck,
   FaProjectDiagram,
   FaChevronDown,
+  FaBars,
+  FaTimes,
 } from "react-icons/fa";
 import { logoutService } from "@/services/service";
 import useStore from "@/store/index";
 
-const Navbar = () => {
+const Navbar = ({ isMenuOpen, toggleMenu }) => {
   const router = useRouter();
   const { usuarioLogeado, setUsuarioLogeado } = useStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -48,12 +51,29 @@ const Navbar = () => {
   };
 
   return (
-    <aside className="w-72 bg-black shadow-lg p-4 fixed top-0 left-0 h-full flex flex-col justify-between">
-      <div className="overflow-y-auto">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-white">Admin Panel</h1>
-        </div>
-        <nav>
+    <aside
+      className={`bg-black shadow-lg fixed top-0 left-0 h-full flex flex-col justify-between transition-all duration-300 ${
+        isMenuOpen ? "w-72" : "w-0"
+      }`}
+    >
+      <div className="flex justify-between items-center p-4 mr-9">
+        {isMenuOpen && (
+          <div className="hidden md:block p-4">
+            <h1 className="text-2xl font-bold text-white">
+              TECOM ADMINISTRADOR
+            </h1>
+          </div>
+        )}
+
+        <button
+          onClick={toggleMenu}
+          className={`text-${isMenuOpen ? "white" : "black"}`}
+        >
+          <FaBars />
+        </button>
+      </div>
+      <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-black h-full">
+        <nav className="p-4">
           <ul className="space-y-4">
             <li className="border-b border-gray-700">
               <Link
@@ -61,7 +81,7 @@ const Navbar = () => {
                 className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
               >
                 <FaHome className="mr-2" />
-                Panel
+                <span className="hidden md:inline">Panel</span>
               </Link>
             </li>
             {usuarioLogeado && usuarioLogeado.rol === 1 && (
@@ -71,7 +91,7 @@ const Navbar = () => {
                   className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
                 >
                   <FaThLarge className="mr-2" />
-                  Dashboard
+                  <span className="hidden md:inline">Dashboard</span>
                 </Link>
               </li>
             )}
@@ -81,7 +101,7 @@ const Navbar = () => {
                 className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
               >
                 <FaUserCircle className="mr-2" />
-                Perfil
+                <span className="hidden md:inline">Perfil</span>
               </Link>
             </li>
             {usuarioLogeado && usuarioLogeado.rol === 1 && (
@@ -91,7 +111,7 @@ const Navbar = () => {
                   className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
                 >
                   <FaMapMarkedAlt className="mr-2" />
-                  Áreas
+                  <span className="hidden md:inline">Áreas</span>
                 </Link>
               </li>
             )}
@@ -101,7 +121,7 @@ const Navbar = () => {
                 className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
               >
                 <FaClipboardList className="mr-2" />
-                Tareas
+                <span className="hidden md:inline">Tareas</span>
               </Link>
             </li>
             {usuarioLogeado && usuarioLogeado.rol === 1 && (
@@ -111,7 +131,7 @@ const Navbar = () => {
                   className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
                 >
                   <FaUsersCog className="mr-2" />
-                  Empleados
+                  <span className="hidden md:inline">Empleados</span>
                 </Link>
               </li>
             )}
@@ -121,7 +141,7 @@ const Navbar = () => {
                 className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
               >
                 <FaChartBar className="mr-2" />
-                Desempeño
+                <span className="hidden md:inline">Desempeño</span>
               </Link>
             </li>
             <li className="border-b border-gray-700">
@@ -130,7 +150,7 @@ const Navbar = () => {
                 className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
               >
                 <FaCalendarCheck className="mr-2" />
-                Calendario
+                <span className="hidden md:inline">Calendario</span>
               </Link>
             </li>
             <li className="border-b border-gray-700">
@@ -139,7 +159,7 @@ const Navbar = () => {
                 className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
               >
                 <FaCalendarCheck className="mr-2" />
-                Notificaciones
+                <span className="hidden md:inline">Notificaciones</span>
               </Link>
             </li>
             <li className="border-b border-gray-700">
@@ -148,7 +168,7 @@ const Navbar = () => {
                 className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition cursor-pointer"
               >
                 <FaProjectDiagram className="mr-2" />
-                Proyectos
+                <span className="hidden md:inline">Proyectos</span>
                 <FaChevronDown className="ml-2" />
               </div>
               {isDropdownOpen && (
@@ -211,20 +231,20 @@ const Navbar = () => {
                   className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
                 >
                   <FaUserShield className="mr-2" />
-                  Roles
+                  <span className="hidden md:inline">Roles</span>
                 </Link>
               </li>
             )}
           </ul>
         </nav>
       </div>
-      <div>
+      <div className="p-4">
         <button
           onClick={handleLogout}
           className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition w-full"
         >
           <FaSignOutAlt className="mr-2" />
-          Cerrar Sesión
+          <span className="hidden md:inline">Cerrar Sesión</span>
         </button>
       </div>
     </aside>

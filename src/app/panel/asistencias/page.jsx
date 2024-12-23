@@ -3,11 +3,10 @@ import React from "react";
 
 
 const App = () => {
-  const id_empleado = 31; // Reemplaza con el ID del empleado que desees
 
   return (
     <div>
-      <CalendarioTareas id_empleado={id_empleado} />
+      <CalendarioTareas/>
     </div>
   );
 };

@@ -36,7 +36,7 @@ const Modal = ({
     } else {
       setParentTaskEndDate("");
     }
-  }, [newTask.tarea_padre, tareas, usuarioLogeado.rol]);
+  }, [newTask.tarea_padre, tareas, usuarioLogeado?.rol]);
 
   if (!isOpen) return null;
 

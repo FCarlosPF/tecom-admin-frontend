@@ -262,24 +262,24 @@ export const addAsignacionTarea = async (task) => {
   }
 };
 
-export const updateEmpleado = async (id, updatedArea) => {
+export const updateEmpleado = async (id, updatedEmpleado) => {
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/empleados/${id}/`, {
       method: "PUT", // O "PATCH" si solo quieres actualizar algunos campos
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedArea),
+      body: JSON.stringify(updatedEmpleado),
     });
 
     if (!response.ok) {
-      throw new Error("Error al actualizar el área");
+      throw new Error("Error al actualizar el empleado");
     }
 
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error en el servicio de actualizar área:", error);
+    console.error("Error en el servicio de actualizar empleado:", error);
     throw error;
   }
 };
@@ -1147,6 +1147,122 @@ export const obtenerTareasPendientesEmpleado = async (id_empleado) => {
     return data;
   } catch (error) {
     console.error("Error al obtener las tareas pendientes:", error);
+    throw error;
+  }
+};
+
+export const getNotificaciones = async () => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/notificaciones/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener las notificaciones");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de obtener notificaciones:", error);
+    throw error;
+  }
+};
+
+export const addNotificacion = async (ordenCompra) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/api/notificaciones/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(ordenCompra),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al agregar la notificación");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de agregar notificación:", error);
+    throw error;
+  }
+};
+
+export const updateNotificacion = async (id, ordenCompra) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/notificaciones/${id}/`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(ordenCompra),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al actualizar la notificación");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de actualizar la notificación:", error);
+    throw error;
+  }
+};
+
+export const deleteNotificacion = async (id) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/notificaciones/${id}/`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al eliminar la notificación");
+    }
+
+    return { message: "Notificación eliminada correctamente" };
+  } catch (error) {
+    console.error("Error en el servicio de eliminar notificación:", error);
+    throw error;
+  }
+};
+
+export const enviarNotificacion = async (notificacionId, notificacion) => {
+  try {
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/notificaciones/${notificacionId}/enviar/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(notificacion),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al enviar la notificación");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de enviar notificación:", error);
     throw error;
   }
 };

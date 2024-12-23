@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 
 const EmpleadoModal = ({
@@ -7,10 +7,17 @@ const EmpleadoModal = ({
   setEmpleado,
   onClose,
   onSave,
+  areas,
 }) => {
   const handleChange = (key, value) => {
     setEmpleado((prev) => ({ ...prev, [key]: value }));
   };
+
+  useEffect(() => {
+    if (isEditing && empleado) {
+      setEmpleado(empleado);
+    }
+  }, [isEditing, empleado, setEmpleado]);
 
   return (
     <div
@@ -35,23 +42,42 @@ const EmpleadoModal = ({
           { label: "Correo", key: "correo", type: "email" },
           { label: "Especialidad", key: "especialidad" },
           { label: "Sueldo", key: "sueldo", type: "number" },
-          { label: "Fecha de contratación", key: "fecha_contratacion", type: "date" },
+          {
+            label: "Fecha de contratación",
+            key: "fecha_contratacion",
+            type: "date",
+          },
         ].map(({ label, key, type = "text" }) => (
           <div className="mb-4" key={key}>
             <label className="block text-gray-700">{label}</label>
             <input
               type={type}
               className="w-full p-2 border rounded shadow-inner"
-              value={empleado[key]}
+              value={empleado[key] ?? ""} // Proporciona un valor predeterminado vacío si es null o undefined
               onChange={(e) => handleChange(key, e.target.value)}
             />
           </div>
         ))}
         <div className="mb-4">
+          <label className="block text-gray-700">Área</label>
+          <select
+            className="w-full p-2 border rounded shadow-inner"
+            value={empleado.area ?? ""} // Proporciona un valor predeterminado vacío si es null o undefined
+            onChange={(e) => handleChange("area", parseInt(e.target.value, 10))} // Convierte el valor a entero
+          >
+            <option value="">Seleccione un área</option>
+            {areas.map((area) => (
+              <option key={area.area_id} value={area.area_id}>
+                {area.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="mb-4">
           <label className="block text-gray-700">Estado</label>
           <select
             className="w-full p-2 border rounded shadow-inner"
-            value={empleado.activo}
+            value={empleado.activo ?? ""} // Proporciona un valor predeterminado vacío si es null o undefined
             onChange={(e) => handleChange("activo", e.target.value === "true")}
           >
             <option value="true">Activo</option>

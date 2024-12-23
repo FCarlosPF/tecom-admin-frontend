@@ -1,7 +1,12 @@
 import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-const EmpleadosTable = ({ empleados, onEdit, onDelete }) => {
+const EmpleadosTable = ({ empleados, onEdit, onDelete, areas }) => {
+  const getAreaName = (areaId) => {
+    const area = areas.find((area) => area.area_id === areaId);
+    return area ? area.nombre : "Sin área";
+  };
+
   return (
     <table className="w-full rounded-lg">
       <thead className="bg-gray-800">
@@ -26,6 +31,9 @@ const EmpleadosTable = ({ empleados, onEdit, onDelete }) => {
           </th>
           <th className="px-4 py-3 text-left text-sm text-white font-bold">
             Fecha de contratación
+          </th>
+          <th className="px-4 py-3 text-left text-sm text-white font-bold">
+            Área
           </th>
           <th className="px-4 py-3 text-left text-sm text-white font-bold">
             Acciones
@@ -67,6 +75,9 @@ const EmpleadosTable = ({ empleados, onEdit, onDelete }) => {
               </td>
               <td className="px-4 py-3 text-sm text-gray-100">
                 {usuario.fecha_contratacion}
+              </td>
+              <td className="px-4 py-3 text-sm text-gray-100">
+                {getAreaName(usuario.area.area_id)}
               </td>
               <td className="px-4 py-3 text-sm text-gray-100">
                 <div className="flex gap-3">

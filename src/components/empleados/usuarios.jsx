@@ -7,14 +7,16 @@ import {
   addEmpleado,
   updateEmpleado,
   deleteEmpleado,
+  getAreas,
 } from "@/services/service";
 import EmpleadoModal from "./utils/modal";
 import EmpleadosTable from "./utils/table";
 import useStore from "@/store";
 
 const UsuariosView = () => {
-  const { usuarioLogeado, setUsuarioLogeado } = useStore();
+  const { usuarioLogeado } = useStore();
   const [empleados, setEmpleados] = useState([]);
+  const [areas, setAreas] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [newEmpleado, setNewEmpleado] = useState({
@@ -25,6 +27,7 @@ const UsuariosView = () => {
     sueldo: "",
     activo: true,
     fecha_contratacion: "",
+    area: "",
   });
   const [editEmpleado, setEditEmpleado] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -63,9 +66,19 @@ const UsuariosView = () => {
     }
   };
 
+  const fetchAreas = async () => {
+    try {
+      const areasData = await getAreas();
+      setAreas(areasData);
+    } catch (error) {
+      console.error("Error al obtener las áreas:", error);
+    }
+  };
+
   useEffect(() => {
     if (usuarioLogeado) {
       fetchEmpleados();
+      fetchAreas();
     } else {
       console.log("usuarioLogeado no está definido, no se ejecuta fetchEmpleados");
     }
@@ -103,6 +116,7 @@ const UsuariosView = () => {
         sueldo: "",
         activo: true,
         fecha_contratacion: "",
+        area: "",
       });
       setMessage("Empleado agregado exitosamente");
     } catch (error) {
@@ -113,6 +127,7 @@ const UsuariosView = () => {
 
   const handleEditEmpleado = async () => {
     try {
+      console.log("Empleado Editado:", editEmpleado); // Verificar el estado de editEmpleado
       await updateEmpleado(editEmpleado.id_empleado, editEmpleado);
 
       // Update the specific employee in the state without changing its position
@@ -158,6 +173,7 @@ const UsuariosView = () => {
               sueldo: "",
               activo: true,
               fecha_contratacion: "",
+              area: "",
             });
             setIsEditing(false);
             setShowModal(true);
@@ -178,6 +194,7 @@ const UsuariosView = () => {
             empleados={empleados}
             onEdit={openEditModal}
             onDelete={handleDelete}
+            areas={areas}
           />
         ) : (
           <div className="text-white">No tienes permiso para ver esta información</div>
@@ -189,6 +206,7 @@ const UsuariosView = () => {
             setEmpleado={isEditing ? setEditEmpleado : setNewEmpleado}
             onClose={() => setShowModal(false)}
             onSave={isEditing ? handleEditEmpleado : handleAddEmpleado}
+            areas={areas} // Pasar las áreas al modal
           />
         )}
       </div>

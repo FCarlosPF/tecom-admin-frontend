@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
@@ -6,6 +6,7 @@ import { format, parse, startOfWeek, getDay } from "date-fns";
 import { obtenerTareasPendientesEmpleado } from "../services/service";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "tailwindcss/tailwind.css";
+import useStore from "@/store";
 
 const locales = {
   "en-US": require("date-fns/locale/en-US"),
@@ -19,25 +20,36 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const CalendarioTareas = ({ id_empleado }) => {
+const CalendarioTareas = () => {
   const [tareas, setTareas] = useState([]);
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState("month");
   const [selectedDate, setSelectedDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const { usuarioLogeado, setUsuarioLogeado } = useStore();
 
   useEffect(() => {
     const fetchTareas = async () => {
       try {
-        const data = await obtenerTareasPendientesEmpleado(id_empleado);
+        const data = await obtenerTareasPendientesEmpleado(
+          usuarioLogeado.id_empleado
+        );
         setTareas(data);
       } catch (error) {
-        console.error("Error al obtener las tareas pendientes:", error);
-      }
+        console.error(
+          "Error al obtener las tareas pendientes:",
+          error.message,
+          error.stack
+        );
+      } 
     };
 
-    fetchTareas();
-  }, [id_empleado]);
+    if (usuarioLogeado && usuarioLogeado.id_empleado !== null) {
+      fetchTareas();
+    } else {
+      console.log("usuarioLogeado no está definido o id_empleado es null");
+    }
+  }, [usuarioLogeado]);
 
   const events = tareas.map((tarea) => ({
     title: tarea.tarea_titulo,
@@ -70,8 +82,7 @@ const CalendarioTareas = ({ id_empleado }) => {
   };
 
   const eventsInSelectedDate = events.filter(
-    (event) =>
-      event.start.toDateString() === selectedDate?.toDateString()
+    (event) => event.start.toDateString() === selectedDate?.toDateString()
   );
 
   return (
@@ -118,19 +129,19 @@ const CalendarioTareas = ({ id_empleado }) => {
 
           return {
             style: {
-                backgroundColor,
-                borderColor,
-                borderWidth: "2px",
-                borderStyle: "solid",
-                borderRadius: "4px",
-                padding: "4px",
-                color: "white",
-                fontSize: "12px", // Reducir el tamaño de la fuente
-                whiteSpace: "nowrap", // Asegura que el texto no se desborde
-                textOverflow: "ellipsis", // Muestra "..." cuando el texto es demasiado largo
-                overflow: "hidden", // Oculta el texto cuando es muy largo
-                textAlign: "center", // Centra el texto
-                fontWeight: "bold", // Hace el texto en negrita
+              backgroundColor,
+              borderColor,
+              borderWidth: "2px",
+              borderStyle: "solid",
+              borderRadius: "4px",
+              padding: "4px",
+              color: "white",
+              fontSize: "12px", // Reducir el tamaño de la fuente
+              whiteSpace: "nowrap", // Asegura que el texto no se desborde
+              textOverflow: "ellipsis", // Muestra "..." cuando el texto es demasiado largo
+              overflow: "hidden", // Oculta el texto cuando es muy largo
+              textAlign: "center", // Centra el texto
+              fontWeight: "bold", // Hace el texto en negrita
             },
           };
         }}
@@ -193,12 +204,19 @@ const CalendarioTareas = ({ id_empleado }) => {
       {showModal && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg w-1/2">
-            <h2 className="text-xl font-bold mb-4">Tareas para el {selectedDate.toLocaleDateString()}</h2>
+            <h2 className="text-xl font-bold mb-4">
+              Tareas para el {selectedDate.toLocaleDateString()}
+            </h2>
             <ul>
               {eventsInSelectedDate.map((event, index) => (
                 <li key={index} className="mb-2">
-                  <p><strong>{event.title}</strong></p>
-                  <p>{new Date(event.start).toLocaleTimeString()} - {new Date(event.end).toLocaleTimeString()}</p>
+                  <p>
+                    <strong>{event.title}</strong>
+                  </p>
+                  <p>
+                    {new Date(event.start).toLocaleTimeString()} -{" "}
+                    {new Date(event.end).toLocaleTimeString()}
+                  </p>
                 </li>
               ))}
             </ul>
@@ -215,4 +233,4 @@ const CalendarioTareas = ({ id_empleado }) => {
   );
 };
 
-export default CalendarioTareas
+export default CalendarioTareas;

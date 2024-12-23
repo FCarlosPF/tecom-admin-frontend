@@ -47,7 +47,7 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea, editarTarea }) => {
       </thead>
       <tbody>
         {tareas.map((task) => {
-          const tarea = usuarioLogeado && usuarioLogeado.rol === 2 ? task.tarea : task;
+          const tarea = usuarioLogeado && usuarioLogeado.rol === 1 ? task : task.tarea;
           return (
             <tr key={tarea.tarea_id} className="hover:bg-gray-700 transition">
               <td className="px-4 py-3 text-sm text-gray-100">
@@ -75,7 +75,7 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea, editarTarea }) => {
               <td className="px-4 py-3 text-sm text-gray-100">
                 {tarea.fecha_real_fin ? formatDate(tarea.fecha_real_fin) : ""}
               </td>
-              {(usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+              {usuarioLogeado && (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
                 <td className="px-4 py-3 text-sm text-gray-100">
                   <div className="flex justify-center gap-2">
                     <button

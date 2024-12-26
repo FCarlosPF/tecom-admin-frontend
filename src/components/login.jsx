@@ -1,12 +1,6 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { loginService } from "@/services/service";
 import useStore from "@/store/index";
@@ -16,18 +10,13 @@ import { MoveDirection, OutMode } from "@tsparticles/engine";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const ParticlesMemo = React.memo(({ options, particlesLoaded }) => (
-  <Particles
-    id="tsparticles"
-    particlesLoaded={particlesLoaded}
-    options={options}
-  />
+  <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={options} />
 ));
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const [error, setError] = useState("");
   const router = useRouter();
   const { setUsuarioLogeado, usuarioLogeado } = useStore();

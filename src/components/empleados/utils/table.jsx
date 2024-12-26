@@ -48,13 +48,13 @@ const EmpleadosTable = ({ empleados, onEdit, onDelete, areas }) => {
               className="hover:bg-gray-700 transition"
             >
               <td className="px-4 py-3 text-sm text-gray-100">
-                {usuario.nombre}
+                {usuario.user.first_name}
               </td>
               <td className="px-4 py-3 text-sm text-gray-100">
-                {usuario.apellidos}
+                {usuario.user.last_name}
               </td>
               <td className="px-4 py-3 text-sm text-gray-100">
-                {usuario.correo}
+                {usuario.user.email}
               </td>
               <td className="px-4 py-3 text-sm text-gray-100">
                 {usuario.especialidad}
@@ -77,7 +77,7 @@ const EmpleadosTable = ({ empleados, onEdit, onDelete, areas }) => {
                 {usuario.fecha_contratacion}
               </td>
               <td className="px-4 py-3 text-sm text-gray-100">
-                {getAreaName(usuario.area.area_id)}
+                {getAreaName(usuario.area?.area_id)}
               </td>
               <td className="px-4 py-3 text-sm text-gray-100">
                 <div className="flex gap-3">

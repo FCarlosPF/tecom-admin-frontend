@@ -7,7 +7,7 @@ export const loginService = async (username, password) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ nombre_usuario: username, contrasenia: password }),
+      body: JSON.stringify({ username, password }), // Actualiza los campos enviados
     });
 
     if (!response.ok) {
@@ -37,9 +37,12 @@ export const changePasswordService = async (oldPassword, newPassword) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${accessToken}`
+        Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ old_password: oldPassword, new_password: newPassword }),
+      body: JSON.stringify({
+        old_password: oldPassword,
+        new_password: newPassword,
+      }),
     });
 
     if (!response.ok) {
@@ -73,11 +76,14 @@ export const logoutService = async () => {
 };
 
 export const getAllEmployees = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch("http://127.0.0.1:8000/api/empleados/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
       },
     });
 
@@ -94,11 +100,14 @@ export const getAllEmployees = async () => {
 };
 
 export const getAllTasks = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch("http://127.0.0.1:8000/api/tareas/", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
       },
     });
 
@@ -115,6 +124,8 @@ export const getAllTasks = async () => {
 };
 
 export const getTasKToEmployee = async (employeeId) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/tareas/empleado/${employeeId}/`,
@@ -122,6 +133,7 @@ export const getTasKToEmployee = async (employeeId) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
         },
       }
     );
@@ -142,35 +154,40 @@ export const getTasKToEmployee = async (employeeId) => {
 };
 
 export const getAreas = async () => {
+  let accessToken = localStorage.getItem("accessToken");
+  console.log("Access Token:", accessToken); // Agrega este console.log para mostrar el access token
+
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/areas/`, {
+    let response = await fetch(`http://127.0.0.1:8000/api/areas/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
       },
     });
 
     if (!response.ok) {
-      throw new Error("Error al obtener las tareas del empleado");
+      throw new Error("Error al obtener las áreas");
     }
 
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error(
-      "Error en el servicio de obtener tareas del empleado:",
-      error
-    );
+    console.error("Error en el servicio de obtener áreas:", error);
     throw error;
   }
 };
 
 export const getOneArea = async (areaId) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/area/${areaId}/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
+
       },
     });
 
@@ -190,6 +207,8 @@ export const getOneArea = async (areaId) => {
 };
 
 export const getOneEmpleado = async (empleadoId) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/empleados/${empleadoId}/`,
@@ -197,6 +216,8 @@ export const getOneEmpleado = async (empleadoId) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
+
         },
       }
     );
@@ -217,11 +238,15 @@ export const getOneEmpleado = async (empleadoId) => {
 };
 
 export const addEmpleado = async (empleado) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/empleados/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
+
       },
       body: JSON.stringify(empleado),
     });
@@ -240,11 +265,15 @@ export const addEmpleado = async (empleado) => {
 };
 
 export const addTask = async (task) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/tareas/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
+
       },
       body: JSON.stringify(task),
     });
@@ -263,6 +292,8 @@ export const addTask = async (task) => {
 };
 
 export const addAsignacionTarea = async (task) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/asignacionestareas/`,
@@ -270,6 +301,8 @@ export const addAsignacionTarea = async (task) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
+
         },
         body: JSON.stringify(task),
       }
@@ -289,11 +322,16 @@ export const addAsignacionTarea = async (task) => {
 };
 
 export const updateEmpleado = async (id, updatedEmpleado) => {
+
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/empleados/${id}/`, {
       method: "PUT", // O "PATCH" si solo quieres actualizar algunos campos
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(updatedEmpleado),
     });
@@ -311,11 +349,14 @@ export const updateEmpleado = async (id, updatedEmpleado) => {
 };
 
 export const deleteTarea = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/tareas/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 
@@ -331,11 +372,15 @@ export const deleteTarea = async (id) => {
 };
 
 export const deleteEmpleado = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/empleados/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -351,11 +396,15 @@ export const deleteEmpleado = async (id) => {
 };
 
 export const getRoles = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/roles/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -372,11 +421,15 @@ export const getRoles = async () => {
 };
 
 export const addRole = async (role) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/roles/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(role),
     });
@@ -394,11 +447,15 @@ export const addRole = async (role) => {
 };
 
 export const addArea = async (area) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/areas/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(area),
     });
@@ -416,11 +473,15 @@ export const addArea = async (area) => {
 };
 
 export const deleteRole = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/roles/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -436,11 +497,15 @@ export const deleteRole = async (id) => {
 };
 
 export const deleteArea = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/areas/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -456,11 +521,15 @@ export const deleteArea = async (id) => {
 };
 
 export const updateArea = async (id, updatedArea) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/areas/${id}/`, {
       method: "PUT", // O "PATCH" si solo quieres actualizar algunos campos
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(updatedArea),
     });
@@ -478,11 +547,15 @@ export const updateArea = async (id, updatedArea) => {
 };
 
 export const updateTareas = async (id, updateTareas) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/tareas/${id}/`, {
       method: "PATCH", // O "PATCH" si solo quieres actualizar algunos campos
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(updateTareas),
     });
@@ -500,6 +573,8 @@ export const updateTareas = async (id, updateTareas) => {
 };
 
 export const getAsignacionesTareas = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/asignacionestareas/`,
@@ -507,6 +582,7 @@ export const getAsignacionesTareas = async () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
         },
       }
     );
@@ -524,6 +600,8 @@ export const getAsignacionesTareas = async () => {
 };
 
 export const updateAsignacionesTareas = async (id, updateTareas) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/asignacionestareas/${id}/`,
@@ -531,6 +609,8 @@ export const updateAsignacionesTareas = async (id, updateTareas) => {
         method: "PATCH", // O "PATCH" si solo quieres actualizar algunos campos
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
+
         },
         body: JSON.stringify(updateTareas),
       }
@@ -549,6 +629,8 @@ export const updateAsignacionesTareas = async (id, updateTareas) => {
 };
 
 export const deleteAsignacionesTareas = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/asignacionestareas/${id}/`,
@@ -556,6 +638,7 @@ export const deleteAsignacionesTareas = async (id) => {
         method: "DELETE", // O "PATCH" si solo quieres actualizar algunos campos
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -575,11 +658,14 @@ export const deleteAsignacionesTareas = async (id) => {
 };
 
 export const getProyectos = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/proyectos/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 
@@ -596,11 +682,15 @@ export const getProyectos = async () => {
 };
 
 export const addProyecto = async (proyecto) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/proyectos/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(proyecto),
     });
@@ -618,11 +708,15 @@ export const addProyecto = async (proyecto) => {
 };
 
 export const updateProyecto = async (id, proyecto) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/proyectos/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(proyecto),
     });
@@ -640,11 +734,15 @@ export const updateProyecto = async (id, proyecto) => {
 };
 
 export const deleteProyecto = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/proyectos/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -660,11 +758,15 @@ export const deleteProyecto = async (id) => {
 };
 
 export const getCostos = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/costos/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -681,11 +783,15 @@ export const getCostos = async () => {
 };
 
 export const addCosto = async (costo) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/costos/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(costo),
     });
@@ -703,11 +809,15 @@ export const addCosto = async (costo) => {
 };
 
 export const updateCosto = async (id, costo) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/costos/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(costo),
     });
@@ -725,11 +835,15 @@ export const updateCosto = async (id, costo) => {
 };
 
 export const deleteCosto = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/costos/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -745,11 +859,15 @@ export const deleteCosto = async (id) => {
 };
 
 export const getFacturas = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/facturas/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -766,11 +884,15 @@ export const getFacturas = async () => {
 };
 
 export const addFactura = async (factura) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/facturas/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(factura),
     });
@@ -788,11 +910,15 @@ export const addFactura = async (factura) => {
 };
 
 export const updateFactura = async (id, factura) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/facturas/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(factura),
     });
@@ -810,11 +936,15 @@ export const updateFactura = async (id, factura) => {
 };
 
 export const deleteFactura = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/facturas/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -830,11 +960,15 @@ export const deleteFactura = async (id) => {
 };
 
 export const getProveedores = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/proveedores/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -851,11 +985,15 @@ export const getProveedores = async () => {
 };
 
 export const addProveedor = async (proveedor) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/proveedores/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(proveedor),
     });
@@ -873,6 +1011,8 @@ export const addProveedor = async (proveedor) => {
 };
 
 export const updateProveedor = async (id, proveedor) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/proveedores/${id}/`,
@@ -880,6 +1020,8 @@ export const updateProveedor = async (id, proveedor) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+
         },
         body: JSON.stringify(proveedor),
       }
@@ -898,6 +1040,8 @@ export const updateProveedor = async (id, proveedor) => {
 };
 
 export const deleteProveedor = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/proveedores/${id}/`,
@@ -905,6 +1049,8 @@ export const deleteProveedor = async (id) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+
         },
       }
     );
@@ -921,11 +1067,15 @@ export const deleteProveedor = async (id) => {
 };
 
 export const getPagos = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/pagos/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -942,11 +1092,15 @@ export const getPagos = async () => {
 };
 
 export const addPago = async (pago) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/pagos/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(pago),
     });
@@ -964,11 +1118,15 @@ export const addPago = async (pago) => {
 };
 
 export const updatePago = async (id, pago) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/pagos/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(pago),
     });
@@ -986,11 +1144,15 @@ export const updatePago = async (id, pago) => {
 };
 
 export const deletePago = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/pagos/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -1006,11 +1168,15 @@ export const deletePago = async (id) => {
 };
 
 export const getOrdenesCompra = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/ordenescompra/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -1027,11 +1193,15 @@ export const getOrdenesCompra = async () => {
 };
 
 export const addOrdenCompra = async (ordenCompra) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/ordenescompra/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(ordenCompra),
     });
@@ -1049,6 +1219,8 @@ export const addOrdenCompra = async (ordenCompra) => {
 };
 
 export const updateOrdenCompra = async (id, ordenCompra) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/ordenescompra/${id}/`,
@@ -1056,6 +1228,8 @@ export const updateOrdenCompra = async (id, ordenCompra) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+
         },
         body: JSON.stringify(ordenCompra),
       }
@@ -1074,6 +1248,8 @@ export const updateOrdenCompra = async (id, ordenCompra) => {
 };
 
 export const deleteOrdenCompra = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/ordenescompra/${id}/`,
@@ -1081,6 +1257,8 @@ export const deleteOrdenCompra = async (id) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+
         },
       }
     );
@@ -1097,6 +1275,8 @@ export const deleteOrdenCompra = async (id) => {
 };
 
 export const getMetricasPorEmpleado = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/metricas-empleado/${id}`,
@@ -1104,6 +1284,8 @@ export const getMetricasPorEmpleado = async (id) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+
         },
       }
     );
@@ -1124,6 +1306,9 @@ export const getMetricasPorEmpleado = async (id) => {
 };
 
 export const descargarReporteExcel = async () => {
+
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       "http://127.0.0.1:8000/api/reporte-tareas-no-entregadas-a-tiempo/",
@@ -1132,6 +1317,7 @@ export const descargarReporteExcel = async () => {
         headers: {
           "Content-Type":
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          Authorization: `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
         },
       }
     );
@@ -1154,6 +1340,8 @@ export const descargarReporteExcel = async () => {
 };
 
 export const obtenerTareasPendientesEmpleado = async (id_empleado) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/tareas-pendientes/${id_empleado}/`,
@@ -1161,6 +1349,7 @@ export const obtenerTareasPendientesEmpleado = async (id_empleado) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${accessToken}`, // Incluye el token de acceso en los encabezados
         },
       }
     );
@@ -1178,11 +1367,15 @@ export const obtenerTareasPendientesEmpleado = async (id_empleado) => {
 };
 
 export const getNotificaciones = async () => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/notificaciones/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
     });
 
@@ -1199,11 +1392,15 @@ export const getNotificaciones = async () => {
 };
 
 export const addNotificacion = async (ordenCompra) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(`http://127.0.0.1:8000/api/notificaciones/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+
       },
       body: JSON.stringify(ordenCompra),
     });
@@ -1221,6 +1418,8 @@ export const addNotificacion = async (ordenCompra) => {
 };
 
 export const updateNotificacion = async (id, ordenCompra) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/notificaciones/${id}/`,
@@ -1228,6 +1427,8 @@ export const updateNotificacion = async (id, ordenCompra) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+
         },
         body: JSON.stringify(ordenCompra),
       }
@@ -1246,6 +1447,8 @@ export const updateNotificacion = async (id, ordenCompra) => {
 };
 
 export const deleteNotificacion = async (id) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/notificaciones/${id}/`,
@@ -1253,6 +1456,8 @@ export const deleteNotificacion = async (id) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+
         },
       }
     );
@@ -1269,6 +1474,8 @@ export const deleteNotificacion = async (id) => {
 };
 
 export const enviarNotificacion = async (notificacionId, notificacion) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
     const response = await fetch(
       `http://127.0.0.1:8000/api/notificaciones/${notificacionId}/enviar/`,
@@ -1276,6 +1483,8 @@ export const enviarNotificacion = async (notificacionId, notificacion) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+
         },
         body: JSON.stringify(notificacion),
       }
@@ -1293,16 +1502,21 @@ export const enviarNotificacion = async (notificacionId, notificacion) => {
   }
 };
 
-
-
 export const getNotificacionesPorEmpleado = async (idEmpleado) => {
+  const accessToken = localStorage.getItem("accessToken");
+
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/notificaciones/empleado/${idEmpleado}/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/notificaciones/empleado/${idEmpleado}/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Error al obtener las notificaciones");

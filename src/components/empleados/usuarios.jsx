@@ -20,14 +20,17 @@ const UsuariosView = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [newEmpleado, setNewEmpleado] = useState({
-    nombre: "",
-    apellidos: "",
-    correo: "",
+    user: {
+      email: "",
+      first_name: "",
+      last_name: "",
+      username: "",
+      password: ""
+    },
     especialidad: "",
-    sueldo: "",
-    activo: true,
-    fecha_contratacion: "",
-    area: "",
+    sueldo: null,
+    activo: null,
+    fecha_contratacion: null,
   });
   const [editEmpleado, setEditEmpleado] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -109,14 +112,17 @@ const UsuariosView = () => {
       setEmpleados((prevEmpleados) => [...prevEmpleados, addedEmpleado]);
       setShowModal(false);
       setNewEmpleado({
-        nombre: "",
-        apellidos: "",
-        correo: "",
+        user: {
+          email: "",
+          first_name: "",
+          last_name: ""
+        },
         especialidad: "",
-        sueldo: "",
-        activo: true,
-        fecha_contratacion: "",
-        area: "",
+        sueldo: null,
+        activo: null,
+        fecha_contratacion: null,
+        username: "",
+        password: "",
       });
       setMessage("Empleado agregado exitosamente");
     } catch (error) {
@@ -166,14 +172,15 @@ const UsuariosView = () => {
           className="p-2 bg-gray-800 text-white rounded-full shadow-lg flex items-center hover:shadow-xl transition"
           onClick={() => {
             setNewEmpleado({
-              nombre: "",
-              apellidos: "",
-              correo: "",
+              user: {
+                email: "",
+                first_name: "",
+                last_name: ""
+              },
               especialidad: "",
-              sueldo: "",
-              activo: true,
-              fecha_contratacion: "",
-              area: "",
+              sueldo: null,
+              activo: null,
+              fecha_contratacion: null,
             });
             setIsEditing(false);
             setShowModal(true);

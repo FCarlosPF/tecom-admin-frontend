@@ -10,7 +10,18 @@ const EmpleadoModal = ({
   areas,
 }) => {
   const handleChange = (key, value) => {
-    setEmpleado((prev) => ({ ...prev, [key]: value }));
+    if (key.includes(".")) {
+      const keys = key.split(".");
+      setEmpleado((prev) => ({
+        ...prev,
+        [keys[0]]: {
+          ...prev[keys[0]],
+          [keys[1]]: value,
+        },
+      }));
+    } else {
+      setEmpleado((prev) => ({ ...prev, [key]: value }));
+    }
   };
 
   useEffect(() => {
@@ -37,11 +48,13 @@ const EmpleadoModal = ({
           </button>
         </div>
         {[
-          { label: "Nombre", key: "nombre" },
-          { label: "Apellidos", key: "apellidos" },
-          { label: "Correo", key: "correo", type: "email" },
+          { label: "Nombre", key: "user.first_name" },
+          { label: "Correo", key: "user.email", type: "email" },
+          { label: "Apellidos", key: "user.last_name" },
           { label: "Especialidad", key: "especialidad" },
           { label: "Sueldo", key: "sueldo", type: "number" },
+          { label: "Nombre de Usuario", key: "user.username" },
+          { label: "Contraseña", key: "user.password", type: "password" },
           {
             label: "Fecha de contratación",
             key: "fecha_contratacion",
@@ -53,7 +66,11 @@ const EmpleadoModal = ({
             <input
               type={type}
               className="w-full p-2 border rounded shadow-inner"
-              value={empleado[key] ?? ""} // Proporciona un valor predeterminado vacío si es null o undefined
+              value={
+                key.includes(".")
+                  ? empleado[key.split(".")[0]][key.split(".")[1]]
+                  : empleado[key] ?? ""
+              }
               onChange={(e) => handleChange(key, e.target.value)}
             />
           </div>

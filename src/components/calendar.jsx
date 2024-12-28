@@ -26,7 +26,7 @@ const CalendarioTareas = () => {
   const [view, setView] = useState("month");
   const [selectedDate, setSelectedDate] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const { usuarioLogeado, setUsuarioLogeado } = useStore();
+  const { usuarioLogeado} = useStore();
 
   useEffect(() => {
     const fetchTareas = async () => {

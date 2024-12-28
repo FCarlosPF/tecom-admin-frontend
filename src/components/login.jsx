@@ -132,7 +132,7 @@ const Login = () => {
         },
         shape: {
           type: "circle",
-        },
+        },  
         size: {
           value: { min: 1, max: 5 },
         },
@@ -156,78 +156,78 @@ const Login = () => {
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-black">
-      <ParticlesMemo particlesLoaded={particlesLoaded} options={options} />
-      <div className="flex items-center justify-center rounded-lg shadow-lg bg-blue-800 bg-opacity-90 max-w-4xl w-full z-10">
-        {/* Imagen a la izquierda */}
-        <div className="w-1/2 hidden md:block">
-          <img
-            src="https://media.licdn.com/dms/image/v2/D4E0BAQGgGk-XuOr2cA/company-logo_200_200/company-logo_200_200/0/1666116188527?e=1741824000&v=beta&t=Yx0Q88ghBsl--XUhVQuOak_VdJeLx-l0HoT1mjmovAo"
-            alt="Login Image"
-            className="w-full h-auto object-cover rounded-lg shadow-lg"
-          />
-        </div>
+        <ParticlesMemo particlesLoaded={particlesLoaded} options={options} />
+        <div className="flex items-center justify-center rounded-lg shadow-lg bg-blue-800 bg-opacity-90 max-w-4xl w-full z-10">
+          {/* Imagen a la izquierda */}
+          <div className="w-1/2 hidden md:block">
+            <img
+              src="https://media.licdn.com/dms/image/v2/D4E0BAQGgGk-XuOr2cA/company-logo_200_200/company-logo_200_200/0/1666116188527?e=1741824000&v=beta&t=Yx0Q88ghBsl--XUhVQuOak_VdJeLx-l0HoT1mjmovAo"
+              alt="Login Image"
+              className="w-full h-auto object-cover rounded-lg shadow-lg"
+            />
+          </div>
 
-        {/* Formulario a la derecha */}
-        <div className="w-full md:w-1/2 p-6">
-          <h2 className="text-center text-3xl font-bold text-white mb-6">
-            Iniciar Sesión
-          </h2>
-          {error && <p className="text-red-500 mb-4">{error}</p>}
-          <form onSubmit={handleLogin}>
-            <div className="mb-4">
-              <label
-                htmlFor="username"
-                className="block text-sm font-bold text-white mb-2"
-              >
-                Nombre de Usuario
-              </label>
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={handleUsernameChange}
-                className="w-full p-3 rounded-lg bg-gray-800 shadow-inner focus:outline-none text-white font-bold"
-                placeholder="nombre de usuario"
-                required
-                autoComplete="username"
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="password"
-                className="block text-sm font-bold text-white mb-2"
-              >
-                Contraseña
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  id="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  className="w-full p-3 rounded-lg bg-gray-800 shadow-inner focus:outline-none text-white font-bold pr-10"
-                  placeholder="********"
-                  required
-                  autoComplete="current-password"
-                />
-                <button
-                  type="button"
-                  onClick={toggleShowPassword}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200"
+          {/* Formulario a la derecha */}
+          <div className="w-full md:w-1/2 p-6">
+            <h2 className="text-center text-3xl font-bold text-white mb-6">
+              Iniciar Sesión
+            </h2>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+            <form onSubmit={handleLogin}>
+              <div className="mb-4">
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-bold text-white mb-2"
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
+                  Nombre de Usuario
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  className="w-full p-3 rounded-lg bg-gray-800 shadow-inner focus:outline-none text-white font-bold"
+                  placeholder="nombre de usuario"
+                  required
+                  autoComplete="username"
+                />
               </div>
-            </div>
-            <button
-              type="submit"
-              className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg active:shadow-inner transition-all font-medium text-white"
-            >
-              Entrar
-            </button>
-          </form>
+              <div className="mb-4">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-bold text-white mb-2"
+                >
+                  Contraseña
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    className="w-full p-3 rounded-lg bg-gray-800 shadow-inner focus:outline-none text-white font-bold pr-10"
+                    placeholder="********"
+                    required
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={toggleShowPassword}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-200"
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg active:shadow-inner transition-all font-medium text-white"
+              >
+                Entrar
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
     </div>
   );
 };

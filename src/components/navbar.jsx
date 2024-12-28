@@ -19,6 +19,7 @@ import {
   FaChevronDown,
   FaBars,
   FaTimes,
+  FaBell,
 } from "react-icons/fa";
 import { logoutService } from "@/services/service";
 import useStore from "@/store/index";
@@ -153,77 +154,83 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
                 <span className="hidden md:inline">Calendario</span>
               </Link>
             </li>
-            <li className="border-b border-gray-700">
-              <Link
-                href="/panel/notificaciones"
-                className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
-              >
-                <FaCalendarCheck className="mr-2" />
-                <span className="hidden md:inline">Notificaciones</span>
-              </Link>
-            </li>
-            <li className="border-b border-gray-700">
-              <div
-                onClick={toggleDropdown}
-                className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition cursor-pointer"
-              >
-                <FaProjectDiagram className="mr-2" />
-                <span className="hidden md:inline">Proyectos</span>
-                <FaChevronDown className="ml-2" />
-              </div>
-              {isDropdownOpen && (
-                <ul className="ml-4 mt-2 space-y-2">
-                  <li className="border-b border-gray-700">
-                    <Link
-                      href="/panel/proyectos"
-                      className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
-                    >
-                      Dashboard
-                    </Link>
-                  </li>
-                  <li className="border-b border-gray-700">
-                    <Link
-                      href="/panel/proyectos/proyecto"
-                      className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
-                    >
-                      Proyecto
-                    </Link>
-                  </li>
-                  <li className="border-b border-gray-700">
-                    <Link
-                      href="/panel/proyectos/facturas"
-                      className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
-                    >
-                      Facturas
-                    </Link>
-                  </li>
-                  <li className="border-b border-gray-700">
-                    <Link
-                      href="/panel/proyectos/ordenesCompra"
-                      className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
-                    >
-                      Órdenes de Compra
-                    </Link>
-                  </li>
-                  <li className="border-b border-gray-700">
-                    <Link
-                      href="/panel/proyectos/costos"
-                      className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
-                    >
-                      Costos
-                    </Link>
-                  </li>
-                  <li className="border-b border-gray-700">
-                    <Link
-                      href="/panel/proyectos/pagos"
-                      className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
-                    >
-                      Pagos
-                    </Link>
-                  </li>
-                </ul>
+            {usuarioLogeado &&
+              (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 6) && (
+                <li className="border-b border-gray-700">
+                  <Link
+                    href="/panel/notificaciones"
+                    className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition"
+                  >
+                    <FaBell className="mr-2" />
+                    <span className="hidden md:inline">Notificaciones</span>
+                  </Link>
+                </li>
               )}
-            </li>
+            {usuarioLogeado && usuarioLogeado.rol === 1 && (
+              <li className="border-b border-gray-700">
+                <div
+                  onClick={toggleDropdown}
+                  className="flex items-center p-3 rounded-lg shadow-md text-white hover:bg-blue-600 hover:shadow-lg transition cursor-pointer"
+                >
+                  <FaProjectDiagram className="mr-2" />
+                  <span className="hidden md:inline">Proyectos</span>
+                  <FaChevronDown className="ml-2" />
+                </div>
+                {isDropdownOpen && (
+                  <ul className="ml-4 mt-2 space-y-2">
+                    <li className="border-b border-gray-700">
+                      <Link
+                        href="/panel/proyectos"
+                        className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
+                      >
+                        Dashboard
+                      </Link>
+                    </li>
+                    <li className="border-b border-gray-700">
+                      <Link
+                        href="/panel/proyectos/proyecto"
+                        className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
+                      >
+                        Proyecto
+                      </Link>
+                    </li>
+                    <li className="border-b border-gray-700">
+                      <Link
+                        href="/panel/proyectos/facturas"
+                        className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
+                      >
+                        Facturas
+                      </Link>
+                    </li>
+                    <li className="border-b border-gray-700">
+                      <Link
+                        href="/panel/proyectos/ordenesCompra"
+                        className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
+                      >
+                        Órdenes de Compra
+                      </Link>
+                    </li>
+                    <li className="border-b border-gray-700">
+                      <Link
+                        href="/panel/proyectos/costos"
+                        className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
+                      >
+                        Costos
+                      </Link>
+                    </li>
+                    <li className="border-b border-gray-700">
+                      <Link
+                        href="/panel/proyectos/pagos"
+                        className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
+                      >
+                        Pagos
+                      </Link>
+                    </li>
+                  </ul>
+                )}
+              </li>
+            )}
+
             {usuarioLogeado && usuarioLogeado.rol === 1 && (
               <li className="border-b border-gray-700">
                 <Link

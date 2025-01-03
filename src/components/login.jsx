@@ -245,6 +245,6 @@ const Login = () => {
   );
 };
 
-Login.displayName = "Login";
+ParticlesMemo.displayName = "ParticlesMemo";
 
 export default Login;

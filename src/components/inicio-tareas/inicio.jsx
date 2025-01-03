@@ -2,13 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  FaCheck,
-  FaUser,
-  FaClock,
-  FaTag,
-  FaArrowRight,
-  FaChevronDown,
-  FaChevronUp,
   FaBell,
 } from "react-icons/fa";
 import useStore from "@/store";
@@ -22,6 +15,8 @@ import {
 } from "@/services/service";
 import { format } from "date-fns";
 import CampanaModal from "./utils/CampanaModal";
+import TareaModal from "./utils/TareaModal";
+import Estados from "./utils/Estados";
 
 const TareasView = () => {
   const {
@@ -177,6 +172,7 @@ const TareasView = () => {
   };
 
   const handleCardClick = (tarea) => {
+    console.log("Tarea seleccionada:", tarea); // Agregar console.log
     setSelectedTarea(tarea);
     const asignaciones = asignacionesTareas.filter(
       (asignacion) => asignacion.tarea.tarea_id === tarea.tarea_id
@@ -248,318 +244,23 @@ const TareasView = () => {
           onClick={handleBellClick}
         />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 h-full flex-grow">
-        {estados.map((estado) => (
-          <div
-            key={estado}
-            className="bg-gray-900 p-2 rounded-lg shadow-md flex flex-col h-full overflow-y-auto"
-          >
-            <h2 className="text-lg font-semibold text-white mb-2">{estado}</h2>
-            <div className="flex flex-col space-y-2">
-              {tareasPorEstado[estado] && tareasPorEstado[estado].length > 0 ? (
-                tareasPorEstado[estado]
-                  .filter((tarea) =>
-                    usuarioLogeado && usuarioLogeado.rol == 1
-                      ? !tarea.tarea_padre
-                      : !tarea.tarea.tarea_padre
-                  )
-                  .map((tarea) => {
-                    const subtareas = tareas.filter((subtarea) => {
-                      return usuarioLogeado && usuarioLogeado.rol === 1
-                        ? subtarea.tarea_padre === tarea.tarea_id
-                        : subtarea.tarea.tarea_padre === tarea.tarea.tarea_id;
-                    });
-                    const tareaData =
-                      usuarioLogeado && usuarioLogeado.rol === 1
-                        ? tarea
-                        : tarea.tarea;
-                    return (
-                      <div
-                        key={tareaData.tarea_id}
-                        className="bg-gray-800 shadow-md rounded-lg overflow-hidden p-2 border-l-4 border-blue-500 cursor-pointer"
-                      >
-                        <div
-                          className="flex justify-between items-center"
-                          onClick={() =>
-                            usuarioLogeado.rol === 1
-                              ? handleCardClick(tarea)
-                              : handleCardClick(tarea.tarea)
-                          }
-                        >
-                          <div className="flex-grow">
-                            <div className="flex justify-between items-center mb-1">
-                              <h2 className="text-base font-semibold text-white">
-                                {tareaData.titulo}
-                              </h2>
-                            </div>
-                            <p className="text-sm text-gray-400 mb-1">
-                              {tareaData.descripcion}
-                            </p>
-                            <div className="flex items-center text-sm text-gray-400 mb-1">
-                              <FaClock className="mr-1 text-blue-500" />
-                              <span
-                                className={
-                                  (tareaData.estado !== "Completada" &&
-                                    tareaData.tiempo_restante.dias === 0 &&
-                                    tareaData.tiempo_restante.horas === 0) ||
-                                  (tareaData.estado === "Completada" &&
-                                    new Date(tareaData.fecha_real_fin) >
-                                      new Date(tareaData.fecha_estimada_fin))
-                                    ? "text-red-500"
-                                    : ""
-                                }
-                              >
-                                {tareaData.estado === "Completada"
-                                  ? `Completada el: ${format(
-                                      new Date(tareaData.fecha_real_fin),
-                                      "dd/MM/yyyy HH:mm"
-                                    )}`
-                                  : tareaData.tiempo_restante.dias === 0 &&
-                                    tareaData.tiempo_restante.horas === 0
-                                  ? `Vencido: ${tareaData.tiempo_pasado.dias} días y ${tareaData.tiempo_pasado.horas} horas pasados`
-                                  : `Tiempo restante: ${tareaData.tiempo_restante.dias} días y ${tareaData.tiempo_restante.horas} horas`}
-                              </span>
-                            </div>
-                            <div className="flex items-center text-sm text-gray-400 mb-1">
-                              <FaTag className="mr-1 text-yellow-500" />
-                              <span>{tareaData.prioridad}</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center">
-                            {tareaData.estado !== "Completada" && (
-                              <button
-                                className={`flex items-center justify-center w-6 h-6 text-white rounded-full shadow-md transition-colors duration-300 ${
-                                  tareaData.estado === "Pendiente"
-                                    ? "bg-blue-500 hover:bg-blue-600"
-                                    : "bg-green-500 hover:bg-green-600"
-                                }`}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  completarTarea(
-                                    usuarioLogeado && usuarioLogeado.rol == 1
-                                      ? tarea.tarea_id
-                                      : tarea.tarea.tarea_id
-                                  );
-                                }}
-                              >
-                                {tareaData.estado === "Pendiente" ? (
-                                  <FaArrowRight size={12} />
-                                ) : (
-                                  <FaCheck size={12} />
-                                )}
-                              </button>
-                            )}
-                            {subtareas.length > 0 && (
-                              <button
-                                className="ml-2 text-gray-400 hover:text-gray-200"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleExpand(
-                                    usuarioLogeado.rol === 1
-                                      ? tarea.tarea_id
-                                      : tarea.tarea.tarea_id
-                                  );
-                                }}
-                              >
-                                {expandedTareas[
-                                  usuarioLogeado.rol === 1
-                                    ? tarea.tarea_id
-                                    : tarea.tarea.tarea_id
-                                ] ? (
-                                  <FaChevronUp />
-                                ) : (
-                                  <FaChevronDown />
-                                )}
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                        {expandedTareas[
-                          usuarioLogeado && usuarioLogeado.rol === 1
-                            ? tarea.tarea_id
-                            : tarea.tarea.tarea_id
-                        ] && (
-                          <div className="pl-4 mt-2">
-                            {subtareas.map((subtarea) => {
-                              const subtareaData =
-                                usuarioLogeado.rol === 1
-                                  ? subtarea
-                                  : subtarea.tarea;
-                              return (
-                                <div
-                                  key={subtareaData.tarea_id}
-                                  className="bg-gray-700 shadow-md rounded-lg overflow-hidden p-2 border-l-4 border-indigo-500 cursor-pointer"
-                                >
-                                  <div
-                                    className="flex justify-between items-center"
-                                    onClick={() =>
-                                      handleCardClick(subtareaData)
-                                    }
-                                  >
-                                    <div className="flex-grow">
-                                      <div className="flex justify-between items-center mb-1">
-                                        <h2 className="text-base font-semibold text-white">
-                                          {subtareaData.titulo}
-                                        </h2>
-                                      </div>
-                                      <p className="text-sm text-gray-400 mb-1">
-                                        {subtareaData.descripcion}
-                                      </p>
-                                      <div className="flex items-center text-sm text-gray-400 mb-1">
-                                        <FaClock className="mr-1 text-blue-500" />
-                                        <span>
-                                          {subtareaData.estado === "Completada"
-                                            ? `Completada el: ${format(
-                                                new Date(
-                                                  subtareaData.fecha_real_fin
-                                                ),
-                                                "dd/MM/yyyy HH:mm"
-                                              )}`
-                                            : subtareaData.tiempo_restante
-                                                .dias === 0 &&
-                                              subtareaData.tiempo_restante
-                                                .horas === 0
-                                            ? `Vencido: ${subtareaData.tiempo_pasado.dias} días y ${subtareaData.tiempo_pasado.horas} horas pasados`
-                                            : `Tiempo restante: ${subtareaData.tiempo_restante.dias} días y ${subtareaData.tiempo_restante.horas} horas`}
-                                        </span>
-                                      </div>
-                                      <div className="flex items-center text-sm text-gray-400 mb-1">
-                                        <FaTag className="mr-1 text-yellow-500" />
-                                        <span>{subtareaData.prioridad}</span>
-                                      </div>
-                                    </div>
-                                    <div className="flex items-center">
-                                      {subtareaData.estado !== "Completada" && (
-                                        <button
-                                          className={`flex items-center justify-center w-6 h-6 text-white rounded-full shadow-md transition-colors duration-300 ${
-                                            subtareaData.estado === "Pendiente"
-                                              ? "bg-blue-500 hover:bg-blue-600"
-                                              : "bg-green-500 hover:bg-green-600"
-                                          }`}
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            completarTarea(subtarea.tarea_id);
-                                          }}
-                                        >
-                                          {subtareaData.estado ===
-                                          "Pendiente" ? (
-                                            <FaArrowRight size={12} />
-                                          ) : (
-                                            <FaCheck size={12} />
-                                          )}
-                                        </button>
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })
-              ) : (
-                <p className="text-gray-500 text-sm">
-                  No hay tareas en este estado.
-                </p>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-      {selectedTarea && (
-        <div
-          id="modal-overlay"
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-start"
-          onClick={handleOutsideClick}
-        >
-          <div
-            className="w-[25%] md:w-[30%] lg:w-[25%] h-full bg-white shadow-2xl rounded-l-lg p-6 relative z-50 overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              className="absolute top-4 right-4 text-gray-600 hover:text-red-500 text-3xl"
-              onClick={closeModal}
-            >
-              &times;
-            </button>
-            <h2 className="text-3xl font-bold mb-6 text-gray-800">
-              {selectedTarea.titulo}
-            </h2>
-            <p className="text-gray-600 mb-6 text-base leading-relaxed">
-              {selectedTarea.descripcion}
-            </p>
-            <div className="space-y-4">
-              <div className="flex items-center text-base text-gray-600">
-                <FaClock className="mr-2 text-blue-500" />
-                <span className="font-medium">Fecha de inicio:</span>{" "}
-                <span className="ml-1">
-                  {format(
-                    new Date(selectedTarea.fecha_inicio),
-                    "dd/MM/yyyy HH:mm"
-                  )}
-                </span>
-              </div>
-              <div className="flex items-center text-base text-gray-600">
-                <FaClock className="mr-2 text-blue-500" />
-                <span className="font-medium">Fecha estimada de fin:</span>{" "}
-                <span className="ml-1">
-                  {format(
-                    new Date(selectedTarea.fecha_estimada_fin),
-                    "dd/MM/yyyy HH:mm"
-                  )}
-                </span>
-              </div>
-              {selectedTarea.fecha_real_fin && (
-                <div className="flex items-center text-base text-gray-600">
-                  <FaClock className="mr-2 text-green-500" />
-                  <span className="font-medium">Fecha real de fin:</span>{" "}
-                  <span className="ml-1">
-                    {format(
-                      new Date(selectedTarea.fecha_real_fin),
-                      "dd/MM/yyyy HH:mm"
-                    )}
-                  </span>
-                </div>
-              )}
-              <div className="flex items-center text-base text-gray-600">
-                <FaTag className="mr-2 text-yellow-500" />
-                <span className="font-medium">Prioridad:</span>{" "}
-                <span className="ml-1">{selectedTarea.prioridad}</span>
-              </div>
-              <div className="flex items-center text-base text-gray-600">
-                <FaUser className="mr-2 text-purple-500" />
-                <span className="font-medium">Asignador:</span>{" "}
-                <span className="ml-1">{asignadorNombres}</span>
-              </div>
-              <div className="flex items-center text-base text-gray-600">
-                <FaUser className="mr-2 text-purple-500" />
-                <span className="font-medium">Empleado:</span>{" "}
-                <span className="ml-1">{empleadoNombres}</span>
-              </div>
-              <div className="flex items-center text-base text-gray-600">
-                <FaClock className="mr-2 text-teal-500" />
-                <span className="font-medium">Tiempo restante:</span>{" "}
-                <span className="ml-1">
-                  {selectedTarea.tiempo_restante.dias} días,{" "}
-                  {selectedTarea.tiempo_restante.horas} horas,{" "}
-                  {selectedTarea.tiempo_restante.minutos} minutos
-                </span>
-              </div>
-              <div className="flex items-center text-base text-gray-600">
-                <FaClock className="mr-2 text-red-500" />
-                <span className="font-medium">Tiempo pasado:</span>{" "}
-                <span className="ml-1">
-                  {selectedTarea.tiempo_pasado.dias} días,{" "}
-                  {selectedTarea.tiempo_pasado.horas} horas,{" "}
-                  {selectedTarea.tiempo_pasado.minutos} minutos
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <Estados
+        estados={estados}
+        tareasPorEstado={tareasPorEstado}
+        usuarioLogeado={usuarioLogeado}
+        tareas={tareas}
+        handleCardClick={handleCardClick}
+        completarTarea={completarTarea}
+        toggleExpand={toggleExpand}
+        expandedTareas={expandedTareas}
+      />
+      <TareaModal
+        selectedTarea={selectedTarea}
+        asignadorNombres={asignadorNombres}
+        empleadoNombres={empleadoNombres}
+        closeModal={closeModal}
+        handleOutsideClick={handleOutsideClick}
+      />
       <CampanaModal isOpen={isModalCampanaOpen} onClose={handleCloseModal} />
     </div>
   );

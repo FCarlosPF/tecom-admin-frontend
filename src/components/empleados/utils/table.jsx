@@ -48,13 +48,13 @@ const EmpleadosTable = ({ empleados, onEdit, onDelete, areas }) => {
               className="hover:bg-gray-700 transition"
             >
               <td className="px-4 py-3 text-sm text-gray-100">
-                {usuario.user.first_name}
+                {usuario.user?.first_name}
               </td>
               <td className="px-4 py-3 text-sm text-gray-100">
-                {usuario.user.last_name}
+                {usuario.user?.last_name}
               </td>
               <td className="px-4 py-3 text-sm text-gray-100">
-                {usuario.user.email}
+                {usuario.user?.email}
               </td>
               <td className="px-4 py-3 text-sm text-gray-100">
                 {usuario.especialidad}

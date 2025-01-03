@@ -37,7 +37,7 @@ const ProyectosTable = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [setProyectos]);
 
   const handleDelete = async (id) => {
     const confirmacion = confirm(

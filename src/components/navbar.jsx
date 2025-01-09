@@ -85,7 +85,7 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
                 <span className="hidden md:inline">Panel</span>
               </Link>
             </li>
-            {usuarioLogeado && usuarioLogeado.rol === 1 && (
+{/*             {usuarioLogeado && usuarioLogeado.rol === 1 && (
               <li className="border-b border-gray-700">
                 <Link
                   href="/panel/dashboard"
@@ -95,7 +95,7 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
                   <span className="hidden md:inline">Dashboard</span>
                 </Link>
               </li>
-            )}
+            )} */}
             <li className="border-b border-gray-700">
               <Link
                 href="/panel/perfil"
@@ -178,14 +178,14 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
                 </div>
                 {isDropdownOpen && (
                   <ul className="ml-4 mt-2 space-y-2">
-                    <li className="border-b border-gray-700">
+                    {/* <li className="border-b border-gray-700">
                       <Link
                         href="/panel/proyectos"
                         className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
                       >
                         Dashboard
                       </Link>
-                    </li>
+                    </li> */}
                     <li className="border-b border-gray-700">
                       <Link
                         href="/panel/proyectos/proyecto"
@@ -194,38 +194,38 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
                         Proyecto
                       </Link>
                     </li>
-                    <li className="border-b border-gray-700">
+                   {/*  <li className="border-b border-gray-700">
                       <Link
                         href="/panel/proyectos/facturas"
                         className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
                       >
                         Facturas
                       </Link>
-                    </li>
-                    <li className="border-b border-gray-700">
+                    </li> */}
+{/*                     <li className="border-b border-gray-700">
                       <Link
                         href="/panel/proyectos/ordenesCompra"
                         className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
                       >
                         Órdenes de Compra
                       </Link>
-                    </li>
-                    <li className="border-b border-gray-700">
+                    </li> */}
+{/*                     <li className="border-b border-gray-700">
                       <Link
                         href="/panel/proyectos/costos"
                         className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
                       >
                         Costos
                       </Link>
-                    </li>
-                    <li className="border-b border-gray-700">
+                    </li> */}
+{/*                     <li className="border-b border-gray-700">
                       <Link
                         href="/panel/proyectos/pagos"
                         className="flex items-center p-2 rounded-lg text-white hover:bg-blue-600 transition"
                       >
                         Pagos
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 )}
               </li>

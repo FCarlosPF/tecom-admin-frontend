@@ -2,7 +2,7 @@
 
 export const loginService = async (username, password) => {
   try {
-    const response = await fetch("http://localhost:8000/api/login/", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,7 +33,7 @@ export const changePasswordService = async (oldPassword, newPassword) => {
   try {
     const accessToken = localStorage.getItem("accessToken");
 
-    const response = await fetch("http://localhost:8000/api/change-password/", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/change-password/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -79,7 +79,7 @@ export const getAllEmployees = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch("http://localhost:8000/api/empleados/", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/empleados/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export const getAllTasks = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch("http://localhost:8000/api/tareas/", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tareas/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -128,7 +128,7 @@ export const getTasKToEmployee = async (employeeId) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/tareas/empleado/${employeeId}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tareas/empleado/${employeeId}/`,
       {
         method: "GET",
         headers: {
@@ -158,7 +158,7 @@ export const getAreas = async () => {
   console.log("Access Token:", accessToken); // Agrega este console.log para mostrar el access token
 
   try {
-    let response = await fetch(`http://localhost:8000/api/areas/`, {
+    let response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/areas/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -182,7 +182,7 @@ export const getOneArea = async (areaId) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/area/${areaId}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/area/${areaId}/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -211,7 +211,7 @@ export const getOneEmpleado = async (empleadoId) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/empleados/${empleadoId}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/empleados/${empleadoId}/`,
       {
         method: "GET",
         headers: {
@@ -241,7 +241,7 @@ export const addEmpleado = async (empleado) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/empleados/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/empleados/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -268,7 +268,7 @@ export const addTask = async (task) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/tareas/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tareas/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -296,7 +296,7 @@ export const addAsignacionTarea = async (task) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/asignacionestareas/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/asignacionestareas/`,
       {
         method: "POST",
         headers: {
@@ -326,7 +326,7 @@ export const updateEmpleado = async (id, updatedEmpleado) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/empleados/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/empleados/${id}/`, {
       method: "PUT", // O "PATCH" si solo quieres actualizar algunos campos
       headers: {
         "Content-Type": "application/json",
@@ -352,7 +352,7 @@ export const deleteTarea = async (id) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/tareas/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tareas/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -375,7 +375,7 @@ export const deleteEmpleado = async (id) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/empleados/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/empleados/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -399,7 +399,7 @@ export const getRoles = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/roles/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/roles/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -424,7 +424,7 @@ export const addRole = async (role) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/roles/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/roles/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -450,7 +450,7 @@ export const addArea = async (area) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/areas/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/areas/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -476,7 +476,7 @@ export const deleteRole = async (id) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/roles/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/roles/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -500,7 +500,7 @@ export const deleteArea = async (id) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/areas/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/areas/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -524,7 +524,7 @@ export const updateArea = async (id, updatedArea) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/areas/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/areas/${id}/`, {
       method: "PUT", // O "PATCH" si solo quieres actualizar algunos campos
       headers: {
         "Content-Type": "application/json",
@@ -550,7 +550,7 @@ export const updateTareas = async (id, updateTareas) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/tareas/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tareas/${id}/`, {
       method: "PATCH", // O "PATCH" si solo quieres actualizar algunos campos
       headers: {
         "Content-Type": "application/json",
@@ -577,7 +577,7 @@ export const getAsignacionesTareas = async () => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/asignacionestareas/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/asignacionestareas/`,
       {
         method: "GET",
         headers: {
@@ -604,7 +604,7 @@ export const updateAsignacionesTareas = async (id, updateTareas) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/asignacionestareas/${id}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/asignacionestareas/${id}/`,
       {
         method: "PATCH", // O "PATCH" si solo quieres actualizar algunos campos
         headers: {
@@ -633,7 +633,7 @@ export const deleteAsignacionesTareas = async (id) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/asignacionestareas/${id}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/asignacionestareas/${id}/`,
       {
         method: "DELETE", // O "PATCH" si solo quieres actualizar algunos campos
         headers: {
@@ -661,7 +661,7 @@ export const getProyectos = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/proyectos/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proyectos/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -685,7 +685,7 @@ export const addProyecto = async (proyecto) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/proyectos/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proyectos/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -711,7 +711,7 @@ export const updateProyecto = async (id, proyecto) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/proyectos/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proyectos/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -737,7 +737,7 @@ export const deleteProyecto = async (id) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/proyectos/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proyectos/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -761,7 +761,7 @@ export const getCostos = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/costos/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/costos/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -786,7 +786,7 @@ export const addCosto = async (costo) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/costos/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/costos/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -812,7 +812,7 @@ export const updateCosto = async (id, costo) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/costos/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/costos/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -838,7 +838,7 @@ export const deleteCosto = async (id) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/costos/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/costos/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -862,7 +862,7 @@ export const getFacturas = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/facturas/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/facturas/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -887,7 +887,7 @@ export const addFactura = async (factura) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/facturas/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/facturas/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -913,7 +913,7 @@ export const updateFactura = async (id, factura) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/facturas/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/facturas/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -939,7 +939,7 @@ export const deleteFactura = async (id) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/facturas/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/facturas/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -963,7 +963,7 @@ export const getProveedores = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/proveedores/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proveedores/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -988,7 +988,7 @@ export const addProveedor = async (proveedor) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/proveedores/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proveedores/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1015,7 +1015,7 @@ export const updateProveedor = async (id, proveedor) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/proveedores/${id}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proveedores/${id}/`,
       {
         method: "PUT",
         headers: {
@@ -1044,7 +1044,7 @@ export const deleteProveedor = async (id) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/proveedores/${id}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/proveedores/${id}/`,
       {
         method: "DELETE",
         headers: {
@@ -1070,7 +1070,7 @@ export const getPagos = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/pagos/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pagos/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -1095,7 +1095,7 @@ export const addPago = async (pago) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/pagos/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pagos/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1121,7 +1121,7 @@ export const updatePago = async (id, pago) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/pagos/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pagos/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -1147,7 +1147,7 @@ export const deletePago = async (id) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/pagos/${id}/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/pagos/${id}/`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -1171,7 +1171,7 @@ export const getOrdenesCompra = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/ordenescompra/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ordenescompra/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -1196,7 +1196,7 @@ export const addOrdenCompra = async (ordenCompra) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/ordenescompra/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ordenescompra/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1223,7 +1223,7 @@ export const updateOrdenCompra = async (id, ordenCompra) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/ordenescompra/${id}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ordenescompra/${id}/`,
       {
         method: "PUT",
         headers: {
@@ -1252,7 +1252,7 @@ export const deleteOrdenCompra = async (id) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/ordenescompra/${id}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/ordenescompra/${id}/`,
       {
         method: "DELETE",
         headers: {
@@ -1279,7 +1279,7 @@ export const getMetricasPorEmpleado = async (id) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/metricas-empleado/${id}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/metricas-empleado/${id}`,
       {
         method: "GET",
         headers: {
@@ -1311,7 +1311,7 @@ export const descargarReporteExcel = async () => {
 
   try {
     const response = await fetch(
-      "http://localhost:8000/api/reporte-tareas-no-entregadas-a-tiempo/",
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/reporte-tareas-no-entregadas-a-tiempo/`,
       {
         method: "GET",
         headers: {
@@ -1344,7 +1344,7 @@ export const obtenerTareasPendientesEmpleado = async (id_empleado) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/tareas-pendientes/${id_empleado}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/tareas-pendientes/${id_empleado}/`,
       {
         method: "GET",
         headers: {
@@ -1370,7 +1370,7 @@ export const getNotificaciones = async () => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/notificaciones/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/notificaciones/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -1395,7 +1395,7 @@ export const addNotificacion = async (ordenCompra) => {
   const accessToken = localStorage.getItem("accessToken");
 
   try {
-    const response = await fetch(`http://localhost:8000/api/notificaciones/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/notificaciones/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -1422,7 +1422,7 @@ export const updateNotificacion = async (id, ordenCompra) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/notificaciones/${id}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/notificaciones/${id}/`,
       {
         method: "PUT",
         headers: {
@@ -1451,7 +1451,7 @@ export const deleteNotificacion = async (id) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/notificaciones/${id}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/notificaciones/${id}/`,
       {
         method: "DELETE",
         headers: {
@@ -1478,7 +1478,7 @@ export const enviarNotificacion = async (notificacionId, notificacion) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/notificaciones/${notificacionId}/enviar/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/notificaciones/${notificacionId}/enviar/`,
       {
         method: "POST",
         headers: {
@@ -1507,7 +1507,7 @@ export const getNotificacionesPorEmpleado = async (idEmpleado) => {
 
   try {
     const response = await fetch(
-      `http://localhost:8000/api/notificaciones/empleado/${idEmpleado}/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/notificaciones/empleado/${idEmpleado}/`,
       {
         method: "GET",
         headers: {

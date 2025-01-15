@@ -3,13 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash, FaPlus, FaTimes } from "react-icons/fa";
 import useStore from "@/store";
-import {
-  getAreas,
-  deleteArea,
-  addArea,
-  updateArea,
-} from "@/services/service";
+import { getAreas, deleteArea, addArea, updateArea } from "@/services/service";
 import { toast } from "react-toastify";
+import { capitalizeFirstLetter, capitalizeWords } from "@/utils/funciones";
 
 const AreasView = () => {
   const [areas, setAreas] = useState([]);
@@ -33,6 +29,10 @@ const AreasView = () => {
     };
     fetchAreas();
   }, []);
+
+  useEffect(() => {
+    console.log("empleados:", empleados);
+  }, [empleados]);
 
   const handleDelete = async (id) => {
     try {
@@ -67,7 +67,9 @@ const AreasView = () => {
     try {
       const areaToUpdate = {
         ...editArea,
-        supervisor: editArea.supervisor ? editArea.supervisor.id_empleado : null,
+        supervisor: editArea.supervisor
+          ? editArea.supervisor.id_empleado
+          : null,
       };
       await updateArea(areaToUpdate.area_id, areaToUpdate);
       const updatedAreas = await getAreas();
@@ -98,7 +100,9 @@ const AreasView = () => {
     <div className="p-6 bg-gray-100 min-h-screen">
       <div>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-gray-800">Gestión de Áreas</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Gestión de Áreas
+          </h2>
           <button
             className="p-2 bg-gray-800 text-white rounded-full shadow-lg flex items-center hover:shadow-xl transition"
             onClick={() => {
@@ -114,18 +118,28 @@ const AreasView = () => {
           <table className="w-full rounded-lg">
             <thead className="bg-gray-800">
               <tr>
-                <th className="px-4 py-3 text-left text-sm text-white font-bold">Nombre</th>
-                <th className="px-4 py-3 text-left text-sm text-white font-bold">Supervisor</th>
-                <th className="px-4 py-3 text-center text-sm text-white font-bold">Acciones</th>
+                <th className="px-4 py-3 text-left text-sm text-white font-bold">
+                  Nombre
+                </th>
+                <th className="px-4 py-3 text-left text-sm text-white font-bold">
+                  Supervisor
+                </th>
+                <th className="px-4 py-3 text-center text-sm text-white font-bold">
+                  Acciones
+                </th>
               </tr>
             </thead>
             <tbody>
               {areas.map((area) => (
                 <tr key={area.area_id} className="hover:bg-gray-700 transition">
-                  <td className="px-4 py-3 text-sm text-gray-100">{area.nombre}</td>
+                  <td className="px-4 py-3 text-sm text-gray-100">
+                    {area.nombre}
+                  </td>
                   <td className="px-4 py-3 text-sm text-gray-100">
                     {area.supervisor
-                      ? `${area.supervisor.nombre} ${area.supervisor.apellidos}`
+                      ? `${capitalizeFirstLetter(
+                          area.supervisor.first_name
+                        )} ${capitalizeWords(area.supervisor.last_name)}`
                       : "Sin supervisor"}
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-100 text-center">
@@ -163,7 +177,9 @@ const AreasView = () => {
               {isEditing ? "Editar Área" : "Agregar Nueva Área"}
             </h2>
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-2">Nombre</label>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Nombre
+              </label>
               <input
                 type="text"
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
@@ -176,7 +192,9 @@ const AreasView = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-2">Supervisor</label>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Supervisor
+              </label>
               <select
                 className="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-blue-300"
                 value={
@@ -200,8 +218,11 @@ const AreasView = () => {
               >
                 <option value="">Seleccione un supervisor</option>
                 {empleados.map((empleado) => (
-                  <option key={empleado.id_empleado} value={empleado.id_empleado}>
-                    {empleado.nombre}
+                  <option
+                    key={empleado.id_empleado}
+                    value={empleado.id_empleado}
+                  >
+                    {empleado.first_name}
                   </option>
                 ))}
               </select>

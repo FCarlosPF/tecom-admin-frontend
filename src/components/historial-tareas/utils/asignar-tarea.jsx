@@ -61,24 +61,24 @@ const AssignTask = ({
           {Array.isArray(tareas) &&
             tareas
               .filter((tarea) =>
-                usuarioLogeado.rol === 1
+                usuarioLogeado?.rol?.id === 1
                   ? tarea.estado === "Pendiente"
                   : tarea.tarea?.estado === "Pendiente"
               )
               .map((tarea) => (
                 <option
                   key={
-                    usuarioLogeado.rol === 1
+                    usuarioLogeado?.rol?.id === 1
                       ? tarea.tarea_id
                       : tarea.tarea.tarea_id
                   }
                   value={
-                    usuarioLogeado.rol === 1
+                    usuarioLogeado?.rol?.id === 1
                       ? tarea.tarea_id
                       : tarea.tarea.tarea_id
                   }
                 >
-                  {usuarioLogeado.rol === 1 ? tarea.titulo : tarea.tarea.titulo}
+                  {usuarioLogeado?.rol?.id === 1 ? tarea.titulo : tarea.tarea.titulo}
                 </option>
               ))}
         </select>

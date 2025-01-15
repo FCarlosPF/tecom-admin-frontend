@@ -14,7 +14,7 @@ import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import { MoveDirection, OutMode } from "@tsparticles/engine";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Image from 'next/image';
+import Image from "next/image";
 
 const ParticlesMemo = React.memo(({ options, particlesLoaded }) => (
   <Particles
@@ -57,22 +57,7 @@ const Login = () => {
     try {
       const data = await loginService(username, password);
       if (data) {
-        const usuario = {
-          id_empleado: data.id_empleado,
-          nombre: data.nombre,
-          apellidos: data.apellidos,
-          correo: data.correo,
-          especialidad: data.especialidad,
-          sueldo: data.sueldo,
-          activo: data.activo,
-          foto: data.foto,
-          nombre_usuario: data.nombre_usuario,
-          fecha_contratacion: data.fecha_contratacion,
-          area: data.area,
-          rol: data.rol,
-        };
-        setUsuarioLogeado(usuario);
-        localStorage.setItem("usuarioLogeado", JSON.stringify(usuario));
+        setUsuarioLogeado(data);
         router.push("/panel");
       } else {
         setError("Credenciales incorrectas");

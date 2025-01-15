@@ -14,8 +14,7 @@ import EmpleadosTable from "./utils/table";
 import useStore from "@/store";
 
 const UsuariosView = () => {
-  const { usuarioLogeado } = useStore();
-  const [empleados, setEmpleados] = useState([]);
+  const { usuarioLogeado,empleados,setEmpleados } = useStore();
   const [areas, setAreas] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -55,10 +54,11 @@ const UsuariosView = () => {
         usuarioLogeado
       );
       let data;
-      if (usuarioLogeado.rol === 1) {
+      if (usuarioLogeado?.rol?.id === 1) {
         console.log("Usuario con rol 1, obteniendo todos los empleados");
         data = await getAllEmployees();
         setEmpleados(data);
+        console.log(data)
       } else {
         console.log("Usuario con rol diferente a 1, no se obtienen empleados");
       }
@@ -98,6 +98,7 @@ const UsuariosView = () => {
           prevEmpleados.filter((empleado) => empleado.id_empleado !== id)
         );
         setMessage("Empleado eliminado exitosamente");
+        fetchEmpleados();
       } catch (error) {
         console.error("Error al eliminar el empleado:", error);
         setMessage("Error al eliminar el empleado");
@@ -125,6 +126,7 @@ const UsuariosView = () => {
         password: "",
       });
       setMessage("Empleado agregado exitosamente");
+      fetchEmpleados()
     } catch (error) {
       console.error("Error al agregar el empleado:", error);
       setMessage("Error al agregar el empleado");
@@ -144,6 +146,7 @@ const UsuariosView = () => {
             : empleado
         )
       );
+      fetchEmpleados();
       setShowModal(false);
       setEditEmpleado(null);
       setIsEditing(false);
@@ -196,7 +199,7 @@ const UsuariosView = () => {
           </div>
         )}
         {usuarioLogeado &&
-        (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) ? (
+        (usuarioLogeado?.rol?.id === 1 || usuarioLogeado?.rol?.id === 2) ? (
           <EmpleadosTable
             empleados={empleados}
             onEdit={openEditModal}

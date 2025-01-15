@@ -105,7 +105,7 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
                 <span className="hidden md:inline">Perfil</span>
               </Link>
             </li>
-            {usuarioLogeado && usuarioLogeado.rol === 1 && (
+            {usuarioLogeado && usuarioLogeado?.rol?.id === 1 && (
               <li className="border-b border-gray-700">
                 <Link
                   href="/panel/areas"
@@ -125,7 +125,7 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
                 <span className="hidden md:inline">Tareas</span>
               </Link>
             </li>
-            {usuarioLogeado && usuarioLogeado.rol === 1 && (
+            {usuarioLogeado && usuarioLogeado?.rol?.id === 1 && (
               <li className="border-b border-gray-700">
                 <Link
                   href="/panel/usuarios"
@@ -155,7 +155,7 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
               </Link>
             </li>
             {usuarioLogeado &&
-              (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 6) && (
+              (usuarioLogeado.rol === 1 || usuarioLogeado?.rol?.id === 6) && (
                 <li className="border-b border-gray-700">
                   <Link
                     href="/panel/notificaciones"
@@ -166,7 +166,7 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
                   </Link>
                 </li>
               )}
-            {usuarioLogeado && usuarioLogeado.rol === 1 && (
+            {usuarioLogeado && usuarioLogeado?.rol?.id === 1 && (
               <li className="border-b border-gray-700">
                 <div
                   onClick={toggleDropdown}
@@ -231,7 +231,7 @@ const Navbar = ({ isMenuOpen, toggleMenu }) => {
               </li>
             )}
 
-            {usuarioLogeado && usuarioLogeado.rol === 1 && (
+            { usuarioLogeado?.rol?.id === 1 && (
               <li className="border-b border-gray-700">
                 <Link
                   href="/panel/roles"

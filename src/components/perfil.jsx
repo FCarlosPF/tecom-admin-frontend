@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import useStore from "@/store/index";
 import { changePasswordService } from "@/services/service";
+import { getInitials } from "@/utils/funciones";
 
 const PerfilView = () => {
   const { usuarioLogeado } = useStore();
@@ -12,11 +13,7 @@ const PerfilView = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const getInitials = (nombre, apellidos) => {
-    const nombreInicial = nombre ? nombre.charAt(0).toUpperCase() : "";
-    const apellidoInicial = apellidos ? apellidos.charAt(0).toUpperCase() : "";
-    return `${nombreInicial}${apellidoInicial}`;
-  };
+
 
   const handleChangePassword = async () => {
     try {
@@ -47,18 +44,18 @@ const PerfilView = () => {
         <div className="flex flex-col items-center space-y-6 mb-8">
           {/* Iniciales del Usuario */}
           <div className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 shadow-lg flex items-center justify-center text-white text-3xl font-bold">
-            {getInitials(usuarioLogeado.nombre, usuarioLogeado.apellidos)}
+            {getInitials(usuarioLogeado.first_name, usuarioLogeado.last_name)}
           </div>
           {/* Información del Usuario */}
           <div className="text-center">
             <h3 className="text-2xl font-bold text-gray-100">
-              {usuarioLogeado.nombre} {usuarioLogeado.apellidos}
+              {usuarioLogeado.first_name} {usuarioLogeado.last_name}
             </h3>
           </div>
         </div>
         {/* Detalles del Usuario */}
         <div className="space-y-5">
-          <Detail label="Correo" value={usuarioLogeado.correo} />
+          <Detail label="Correo" value={usuarioLogeado.email} />
           <Detail label="Especialidad" value={usuarioLogeado.especialidad} />
           <Detail label="Sueldo" value={usuarioLogeado.sueldo} />
           <Detail

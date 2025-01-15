@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import useStore from "@/store";
+import { capitalizeFirstLetter } from "@/utils/funciones";
 
 const Modal = ({
   isOpen,
@@ -14,21 +15,21 @@ const Modal = ({
 }) => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [parentTaskEndDate, setParentTaskEndDate] = useState("");
-  const {
-    proyectos
-  } = useStore();
+  const { proyectos } = useStore();
   useEffect(() => {
     if (newTask.tarea_padre) {
-      const parentTask = Array.isArray(tareas) ? tareas.find((tarea) => {
-        if (usuarioLogeado.rol === 1) {
-          return tarea.tarea_id === parseInt(newTask.tarea_padre, 10);
-        } else {
-          return tarea.tarea.tarea_id === parseInt(newTask.tarea_padre, 10);
-        }
-      }) : null;
+      const parentTask = Array.isArray(tareas)
+        ? tareas.find((tarea) => {
+            if (usuarioLogeado?.rol?.id === 1) {
+              return tarea.tarea_id === parseInt(newTask.tarea_padre, 10);
+            } else {
+              return tarea.tarea.tarea_id === parseInt(newTask.tarea_padre, 10);
+            }
+          })
+        : null;
       if (parentTask) {
         setParentTaskEndDate(
-          usuarioLogeado.rol === 1
+          usuarioLogeado?.rol?.id === 1
             ? parentTask.fecha_estimada_fin
             : parentTask.tarea.fecha_estimada_fin
         );
@@ -88,25 +89,25 @@ const Modal = ({
           />
         </div>
         <div className="mb-4">
-        <label className="block text-gray-700">Proyecto</label>
-        <select
-          className="w-full p-2 border rounded"
-          value={newTask.proyecto_id || ""}
-          onChange={(e) =>
-            setNewTask({ ...newTask, proyecto_id: Number(e.target.value) })
-          }
-        >
-          <option value="">Seleccione un proyecto</option>
-          {Array.isArray(proyectos) &&
-            proyectos.map((proyecto) => (
-              <option key={proyecto.proyecto_id} value={proyecto.proyecto_id}>
-                {proyecto.nombre}
-              </option>
-            ))}
-        </select>
-      </div>
+          <label className="block text-gray-700">Proyecto</label>
+          <select
+            className="w-full p-2 border rounded"
+            value={newTask.proyecto_id || ""}
+            onChange={(e) =>
+              setNewTask({ ...newTask, proyecto_id: Number(e.target.value) })
+            }
+          >
+            <option value="">Seleccione un proyecto</option>
+            {Array.isArray(proyectos) &&
+              proyectos.map((proyecto) => (
+                <option key={proyecto.proyecto_id} value={proyecto.proyecto_id}>
+                  {proyecto.nombre}
+                </option>
+              ))}
+          </select>
+        </div>
         {usuarioLogeado &&
-          (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+          (usuarioLogeado?.rol?.id === 1 || usuarioLogeado?.rol?.id === 2) && (
             <div className="mb-4">
               <label className="block text-gray-700">Tarea Padre</label>
               <select
@@ -121,17 +122,17 @@ const Modal = ({
                   tareas.map((tarea) => (
                     <option
                       key={
-                        usuarioLogeado.rol === 2
+                        usuarioLogeado?.rol?.id === 2
                           ? tarea.tarea.tarea_id
                           : tarea.tarea_id
                       }
                       value={
-                        usuarioLogeado.rol === 2
+                        usuarioLogeado?.rol?.id === 2
                           ? tarea.tarea.tarea_id
                           : tarea.tarea_id
                       }
                     >
-                      {usuarioLogeado.rol === 2
+                      {usuarioLogeado?.rol?.id === 2
                         ? tarea.tarea.titulo
                         : tarea.titulo}
                     </option>
@@ -197,7 +198,7 @@ const Modal = ({
                     onChange={handleUserSelection}
                     className="mr-2"
                   />
-                  {empleado.nombre}
+                  <p>{capitalizeFirstLetter(empleado.first_name)}</p>
                 </label>
               ))}
           </div>

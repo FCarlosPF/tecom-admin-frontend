@@ -17,8 +17,8 @@ export const loginService = async (username, password) => {
     const data = await response.json();
 
     if (response.status === 200) {
-      localStorage.setItem("refreshToken", data.tokens.refresh);
-      localStorage.setItem("accessToken", data.tokens.access);
+      localStorage.setItem("refreshToken", data.refresh);
+      localStorage.setItem("accessToken", data.access);
       localStorage.setItem("usuarioLogeado", JSON.stringify(data.empleado));
     }
 

@@ -1,26 +1,13 @@
 import { create } from 'zustand';
 
 const useStore = create((set) => ({
-  usuarioLogeado: {
-    id_empleado: null,
-    nombre: '',
-    apellidos: '',
-    correo: '',
-    especialidad: '',
-    sueldo: '',
-    activo: false,
-    foto: '',
-    nombre_usuario: '',
-    fecha_contratacion: '',
-    area: null,
-    rol: null
-  },
+  usuarioLogeado: {},
   empleados: [],
   tareas: [],
   asignacionesTareas: [],
   proyectos: [],
   notificaciones: [],
-  setUsuarioLogeado: (usuario) => set({ usuarioLogeado: usuario }),
+  setUsuarioLogeado: (usuarioLogeado) => set({ usuarioLogeado }),
   setEmpleados: (empleados) => set({ empleados }),
   setTareas: (tareas) => set({ tareas }),
   setAsignacionesTareas: (asignacionesTareas) => set({ asignacionesTareas }),

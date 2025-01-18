@@ -2,25 +2,21 @@
 
 import React, { useState } from "react";
 import useStore from "@/store/index";
-import { changePasswordService } from "@/services/service";
+import { sendEmailService } from "@/services/service";
 import { getInitials } from "@/utils/funciones";
 
 const PerfilView = () => {
   const { usuarioLogeado } = useStore();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
 
 
-  const handleChangePassword = async () => {
+  const enviarCorreo = async () => {
     try {
-      await changePasswordService(oldPassword, newPassword);
-      setSuccess("Contraseña cambiada exitosamente");
+      await sendEmailService(usuarioLogeado.email);
+      setSuccess("Correo enviado correctamente");
       setError("");
-      setIsModalOpen(false);
     } catch (error) {
       setError("Error al cambiar la contraseña");
       setSuccess("");
@@ -65,48 +61,11 @@ const PerfilView = () => {
           <Detail label="Área" value={usuarioLogeado.area?.nombre} />
         </div>
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={enviarCorreo}
           className="mt-6 w-full bg-blue-600 text-white p-3 rounded-lg shadow-md hover:bg-blue-700 transition"
         >
           Cambiar Contraseña
         </button>
-        {isModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-              <h3 className="text-xl font-semibold mb-4">Cambiar Contraseña</h3>
-              {error && <p className="text-red-500 mb-4">{error}</p>}
-              {success && <p className="text-green-500 mb-4">{success}</p>}
-              <input
-                type="password"
-                placeholder="Contraseña Antigua"
-                value={oldPassword}
-                onChange={(e) => setOldPassword(e.target.value)}
-                className="w-full p-2 mb-4 border rounded"
-              />
-              <input
-                type="password"
-                placeholder="Contraseña Nueva"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full p-2 mb-4 border rounded"
-              />
-              <div className="flex justify-end space-x-4">
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600 transition"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleChangePassword}
-                  className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
-                >
-                  Cambiar
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

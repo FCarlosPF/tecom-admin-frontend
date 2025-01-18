@@ -8,7 +8,10 @@ const EmpleadoModal = ({
   onClose,
   onSave,
   areas,
+  setShowPasswordField,
+  showPasswordField
 }) => {
+
   const handleChange = (key, value) => {
     if (key.includes(".")) {
       const keys = key.split(".");
@@ -52,10 +55,7 @@ const EmpleadoModal = ({
           { label: "Correo", key: "email", type: "email" },
           { label: "Apellidos", key: "last_name" },
           { label: "Especialidad", key: "especialidad" },
-          { label: "Sueldo", key: "sueldo", type: "number" },
-          { label: "Nombre de Usuario", key: "username" },
-          { label: "Contraseña", key: "password", type: "password" },
-          {
+          { label: "Sueldo", key: "sueldo", type: "number" },          {
             label: "Fecha de contratación",
             key: "fecha_contratacion",
             type: "date",
@@ -79,28 +79,71 @@ const EmpleadoModal = ({
           <label className="block text-gray-700">Área</label>
           <select
             className="w-full p-2 border rounded shadow-inner"
-            value={empleado.area ?? ""} // Proporciona un valor predeterminado vacío si es null o undefined
-            onChange={(e) => handleChange("area", parseInt(e.target.value, 10))} // Convierte el valor a entero
+            value={empleado.area ?? ""}
+            onChange={(e) => handleChange("area", parseInt(e.target.value, 10))}
           >
             <option value="">Seleccione un área</option>
-            {areas && areas.map((area) => (
-              <option key={area.area_id} value={area.area_id}>
-                {area.nombre}
-              </option>
-            ))}
+            {areas &&
+              areas.map((area) => (
+                <option key={area.area_id} value={area.area_id}>
+                  {area.nombre}
+                </option>
+              ))}
           </select>
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Estado</label>
           <select
             className="w-full p-2 border rounded shadow-inner"
-            value={empleado.is_active ?? ""} // Proporciona un valor predeterminado vacío si es null o undefined
+            value={empleado.is_active ?? ""}
             onChange={(e) => handleChange("is_active", e.target.value === "true")}
           >
             <option value="true">Activo</option>
             <option value="false">Inactivo</option>
           </select>
         </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Nombre de Usuario</label>
+          <input
+            type="text"
+            className="w-full p-2 border rounded shadow-inner"
+            value={empleado.username ?? ""}
+            onChange={(e) => handleChange("username", e.target.value)}
+          />
+        </div>
+        {isEditing ? (
+          <>
+            <div className="mb-4">
+              <button
+                className="px-4 py-2 bg-gray-200 rounded-md shadow-lg hover:shadow-xl transition"
+                onClick={() => setShowPasswordField(!showPasswordField)}
+              >
+                Cambiar Contraseña
+              </button>
+            </div>
+            {showPasswordField && (
+              <div className="mb-4">
+                <label className="block text-gray-700">Contraseña</label>
+                <input
+                  type="password"
+                  className="w-full p-2 border rounded shadow-inner"
+                  value={empleado.password ?? ""}
+                  onChange={(e) => handleChange("password", e.target.value)}
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="mb-4">
+            <label className="block text-gray-700">Contraseña</label>
+            <input
+              type="password"
+              className="w-full p-2 border rounded shadow-inner"
+              value={empleado.password ?? ""}
+              onChange={(e) => handleChange("password", e.target.value)}
+            />
+          </div>
+        )}
         <div className="flex gap-4 justify-end">
           <button
             className="px-4 py-2 bg-gray-200 rounded-md shadow-lg hover:shadow-xl transition"

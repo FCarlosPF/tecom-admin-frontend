@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 208.46">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: #47c0f0;
+      }
+
+      .cls-2, .cls-4 {
+        letter-spacing: 0em;
+      }
+
+      .cls-5 {
+        fill: #6b3519;
+      }
+
+      .cls-6, .cls-4, .cls-7 {
+        fill: #0669b1;
+      }
+
+      .cls-3 {
+        letter-spacing: 0em;
+      }
+
+      .cls-8 {
+        font-family: Ibrand-Regular, Ibrand;
+        font-size: 121.95px;
+      }
+
+      .cls-7 {
+        letter-spacing: 0em;
+      }
+
+      .cls-9 {
+        fill: #f39d03;
+      }
+
+      .cls-10 {
+        fill: #009a52;
+      }
+    </style>
+  </defs>
+  <text class="cls-8" transform="translate(0 177.98)"><tspan class="cls-6" x="0" y="0">Fi</tspan><tspan class="cls-7" x="85.49" y="0">b</tspan><tspan class="cls-6" x="155.36" y="0">e</tspan><tspan class="cls-4" x="222.32" y="0">r</tspan><tspan class="cls-1" x="257.56" y="0">F</tspan><tspan class="cls-2" x="321.1" y="0">i</tspan><tspan class="cls-3" x="342.44" y="0">eld</tspan></text>
+  <g>
+    <path class="cls-9" d="M220.81,88.21l55.07-74.12c1.29-1.71.92-4.15-.84-5.41-1.81-1.34-4.42-.85-5.63,1.05l-49.84,77.65c-.22.34-.12.8.22,1.03.33.21.79.12,1-.18h0l.02-.02h0Z"/>
+    <path class="cls-6" d="M198.09,110.8s50.99-85.94,51.01-85.94c1.54-2.61.67-5.97-1.97-7.52-2.76-1.63-6.4-.53-7.79,2.33l-43.88,89.73c-.79,1.67,1.63,3.02,2.64,1.4h-.02Z"/>
+    <path class="cls-10" d="M211.21,114.98S307.18,9.09,307.18,9.07c2.03-2.23,1.83-5.67-.43-7.68-2.33-2.1-6-1.78-7.95.64l-89.89,111.02c-1.14,1.43.91,3.35,2.3,1.93h0Z"/>
+    <path class="cls-5" d="M217.97,120.32l71.31-62.25c5.06-4.74-1.55-12.23-6.98-7.83-.19.1-65.68,68.29-65.91,68.49-.94.98.45,2.54,1.56,1.6h0l.02-.02h0Z"/>
+  </g>
+</svg>

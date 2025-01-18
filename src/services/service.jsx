@@ -1,4 +1,4 @@
-// service.jsx
+import { toast } from 'react-toastify';
 
 export const loginService = async (username, password) => {
   try {
@@ -29,19 +29,18 @@ export const loginService = async (username, password) => {
   }
 };
 
-export const changePasswordService = async (oldPassword, newPassword) => {
+export const sendEmailService = async (email) => {
   try {
     const accessToken = localStorage.getItem("accessToken");
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/change-password/`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/password-reset/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
-        old_password: oldPassword,
-        new_password: newPassword,
+        email: email,
       }),
     });
 
@@ -50,6 +49,46 @@ export const changePasswordService = async (oldPassword, newPassword) => {
     }
 
     const data = await response.json();
+
+
+    if (response.status === 200) {
+      toast.success("Correo de restablecimiento de contraseña enviado con éxito");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de cambio de contraseña:", error);
+    throw error;
+  }
+};
+
+export const changePassword = async (uid,token,password) => {
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/reset-password/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        uid: uid,
+        token: token,
+        password: password
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al cambiar la contraseña");
+    }
+
+    const data = await response.json();
+
+
+    if (response.status === 200) {
+      toast.success("Contraseña restablecida con éxito");
+    }
 
     return data;
   } catch (error) {
@@ -1515,6 +1554,63 @@ export const getNotificacionesPorEmpleado = async (idEmpleado) => {
           Authorization: `Bearer ${accessToken}`,
 
         },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al obtener las notificaciones");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de obtener notificaciones:", error);
+    throw error;
+  }
+};
+
+export const getObservacionTarea = async (idEmpleado) => {
+  const accessToken = localStorage.getItem("accessToken");
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/observaciones/?tarea_id=${idEmpleado}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error al obtener las notificaciones");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en el servicio de obtener notificaciones:", error);
+    throw error;
+  }
+};
+
+export const agregarObservacion = async (empleado_id,observacion,tarea) => {
+  const accessToken = localStorage.getItem("accessToken");
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/observaciones/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ empleado_id, observacion,tarea }), // Actualiza los campos enviados
+
       }
     );
 

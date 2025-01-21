@@ -1,7 +1,7 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
-import fiberfield from "@/assets/img/Fiberfield.png";
+import fiberfield from "@/assets/img/FiberField.png";
 import person from "@/assets/img/person.svg";
 import eyeSlash from "@/assets/img/eye-slash.svg";
 import eye from "@/assets/img/eye.svg";

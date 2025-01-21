@@ -98,7 +98,7 @@ const TareasView = () => {
 
     try {
       let data;
-      if (usuarioLogeado.rol === 1) {
+      if (usuarioLogeado?.rol?.id === 1) {
         data = await getAllTasks();
       } else {
         if (!usuarioLogeado.id_empleado) {
@@ -121,7 +121,7 @@ const TareasView = () => {
   const completarTarea = async (id) => {
     try {
       const tareaActual = tareas.find((tarea) =>
-        usuarioLogeado.rol === 1
+        usuarioLogeado?.rol?.id === 1
           ? tarea.tarea_id === id
           : tarea.asignacion_id === id
       );
@@ -131,7 +131,7 @@ const TareasView = () => {
       }
 
       const estadoActual =
-        usuarioLogeado.rol === 1
+        usuarioLogeado?.rol?.id === 1
           ? tareaActual.estado
           : tareaActual.tarea.estado;
       const nuevoEstado =
@@ -141,7 +141,7 @@ const TareasView = () => {
           ? format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSSxxx")
           : null;
 
-      if (usuarioLogeado.rol === 1) {
+      if (usuarioLogeado?.rol?.id === 1) {
         await updateTareas(id, {
           ...tareaActual,
           estado: nuevoEstado,
@@ -159,7 +159,7 @@ const TareasView = () => {
 
       setTareas((prevTareas) =>
         prevTareas.map((tarea) =>
-          (usuarioLogeado.rol === 1 ? tarea.tarea_id : tarea.asignacion_id) ===
+          (usuarioLogeado?.rol?.id === 1 ? tarea.tarea_id : tarea.asignacion_id) ===
           id
             ? { ...tarea, estado: nuevoEstado }
             : tarea
@@ -180,12 +180,12 @@ const TareasView = () => {
     setAsignadorNombres(
       [
         ...new Set(
-          asignaciones.map((asignacion) => asignacion.asignador.nombre)
+          asignaciones.map((asignacion) => asignacion.asignador.first_name)
         ),
       ].join(", ")
     );
     setEmpleadoNombres(
-      asignaciones.map((asignacion) => asignacion.empleado?.nombre).join(", ")
+      asignaciones.map((asignacion) => asignacion.empleado?.first_name).join(", ")
     );
   };
 
@@ -219,7 +219,7 @@ const TareasView = () => {
   const tareasPorEstado = (Array.isArray(tareas) ? tareas : []).reduce(
     (acc, tarea) => {
       const estado =
-        usuarioLogeado && usuarioLogeado.rol === 1
+        usuarioLogeado && usuarioLogeado?.rol?.id === 1
           ? tarea.estado
           : tarea.tarea?.estado;
       if (!acc[estado]) {

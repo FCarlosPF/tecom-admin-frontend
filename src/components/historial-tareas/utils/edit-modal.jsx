@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import useStore from "@/store";
+import { capitalizeFirstLetter } from "@/utils/funciones";
 
 const EditTaskModal = ({
   isOpen,
@@ -108,7 +109,7 @@ const EditTaskModal = ({
           </select>
         </div>
         {usuarioLogeado &&
-          (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+          (usuarioLogeado?.rol?.id === 1 || usuarioLogeado?.rol?.id === 2) && (
             <div className="mb-4">
               <label className="block text-gray-700">Tarea Padre</label>
               <select
@@ -123,17 +124,17 @@ const EditTaskModal = ({
                   tareas.map((tarea) => (
                     <option
                       key={
-                        usuarioLogeado.rol === 2
+                        usuarioLogeado?.rol?.id === 2
                           ? tarea.tarea.tarea_id
                           : tarea.tarea_id
                       }
                       value={
-                        usuarioLogeado.rol === 2
+                        usuarioLogeado?.rol?.id === 2
                           ? tarea.tarea.tarea_id
                           : tarea.tarea_id
                       }
                     >
-                      {usuarioLogeado.rol === 2
+                      {usuarioLogeado?.rol?.id === 2
                         ? tarea.tarea.titulo
                         : tarea.titulo}
                     </option>
@@ -194,7 +195,7 @@ const EditTaskModal = ({
                     onChange={handleUserSelection}
                     className="mr-2"
                   />
-                  {empleado.nombre}
+                  <p>{capitalizeFirstLetter(empleado.first_name)}</p>
                 </label>
               ))}
           </div>

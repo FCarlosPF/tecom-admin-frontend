@@ -59,7 +59,7 @@ const TareasView = () => {
     try {
       setLoading(true);
       const [tasks, assignments, employees] = await Promise.all([
-        usuarioLogeado.rol === 1
+        usuarioLogeado?.rol?.id === 1
           ? getAllTasks()
           : getTasKToEmployee(usuarioLogeado.id_empleado),
         getAsignacionesTareas(),
@@ -121,7 +121,7 @@ const TareasView = () => {
       if (addedTask && addedTask.tarea_id) {
         setTareas((prev) => [...prev, addedTask]);
 
-        if (usuarioLogeado && usuarioLogeado.rol === 2) {
+        if (usuarioLogeado && usuarioLogeado?.rol?.id === 2) {
           const tarea = addedTask.tarea_id;
           const empleado = usuarioLogeado.id_empleado;
 
@@ -255,7 +255,7 @@ const TareasView = () => {
               Historial de Tareas
             </h2>
             {usuarioLogeado &&
-              (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+              (usuarioLogeado?.rol?.id === 1 || usuarioLogeado?.rol?.id === 2) && (
                 <div className="flex gap-4">
                   <button
                     className="p-2 bg-gray-800 text-white rounded-full shadow-lg flex items-center hover:shadow-xl transition"
@@ -281,7 +281,7 @@ const TareasView = () => {
             />
           </div>
           {usuarioLogeado &&
-          (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+          (usuarioLogeado?.rol?.id === 1 || usuarioLogeado?.rol?.id === 2) && (
             <div className="flex justify-end mt-4">
               <button
                 className="p-2 bg-blue-600 text-white rounded-full shadow-lg flex items-center hover:shadow-xl transition"

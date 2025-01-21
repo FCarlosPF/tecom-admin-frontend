@@ -14,19 +14,11 @@ import EmpleadosTable from "./utils/table";
 import useStore from "@/store";
 
 const UsuariosView = () => {
-  const { usuarioLogeado } = useStore();
-  const [empleados, setEmpleados] = useState([]);
+  const { usuarioLogeado, empleados, setEmpleados } = useStore();
   const [areas, setAreas] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [newEmpleado, setNewEmpleado] = useState({
-    user: {
-      email: "",
-      first_name: "",
-      last_name: "",
-      username: "",
-      password: ""
-    },
     especialidad: "",
     sueldo: null,
     activo: null,
@@ -35,6 +27,7 @@ const UsuariosView = () => {
   const [editEmpleado, setEditEmpleado] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [message, setMessage] = useState("");
+  const [showPasswordField, setShowPasswordField] = useState(false);
 
   const fetchEmpleados = async () => {
     if (!usuarioLogeado) {
@@ -55,10 +48,11 @@ const UsuariosView = () => {
         usuarioLogeado
       );
       let data;
-      if (usuarioLogeado.rol === 1) {
+      if (usuarioLogeado?.rol?.id === 1) {
         console.log("Usuario con rol 1, obteniendo todos los empleados");
         data = await getAllEmployees();
         setEmpleados(data);
+        console.log(data)
       } else {
         console.log("Usuario con rol diferente a 1, no se obtienen empleados");
       }
@@ -98,6 +92,7 @@ const UsuariosView = () => {
           prevEmpleados.filter((empleado) => empleado.id_empleado !== id)
         );
         setMessage("Empleado eliminado exitosamente");
+        fetchEmpleados();
       } catch (error) {
         console.error("Error al eliminar el empleado:", error);
         setMessage("Error al eliminar el empleado");
@@ -112,11 +107,6 @@ const UsuariosView = () => {
       setEmpleados((prevEmpleados) => [...prevEmpleados, addedEmpleado]);
       setShowModal(false);
       setNewEmpleado({
-        user: {
-          email: "",
-          first_name: "",
-          last_name: ""
-        },
         especialidad: "",
         sueldo: null,
         activo: null,
@@ -125,6 +115,7 @@ const UsuariosView = () => {
         password: "",
       });
       setMessage("Empleado agregado exitosamente");
+      fetchEmpleados()
     } catch (error) {
       console.error("Error al agregar el empleado:", error);
       setMessage("Error al agregar el empleado");
@@ -133,20 +124,27 @@ const UsuariosView = () => {
 
   const handleEditEmpleado = async () => {
     try {
-      console.log("Empleado Editado:", editEmpleado); // Verificar el estado de editEmpleado
-      await updateEmpleado(editEmpleado.id_empleado, editEmpleado);
+      const updatedEmpleado = {
+        ...editEmpleado,
+        update_password: showPasswordField,
+      };
+      console.log("Empleado Editado:", updatedEmpleado); // Verificar el estado de editEmpleado
+
+      await updateEmpleado(editEmpleado.id_empleado, updatedEmpleado);
 
       // Update the specific employee in the state without changing its position
       setEmpleados((prevEmpleados) =>
         prevEmpleados.map((empleado) =>
           empleado.id_empleado === editEmpleado.id_empleado
-            ? { ...empleado, ...editEmpleado }
+            ? { ...empleado, ...updatedEmpleado }
             : empleado
         )
       );
+      fetchEmpleados();
       setShowModal(false);
       setEditEmpleado(null);
       setIsEditing(false);
+      setShowPasswordField(false);
       setMessage("Empleado actualizado exitosamente");
     } catch (error) {
       console.error("Error al actualizar el empleado:", error);
@@ -196,7 +194,7 @@ const UsuariosView = () => {
           </div>
         )}
         {usuarioLogeado &&
-        (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) ? (
+        (usuarioLogeado?.rol?.id === 1 || usuarioLogeado?.rol?.id === 2) ? (
           <EmpleadosTable
             empleados={empleados}
             onEdit={openEditModal}
@@ -214,6 +212,8 @@ const UsuariosView = () => {
             onClose={() => setShowModal(false)}
             onSave={isEditing ? handleEditEmpleado : handleAddEmpleado}
             areas={areas} // Pasar las áreas al modal
+            setShowPasswordField={setShowPasswordField} // Pasar el setter al modal
+            showPasswordField={showPasswordField} // Pasar el estado al modal
           />
         )}
       </div>

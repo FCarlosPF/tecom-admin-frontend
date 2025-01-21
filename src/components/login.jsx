@@ -14,7 +14,8 @@ import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import { MoveDirection, OutMode } from "@tsparticles/engine";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Image from 'next/image';
+import Image from "next/image";
+import logo from '@/assets/img/logo.jpg'; // Ajusta la ruta según sea necesario
 
 const ParticlesMemo = React.memo(({ options, particlesLoaded }) => (
   <Particles
@@ -57,22 +58,7 @@ const Login = () => {
     try {
       const data = await loginService(username, password);
       if (data) {
-        const usuario = {
-          id_empleado: data.id_empleado,
-          nombre: data.nombre,
-          apellidos: data.apellidos,
-          correo: data.correo,
-          especialidad: data.especialidad,
-          sueldo: data.sueldo,
-          activo: data.activo,
-          foto: data.foto,
-          nombre_usuario: data.nombre_usuario,
-          fecha_contratacion: data.fecha_contratacion,
-          area: data.area,
-          rol: data.rol,
-        };
-        setUsuarioLogeado(usuario);
-        localStorage.setItem("usuarioLogeado", JSON.stringify(usuario));
+        setUsuarioLogeado(data);
         router.push("/panel");
       } else {
         setError("Credenciales incorrectas");
@@ -170,13 +156,11 @@ const Login = () => {
       <ParticlesMemo particlesLoaded={particlesLoaded} options={options} />
       <div className="flex items-center justify-center rounded-lg shadow-lg bg-blue-800 bg-opacity-90 max-w-4xl w-full z-10">
         {/* Imagen a la izquierda */}
-        <div className="w-1/2 hidden md:block">
+        <div className="w-1/2 hidden md:block h-">
           <Image
-            src="https://media.licdn.com/dms/image/v2/D4E0BAQGgGk-XuOr2cA/company-logo_200_200/company-logo_200_200/0/1666116188527?e=1741824000&v=beta&t=Yx0Q88ghBsl--XUhVQuOak_VdJeLx-l0HoT1mjmovAo"
-            alt="Login Image"
-            width={200}
-            height={200}
-            className="w-full h-auto object-cover rounded-lg shadow-lg"
+            src={logo}
+            alt="Tecom Logo"
+            className="w-full h-full object-cover rounded-lg shadow-lg"
           />
         </div>
 

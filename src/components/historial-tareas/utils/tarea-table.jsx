@@ -17,7 +17,7 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea, editarTarea }) => {
 
   if (
     usuarioLogeado &&
-    (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2)
+    (usuarioLogeado?.rol?.id === 1 || usuarioLogeado?.rol?.id === 2)
   ) {
     headers.push("Acciones");
   }
@@ -47,7 +47,7 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea, editarTarea }) => {
       </thead>
       <tbody>
         {tareas.map((task) => {
-          const tarea = usuarioLogeado && usuarioLogeado.rol === 1 ? task : task.tarea;
+          const tarea = usuarioLogeado && usuarioLogeado?.rol?.id === 1 ? task : task.tarea;
           return (
             <tr key={tarea.tarea_id} className="hover:bg-gray-700 transition">
               <td className="px-4 py-3 text-sm text-gray-100">
@@ -75,7 +75,7 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea, editarTarea }) => {
               <td className="px-4 py-3 text-sm text-gray-100">
                 {tarea.fecha_real_fin ? formatDate(tarea.fecha_real_fin) : ""}
               </td>
-              {usuarioLogeado && (usuarioLogeado.rol === 1 || usuarioLogeado.rol === 2) && (
+              {usuarioLogeado && (usuarioLogeado?.rol?.id === 1 || usuarioLogeado?.rol?.id === 2) && (
                 <td className="px-4 py-3 text-sm text-gray-100">
                   <div className="flex justify-center gap-2">
                     <button
@@ -84,7 +84,7 @@ const TaskTable = ({ tareas, usuarioLogeado, eliminarTarea, editarTarea }) => {
                     >
                       <FaEdit />
                     </button>
-                    {usuarioLogeado.rol === 1 && (
+                    {usuarioLogeado?.rol?.id === 1 && (
                       <button
                         className="text-red-500 hover:text-red-700 transition"
                         onClick={() => eliminarTarea(tarea.tarea_id)}

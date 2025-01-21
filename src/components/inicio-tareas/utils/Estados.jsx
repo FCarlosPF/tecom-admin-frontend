@@ -24,18 +24,18 @@ const Estados = ({
             {tareasPorEstado[estado] && tareasPorEstado[estado].length > 0 ? (
               tareasPorEstado[estado]
                 .filter((tarea) =>
-                  usuarioLogeado && usuarioLogeado.rol == 1
+                  usuarioLogeado && usuarioLogeado?.rol?.id == 1
                     ? !tarea.tarea_padre
                     : !tarea.tarea.tarea_padre
                 )
                 .map((tarea) => {
                   const subtareas = tareas.filter((subtarea) => {
-                    return usuarioLogeado && usuarioLogeado.rol === 1
+                    return usuarioLogeado && usuarioLogeado?.rol?.id === 1
                       ? subtarea.tarea_padre === tarea.tarea_id
                       : subtarea.tarea.tarea_padre === tarea.tarea.tarea_id;
                   });
                   const tareaData =
-                    usuarioLogeado && usuarioLogeado.rol === 1
+                    usuarioLogeado && usuarioLogeado?.rol?.id === 1
                       ? tarea
                       : tarea.tarea;
                   return (
@@ -46,7 +46,7 @@ const Estados = ({
                       <div
                         className="flex justify-between items-center"
                         onClick={() =>
-                          usuarioLogeado.rol === 1
+                          usuarioLogeado?.rol?.id === 1
                             ? handleCardClick(tarea)
                             : handleCardClick(tarea.tarea)
                         }
@@ -101,7 +101,7 @@ const Estados = ({
                               onClick={(e) => {
                                 e.stopPropagation();
                                 completarTarea(
-                                  usuarioLogeado && usuarioLogeado.rol == 1
+                                  usuarioLogeado && usuarioLogeado?.rol?.id == 1
                                     ? tarea.tarea_id
                                     : tarea.tarea.tarea_id
                                 );
@@ -120,14 +120,14 @@ const Estados = ({
                               onClick={(e) => {
                                 e.stopPropagation();
                                 toggleExpand(
-                                  usuarioLogeado.rol === 1
+                                  usuarioLogeado?.rol?.id === 1
                                     ? tarea.tarea_id
                                     : tarea.tarea.tarea_id
                                 );
                               }}
                             >
                               {expandedTareas[
-                                usuarioLogeado.rol === 1
+                                usuarioLogeado?.rol?.id === 1
                                   ? tarea.tarea_id
                                   : tarea.tarea.tarea_id
                               ] ? (
@@ -140,14 +140,14 @@ const Estados = ({
                         </div>
                       </div>
                       {expandedTareas[
-                        usuarioLogeado && usuarioLogeado.rol === 1
+                        usuarioLogeado && usuarioLogeado?.rol?.id === 1
                           ? tarea.tarea_id
                           : tarea.tarea.tarea_id
                       ] && (
                         <div className="pl-4 mt-2">
                           {subtareas.map((subtarea) => {
                             const subtareaData =
-                              usuarioLogeado.rol === 1
+                              usuarioLogeado?.rol?.id === 1
                                 ? subtarea
                                 : subtarea.tarea;
                             return (
